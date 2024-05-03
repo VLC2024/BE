@@ -1,7 +1,7 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
-import com.vlc.maeummal.domain.member.dto.MemberDTO;
+import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
 import com.vlc.maeummal.global.emums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,9 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -50,13 +48,14 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long PinCode;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<MemberEntity> students = new ArrayList<>();
+    @OneToMany(mappedBy = "following")
+    private List<FollowEntity> followerList;
+
+    @OneToMany(mappedBy = "follower")
+    private List<FollowEntity> followingList;
 
 
 
