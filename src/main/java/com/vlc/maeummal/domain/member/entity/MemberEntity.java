@@ -1,12 +1,17 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
+import com.vlc.maeummal.domain.member.dto.MemberDTO;
 import com.vlc.maeummal.global.emums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -44,6 +49,15 @@ public class MemberEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long PinCode;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<MemberEntity> students = new ArrayList<>();
+
 
 
 
