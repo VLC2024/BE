@@ -1,12 +1,15 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
+import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
 import com.vlc.maeummal.global.emums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -44,6 +47,16 @@ public class MemberEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(nullable = false, unique = true)
+    private Long PinCode;
+
+    @OneToMany(mappedBy = "following")
+    private List<FollowEntity> followerList;
+
+    @OneToMany(mappedBy = "follower")
+    private List<FollowEntity> followingList;
+
 
 
 
