@@ -1,14 +1,15 @@
 package com.vlc.maeummal.domain.lesson.entity;
 
 import com.vlc.maeummal.global.enums.Category;
-import com.vlc.maeummal.global.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,9 +29,8 @@ public class LessonEntity {
     @Column
     private String content;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created_at;
+    @CreatedDate
+    private LocalDateTime created_at; //created_at 레슨 등록 날짜/시간
 
     @Column(nullable = false)
     private Integer view;
@@ -38,13 +38,12 @@ public class LessonEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     @Column(nullable = false)
     private Integer difficulty;
 
     @Column
     private String field;
 
+    @OneToMany(mappedBy = "lesson")
+    private List<WordEntity> words;
 }
