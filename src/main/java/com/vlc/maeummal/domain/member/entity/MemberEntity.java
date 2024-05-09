@@ -1,8 +1,9 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
+import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
-import com.vlc.maeummal.global.emums.Gender;
+import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,8 +57,5 @@ public class MemberEntity {
 
     @OneToMany(mappedBy = "follower")
     private List<FollowEntity> followingList;
-
-
-
 
 }
