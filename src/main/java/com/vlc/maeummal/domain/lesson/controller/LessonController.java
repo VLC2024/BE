@@ -22,7 +22,7 @@ public class LessonController {
     }
 
     @PostMapping("/lesson") // 강의 작성
-    public ResponseEntity<?> createLesson(@RequestBody LessonDTO lessonDTO) {
+    public ResponseEntity<?> createLesson(LessonDTO lessonDTO) {
         LessonDTO createdLesson = lessonService.createLesson(lessonDTO);
         return ResponseEntity.ok(createdLesson);
     }
