@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class LessonDTO {
+    private Long leesonId;
     private String title;
     private String content;
     private String created_at;
