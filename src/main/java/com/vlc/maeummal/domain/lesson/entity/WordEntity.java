@@ -31,6 +31,6 @@ public class WordEntity {
     private String wimage;
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id")
-    private LessonEntity lessonEntity;
+    @JoinColumn(name = "lesson_id") // 컬럼명
+    private LessonEntity lesson; // 변수명 변경 lessonEntity -> lesson
 }

@@ -14,5 +14,4 @@ public class LessonDTO {
     private String view;
     private String category;
     private String difficulty;
-//    private String field;
 }

@@ -41,9 +41,6 @@ public class LessonEntity {
     @Column(nullable = false)
     private Integer difficulty;
 
-    @Column
-    private String field;
-
     @OneToMany(mappedBy = "lesson")
     private List<WordEntity> words;
 }
