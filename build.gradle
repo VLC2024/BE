@@ -43,6 +43,14 @@ dependencies {
     */
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    /**
+     * 2024.05.07 by kyb
+     * jwt, security
+     */
+    implementation group: 'io.jsonwebtoken', name:'jjwt', version:'0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1' // jwt 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {

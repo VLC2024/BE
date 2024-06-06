@@ -18,4 +18,5 @@ public class MemberDTO {
     private String age;
     private String gender;
     private String image;
+    private String token;
 }
