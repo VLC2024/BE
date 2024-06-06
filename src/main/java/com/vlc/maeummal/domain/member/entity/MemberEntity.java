@@ -25,7 +25,7 @@ public class MemberEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private String nickname;
 
     @Column(nullable=false)
@@ -49,7 +49,7 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private Long PinCode;
 
     @OneToMany(mappedBy = "following")
