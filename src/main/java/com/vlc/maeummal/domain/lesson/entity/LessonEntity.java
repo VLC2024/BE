@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.lesson.entity;
 
+import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "lesson")
-public class LessonEntity {
+public class LessonEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lesson_id")
@@ -29,9 +31,6 @@ public class LessonEntity {
     @Column
     private String content;
 
-    @CreatedDate
-    private LocalDateTime created_at; //created_at 레슨 등록 날짜/시간
-
     @Column(nullable = false)
     private Integer view;
 
@@ -41,9 +40,9 @@ public class LessonEntity {
     @Column(nullable = false)
     private Integer difficulty;
 
-    @Column
-    private String field;
+    @Column(nullable = false)
+    private String creator;
 
-    @OneToMany(mappedBy = "lesson")
-    private List<WordEntity> words;
+    @OneToMany(mappedBy = "lessonEntity", cascade = CascadeType.ALL)
+    private List<WordEntity> words = new ArrayList<>();
 }
