@@ -1,7 +1,7 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
-import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
+//import com.vlc.maeummal.domain.myPage.entity.MatchingEntity;
 import com.vlc.maeummal.global.emums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,11 +51,7 @@ public class MemberEntity {
     @Column(nullable = false, unique = true)
     private Long PinCode;
 
-    @OneToMany(mappedBy = "following")
-    private List<FollowEntity> followerList;
 
-    @OneToMany(mappedBy = "follower")
-    private List<FollowEntity> followingList;
 
 
 
