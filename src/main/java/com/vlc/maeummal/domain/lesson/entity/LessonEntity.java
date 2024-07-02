@@ -1,3 +1,4 @@
+
 package com.vlc.maeummal.domain.lesson.entity;
 
 import com.vlc.maeummal.global.common.BaseEntity;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.vlc.maeummal.domain.lesson.entity.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
