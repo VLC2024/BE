@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.member.dto;
 
+import jakarta.annotation.Nullable;
 import lombok.*;
 
 @Data
@@ -14,6 +15,7 @@ public class MemberDTO {
     private String name;
     private String phoneNumber;
     private String station;
+    @Nullable
     private String nickname;
     private String age;
     private String gender;

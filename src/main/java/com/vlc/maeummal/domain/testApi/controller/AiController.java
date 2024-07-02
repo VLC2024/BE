@@ -22,4 +22,9 @@ public class AiController {
     public ResponseEntity<?> generateImage(@RequestBody String prompt) {
         return new ResponseEntity<>(aiService.generatePicture(prompt), HttpStatus.OK);
     }
+
+    @PostMapping("/hello")
+    public ResponseEntity<?> printHello(@RequestBody String prompt) {
+        return new ResponseEntity<>(prompt, HttpStatus.OK);
+    }
 }

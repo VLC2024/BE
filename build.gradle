@@ -43,7 +43,7 @@ dependencies {
     */
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
-<<<<<<< HEAD
+
     /**
      * 24.6.18 dalle3
      *
@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.stripe:stripe-java:22.10.0'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
     implementation 'sh.platform:config:2.2.2'
-=======
+
 
     /**
      * 2024.05.07 by kyb
@@ -69,7 +69,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name:'jjwt', version:'0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.3.1' // jwt 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
->>>>>>> dabe83a9c1da8792fe466c3dde3a9da881ff463d
+
 }
 
 tasks.named('test') {

@@ -63,7 +63,7 @@ public class MemberController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody MemberDTO memberDTO){
         MemberEntity member = memberService.getByCredentials(
-                memberDTO.getName(),
+                memberDTO.getEmail(),
                 memberDTO.getPassword(),
                 passwordEncoder);
 
