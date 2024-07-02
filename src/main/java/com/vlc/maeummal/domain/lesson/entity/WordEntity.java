@@ -1,3 +1,4 @@
+
 package com.vlc.maeummal.domain.lesson.entity;
 
 import jakarta.persistence.*;
@@ -34,3 +35,4 @@ public class WordEntity {
     @JoinColumn(name = "lesson_id")
     private LessonEntity lessonEntity;
 }
+
