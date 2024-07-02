@@ -1,3 +1,4 @@
+
 package com.vlc.maeummal.domain.lesson.dto;
 
 import lombok.AllArgsConstructor;
@@ -20,3 +21,4 @@ public class LessonDTO {
     private String difficulty;
     private String creator;
 }
+

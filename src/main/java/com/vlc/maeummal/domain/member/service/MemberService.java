@@ -26,13 +26,17 @@ public class MemberService {
         // 이미 존재하는 계정일 경우
         if(memberRepository.existsByEmail(email)){
             log.warn("ID already exists {}", email);
+            return null; // 한번더 체크 필요
         }
-        log.info("create member Entity {}",email);
-        return memberRepository.save(memberEntity);
+        else {
+            log.info("create member Entity {}",email);
+            return memberRepository.save(memberEntity);
+        }
+
     }
 
-    public MemberEntity getByCredentials(final String name, final String password, final PasswordEncoder encoder){
-        final MemberEntity originalMember = memberRepository.findByName(name);
+    public MemberEntity getByCredentials(final String email, final String password, final PasswordEncoder encoder){
+        final MemberEntity originalMember = memberRepository.findByEmail(email);
 
         if(originalMember != null && encoder.matches(password, originalMember.getPassword())){
             return originalMember;

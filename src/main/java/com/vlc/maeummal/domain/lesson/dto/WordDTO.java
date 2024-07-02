@@ -1,3 +1,4 @@
+
 package com.vlc.maeummal.domain.lesson.dto;
 
 import lombok.AllArgsConstructor;
@@ -15,3 +16,4 @@ public class WordDTO {
     private String wcategory;
     private String wimage;
 }
+
