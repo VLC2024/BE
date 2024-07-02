@@ -1,11 +1,6 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
-
-//import com.vlc.maeummal.domain.myPage.entity.MatchingEntity;
-import com.vlc.maeummal.global.enums.Gender;
-//import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
-//import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,7 +49,6 @@ public class MemberEntity {
 
     @Column(nullable = true, unique = true)
     private Long PinCode;
-
 
 
 }
