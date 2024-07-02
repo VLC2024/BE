@@ -1,8 +1,12 @@
 package com.vlc.maeummal.domain.member.entity;
 
 
+
 //import com.vlc.maeummal.domain.myPage.entity.MatchingEntity;
-import com.vlc.maeummal.global.emums.Gender;
+import com.vlc.maeummal.global.enums.Gender;
+import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
+//import com.vlc.maeummal.domain.myPage.entity.FollowEntity;
+import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +28,7 @@ public class MemberEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private String nickname;
 
     @Column(nullable=false)
@@ -48,11 +52,8 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private Long PinCode;
-
-
-
 
 
 
