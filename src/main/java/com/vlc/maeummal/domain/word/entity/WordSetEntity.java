@@ -30,7 +30,7 @@ public class WordSetEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @OneToMany(mappedBy = "wordSet")
+    @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL, orphanRemoval = true)
     List <WordEntity> wordEntities = new ArrayList<>();
 
 

@@ -41,6 +41,7 @@ public class WordSetResponseDTO {
             List<GetWordDTO> getWordDTOList = wordSet.getWordEntities().stream()
                     .map(GetWordDTO::getWordDTO).toList();
             return GetWordSetDTO.builder()
+                    .wordSetId(wordSet.getId())
                     .wordList(getWordDTOList)
                     .title(wordSet.getTitle())
                     .description(wordSet.getDescription())
@@ -68,7 +69,6 @@ public class WordSetResponseDTO {
         String prompt;
         String description;
 
-        private WordSetEntity wordSet;
 
         public static GetWordDTO getWordDTO (WordEntity wordEntity) {
             return GetWordDTO.builder()
