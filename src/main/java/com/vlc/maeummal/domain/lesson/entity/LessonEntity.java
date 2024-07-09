@@ -1,6 +1,7 @@
 
 package com.vlc.maeummal.domain.lesson.entity;
 
+import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
 import jakarta.persistence.*;
@@ -45,6 +46,6 @@ public class LessonEntity extends BaseEntity {
     @Column(nullable = false)
     private String creator;
 
-    @OneToMany(mappedBy = "lessonEntity", cascade = CascadeType.ALL)
-    private List<WordEntity> words = new ArrayList<>();
+//    @OneToMany(mappedBy = "lessonEntity", cascade = CascadeType.ALL)
+//    private List<WordEntity> words = new ArrayList<>();
 }
