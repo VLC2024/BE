@@ -1,12 +1,9 @@
 package com.vlc.maeummal.domain.member.controller;
 
 import com.vlc.maeummal.domain.member.dto.MemberDTO;
-import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.global.apiPayload.code.ErrorReasonDTO;
-import com.vlc.maeummal.global.apiPayload.code.ReasonDTO;
 import com.vlc.maeummal.global.security.TokenProvider;
-import jakarta.xml.ws.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
