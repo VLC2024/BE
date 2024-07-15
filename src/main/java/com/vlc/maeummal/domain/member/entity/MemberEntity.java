@@ -3,10 +3,18 @@ package com.vlc.maeummal.domain.member.entity;
 
 import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@MappedSuperclass
+@Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="member")
-public abstract class MemberEntity {
+public class MemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +47,7 @@ public abstract class MemberEntity {
 
     @Column(nullable = true)
     private Long PinCode;
+
+    @Column(nullable = false)
+    private Integer iq;
 }
