@@ -1,6 +1,5 @@
 package com.vlc.maeummal.global.security;
 
-import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
