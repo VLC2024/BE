@@ -2,6 +2,7 @@ package com.vlc.maeummal.domain.member.entity;
 
 
 import com.vlc.maeummal.global.enums.Gender;
+import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,9 @@ public class MemberEntity {
     @Column(nullable = true)
     private Long PinCode;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer iq;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
