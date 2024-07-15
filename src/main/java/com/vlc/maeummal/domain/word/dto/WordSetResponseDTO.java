@@ -13,18 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WordSetResponseDTO {
-    //내가 매칭 신청 보낸 리스트
-    /**
-     * WordSet {
-     *     단어 set 기본 설명
-     *     {
-     *         단어 리스트
-     *     }
-     * }
-     * 조회, 생성 시 이용
-     *
-     */
-
     @Builder
     @Getter
     @NoArgsConstructor
@@ -52,10 +40,8 @@ public class WordSetResponseDTO {
     }
 
     /**
-     *
      * 단어 dto
      * 단어 set 생성 시 사용됨.
-     *
      * */
 
     @Builder
@@ -81,26 +67,3 @@ public class WordSetResponseDTO {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
