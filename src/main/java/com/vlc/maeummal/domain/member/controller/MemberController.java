@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.member.controller;
 
 import com.vlc.maeummal.domain.member.dto.MemberDTO;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.global.apiPayload.code.ErrorReasonDTO;
 import com.vlc.maeummal.global.security.TokenProvider;
