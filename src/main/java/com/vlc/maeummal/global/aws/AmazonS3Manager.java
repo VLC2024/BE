@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.File;
+import java.util.Base64;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class AmazonS3Manager{
     private final AmazonConfig amazonConfig;
 
     private final UuidRepository uuidRepository;
+
 
 
     public String uploadFileWithoutImg(String keyName, MultipartFile file){

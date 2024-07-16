@@ -77,6 +77,12 @@ dependencies {
      * by kcw
     */
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    /**
+     * 2024.07.16
+     * mokmultipartfile
+     * by kcw
+     * */
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 
 }
