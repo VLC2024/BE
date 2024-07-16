@@ -31,7 +31,7 @@ public class WordService {
     // WordSetRequestDTO.GetWordSetDTO wordSetDTO, List<WordSetRequestDTO.GetWordDTO> WordDTOList
     @Transactional
     public WordSetEntity saveWordSetWithWords(WordSetRequestDTO.GetWordSetDTO wordSetDTO, List<WordSetRequestDTO.GetWordDTO> wordDTOList) {
-        // Step 1: Map DTO to EntitywordSetDT
+        // Step 1: Map DTO to EntitywordSetDTO
         WordSetEntity wordSetEntity = WordSetEntity.builder()
                 .title(wordSetDTO.getTitle())
                 .description(wordSetDTO.getDescription())
