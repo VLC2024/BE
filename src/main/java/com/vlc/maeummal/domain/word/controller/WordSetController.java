@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class WordSetController {
     WordService wordService;
 
 
-    @GetMapping("/wordSet")
+    @GetMapping("/wordSet") // 수정 필요 (이미지 )
     public ResponseEntity<?> getWordSet(@RequestParam Long wordSetId){
         WordSetResponseDTO.GetWordSetDTO wordSet = wordService.getWordSet(wordSetId);
         if (wordSet == null) {
@@ -32,17 +33,20 @@ public class WordSetController {
         return ResponseEntity.ok(ApiResponse.onSuccess(wordSet));
     }
 
-//    @PostMapping("/wordSet")
-//    public ResponseEntity<?> getWordSet(@RequestBody WordSetRequestDTO.GetWordSetDTO wordSetDTO, @RequestBody List<WordSetRequestDTO.GetWordDTO> WordDTOList){
-//        // wordSet를 저장
-//        wordService.saveWordSetWithWords(wordSetDTO, WordDTOList);
-//        return ResponseEntity.ok(ApiResponse.successWithoutResult());
-//    }
     @PostMapping("/wordSet")
-    public ResponseEntity<?> createWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO requestDTO) {
-        wordService.saveWordSetWithWords(requestDTO.getWordSetDTO(), requestDTO.getWordDTOList());
-
+    public ResponseEntity<?> getWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSet){
+        // wordSet를 저장
+        wordService.saveWordSetWithWords(wordSet.getWordSetDTO(), wordSet.getWordDTOList());
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
+//@PostMapping(value = "/wordSet", consumes = "multipart/form-data")
+//public ResponseEntity<?> createWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSetDTO) {
+//
+//
+//
+//    wordService.saveWordSetWithWords(WordSetRequestDTO.GetWordSetDTO.getWordSetDTO(wordSetDTO), wordDTOList);
+//
+//        return ResponseEntity.ok(ApiResponse.successWithoutResult());
+//    }
 
 }

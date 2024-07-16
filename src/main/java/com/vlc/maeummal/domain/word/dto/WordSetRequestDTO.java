@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,9 +39,10 @@ public class WordSetRequestDTO {
     @AllArgsConstructor
     public static class GetWordDTO {
         String meaning;
-        String image;
         String prompt;
         String description;
+
+        String image;
 
         public static WordSetRequestDTO.GetWordDTO getWordDTO(WordSetRequestDTO.GetWordDTO wordDTO) {
             return GetWordDTO.builder()

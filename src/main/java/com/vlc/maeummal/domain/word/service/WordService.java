@@ -1,10 +1,16 @@
 package com.vlc.maeummal.domain.word.service;
 
+import com.vlc.maeummal.domain.lesson.dto.WordDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
+import com.vlc.maeummal.domain.word.repository.WordRepository;
 import com.vlc.maeummal.domain.word.repository.WordSetRepository;
+import com.vlc.maeummal.global.aws.AmazonS3Manager;
+import com.vlc.maeummal.global.aws.Uuid;
+import com.vlc.maeummal.global.aws.UuidRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class WordService {
     @Autowired
     WordSetRepository wordSetRepository;
+
+    private final AmazonS3Manager s3Manager;
+
+    private final UuidRepository uuidRepository;
+
+    private final WordRepository wordRepository;
+
 
     // id -> wordset반환
     public WordSetResponseDTO.GetWordSetDTO getWordSet(Long setId) {
@@ -27,7 +42,22 @@ public class WordService {
         return wordSetResponseDTO;
 
     }
-
+    // 1. saveWordSetWithWords로부터 word dto 하나를 가져와서
+    // 2. 이미지를 s3에 저장
+    // 3. 저장된 s3 url을 entity(repository) 에 저장 : String type
+    // 4. 저장된 url 반환
+//    public String  saveWordImageInS3AndGetUrl (WordSetRequestDTO.GetWordDTO wordDTO ) {
+//        String uuid = UUID.randomUUID().toString();
+//        Uuid savedUuid = uuidRepository.save(Uuid.builder()
+//                .uuid(uuid).build());
+//
+////        String imageUrl = s3Manager.uploadFile(s3Manager.generateWordKeyName(savedUuid), wordDTO.getImage());
+////        // 작성자 추가 코드
+//        return imageUrl;
+//
+//
+//    }
+//
     // WordSetRequestDTO.GetWordSetDTO wordSetDTO, List<WordSetRequestDTO.GetWordDTO> WordDTOList
     @Transactional
     public WordSetEntity saveWordSetWithWords(WordSetRequestDTO.GetWordSetDTO wordSetDTO, List<WordSetRequestDTO.GetWordDTO> wordDTOList) {
@@ -45,7 +75,7 @@ public class WordService {
         for (WordSetRequestDTO.GetWordDTO wordDTO : wordDTOList) {
             WordEntity wordEntity = WordEntity.builder()
                     .meaning(wordDTO.getMeaning())
-                    .image(wordDTO.getImage())
+                    .image(wordDTO.getImage()) // image url 저장
                     .prompt(wordDTO.getPrompt())
                     .description(wordDTO.getDescription())
                     .wordSet(savedWordSet) // Associate with the saved WordSetEntity
@@ -58,6 +88,7 @@ public class WordService {
         }
             return savedWordSet;
         }
+
 
 
 }
