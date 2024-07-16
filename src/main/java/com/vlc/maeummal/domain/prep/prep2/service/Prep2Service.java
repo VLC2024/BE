@@ -1,6 +1,10 @@
 package com.vlc.maeummal.domain.prep.prep2.service;
 
+import com.vlc.maeummal.domain.prep.prep2.dto.Prep2RequestDTO;
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2ResponseDTO;
+import com.vlc.maeummal.domain.prep.prep2.entity.Prep2Entity;
+import com.vlc.maeummal.domain.prep.prep2.repository.Prep2Repository;
+import com.vlc.maeummal.global.enums.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +12,12 @@ import java.util.Random;
 
 @Service
 public class Prep2Service {
+    private final Prep2Repository prep2Repository;
+
+    @Autowired
+    public Prep2Service(Prep2Repository prep2Repository) {
+        this.prep2Repository = prep2Repository;
+    }
 //    private final GptApiClient gptApiClient;
 //
 //    @Autowired
@@ -15,7 +25,7 @@ public class Prep2Service {
 //        this.gptApiClient = gptApiClient;
 //    }
 
-    public Prep2ResponseDTO getPromptByCategory(String category) {
+    public Prep2ResponseDTO.makePrompt getPromptByCategory(String category) {
         // 임의의 형용사, 부사, 명사를 생성하는 로직 (실제 GPT API와 연계하지 않고 랜덤 값으로 대체)
         String prompt = generatePrompt(category);
         String noun1 = generateRandomWord("noun");
@@ -29,7 +39,14 @@ public class Prep2Service {
         String adv3 = generateRandomWord("adverb");
 
         // ResponseDTO 객체 생성 및 반환
-        return new Prep2ResponseDTO(prompt, noun1, noun2, noun3, verb1, verb2, verb3, adv1, adv2, adv3);
+        return new Prep2ResponseDTO.makePrompt(prompt, noun1, noun2, noun3, verb1, verb2, verb3, adv1, adv2, adv3);
+    }
+
+    public void saveCategory(Prep2RequestDTO.CategoryRequestDTO requestDTO) {
+        // 새로운 엔티티 생성 및 저장
+        Prep2Entity newEntity = new Prep2Entity();
+        newEntity.setCategory(Category.valueOf(requestDTO.getCategory().toString()));
+        prep2Repository.save(newEntity);
     }
 
     // 임의의 형용사, 부사, 명사를 생성하는 메서드 (실제 GPT API와 연계하지 않고 랜덤 값으로 대체)

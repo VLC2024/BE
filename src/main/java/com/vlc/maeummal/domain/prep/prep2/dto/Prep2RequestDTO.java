@@ -5,14 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Prep2RequestDTO {
+
     @Getter
     @Setter
     public static class CategoryRequestDTO {
+        private Category category;
+    }
+
+    @Getter
+    @Setter
+    public static class RequestDTO {
 
         private Category category;
 
-        public Category getCategory() {
-            return category;
-        }
     }
 }
