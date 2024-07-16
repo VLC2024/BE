@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.File;
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class AmazonS3Manager{
     private final UuidRepository uuidRepository;
 
 
-    public String uploadFile(String keyName, MultipartFile file){
+    public String uploadFileWithoutImg(String keyName, MultipartFile file){
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         try {
@@ -33,6 +34,28 @@ public class AmazonS3Manager{
             log.error("error at AmazonS3Manager uploadFile : {}", (Object) e.getStackTrace());
         }
 
+        return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+    }
+    public String uploadMultipartFile(String keyName, MultipartFile file){
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        try {
+            amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), keyName, file.getInputStream(), metadata));
+        }catch (IOException e){
+            log.error("error at AmazonS3Manager uploadFile : {}", (Object) e.getStackTrace());
+        }
+
+        return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+    }
+    public String uploadFile_for_test(String keyName, File file) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.length());
+        try {
+            amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), keyName, file).withMetadata(metadata));
+        } catch (Exception e) {
+            log.error("Error uploading file to S3: {}", e.getMessage());
+            throw new RuntimeException("Error uploading file to S3", e);
+        }
         return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
     }
 
