@@ -71,6 +71,19 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name:'jjwt', version:'0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.3.1' // jwt 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    /**
+     * 2024.07.15
+     * aws s3
+     * by kcw
+    */
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    /**
+     * 2024.07.16
+     * mokmultipartfile
+     * by kcw
+     * */
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 
 }
 
