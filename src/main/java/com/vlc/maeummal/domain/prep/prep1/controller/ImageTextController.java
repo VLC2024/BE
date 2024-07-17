@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class ImageTextController {
     private QuizService quizService;
 
     @PostMapping("/generate")
-    public ResponseEntity<?> generateContent(@RequestBody String category) {
+    public ResponseEntity<?> generateContent(@RequestParam String category) {
         String imageUrl = openAIService.generateImage(category);
         String generatedText = openAIService.generateText("Describe the image: " + imageUrl);
 
@@ -37,7 +38,7 @@ public class ImageTextController {
         prep1DTO.setDetailedSituation(generatedText);
         prep1DTO.setAnswer(secondPart);
         prep1DTO.setExplanation("");  // 설명이 필요하다면 생성하거나 빈 값으로 설정
-        prep1DTO.setUid(1L);  // UID는 실제 사용자의 식별자로 설정
+        prep1DTO.setUid(prep1DTO.getUid());  // UID는 실제 사용자의 식별자로 설정
         prep1DTO.setOption1(options.get(0));
         prep1DTO.setOption2(options.get(1));
         prep1DTO.setOption3(options.get(2));
