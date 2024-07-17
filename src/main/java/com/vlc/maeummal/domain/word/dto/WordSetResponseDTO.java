@@ -70,15 +70,14 @@ public class WordSetResponseDTO {
 
         String prompt;
         String description;
-        @Nullable
-        MultipartFile image;
+        String image;
 
 
         public static GetWordDTO getWordDTO (WordEntity wordEntity) {
             return GetWordDTO.builder()
                         .wordId(wordEntity.getId())
                         .meaning(wordEntity.getMeaning())
-                        .image(null)
+                        .image(wordEntity.getImage())
                         .prompt(wordEntity.getPrompt())
                         .description(wordEntity.getDescription())
                         .build();
