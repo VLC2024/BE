@@ -20,6 +20,8 @@ public class OpenAIService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // 랜덤 질문 -> 나중에 작성할 답안, 보기도 연계되어있도록 생성
+
     public String generateImage(String prompt) {
         // OpenAI DALL-E API 호출
         // API endpoint와 body 형식에 맞게 호출
@@ -31,6 +33,7 @@ public class OpenAIService {
         headers.setBearerAuth(apiKey);
 
         Map<String, Object> body = new HashMap<>();
+        body.put("model","dall-e-3");
         body.put("prompt", prompt);
         body.put("n", 1);
         body.put("size", "512x512");
