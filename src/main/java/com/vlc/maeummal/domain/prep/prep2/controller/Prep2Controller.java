@@ -21,8 +21,8 @@ public class Prep2Controller {
     }
 
     @PostMapping("/")
-    public Prep2ResponseDTO.makePrompt getPromptByCategory(@RequestBody Prep2RequestDTO.CategoryRequestDTO requestDTO) {
+    public Prep2ResponseDTO.getPromptDTO getPrompt(@RequestBody Prep2RequestDTO.CategoryRequestDTO requestDTO) {
         prep2Service.saveCategory(requestDTO);
-        return prep2Service.getPromptByCategory(requestDTO.getCategory().toString());
+        return prep2Service.getPrompt(requestDTO.getCategory().toString());
     }
 }

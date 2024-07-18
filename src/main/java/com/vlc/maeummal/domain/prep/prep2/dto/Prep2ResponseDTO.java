@@ -12,7 +12,7 @@ public class Prep2ResponseDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class makePrompt{
+    public static class getPromptDTO{
 
         private String prompt;
         private String noun1;
@@ -24,6 +24,15 @@ public class Prep2ResponseDTO {
         private String adv1;
         private String adv2;
         private String adv3;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public  static class makeImg{
+        private String img;
+        private String sentence;
     }
 
 }

@@ -24,6 +24,11 @@ public interface WordRepository extends JpaRepository<WordEntity, Long> {
 
     // word 수정
 
+    //
+
     // wordSet저장
+
+
+    //
 
 }

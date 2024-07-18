@@ -26,31 +26,13 @@ public class Prep2Entity {
     private String prompt;
 
     @Column(nullable=true)
-    private String noun1;
+    private String noun;
 
     @Column(nullable=true)
-    private String noun2;
+    private String adv;
 
     @Column(nullable=true)
-    private String noun3;
-
-    @Column(nullable=true)
-    private String adv1;
-
-    @Column(nullable=true)
-    private String adv2;
-
-    @Column(nullable=true)
-    private String adv3;
-
-    @Column(nullable=true)
-    private String verb1;
-
-    @Column(nullable=true)
-    private String verb2;
-
-    @Column(nullable=true)
-    private String verb3;
+    private String verb;
 
     @Column(nullable=true)
     private String sentence;

@@ -25,7 +25,7 @@ public class Prep2Service {
 //        this.gptApiClient = gptApiClient;
 //    }
 
-    public Prep2ResponseDTO.makePrompt getPromptByCategory(String category) {
+    public Prep2ResponseDTO.getPromptDTO getPrompt(String category) {
         // 임의의 형용사, 부사, 명사를 생성하는 로직 (실제 GPT API와 연계하지 않고 랜덤 값으로 대체)
         String prompt = generatePrompt(category);
         String noun1 = generateRandomWord("noun");
@@ -39,7 +39,7 @@ public class Prep2Service {
         String adv3 = generateRandomWord("adverb");
 
         // ResponseDTO 객체 생성 및 반환
-        return new Prep2ResponseDTO.makePrompt(prompt, noun1, noun2, noun3, verb1, verb2, verb3, adv1, adv2, adv3);
+        return new Prep2ResponseDTO.getPromptDTO(prompt, noun1, noun2, noun3, verb1, verb2, verb3, adv1, adv2, adv3);
     }
 
     public void saveCategory(Prep2RequestDTO.CategoryRequestDTO requestDTO) {

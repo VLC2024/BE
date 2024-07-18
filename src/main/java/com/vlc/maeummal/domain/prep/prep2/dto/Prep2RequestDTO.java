@@ -16,7 +16,8 @@ public class Prep2RequestDTO {
     @Setter
     public static class RequestDTO {
 
-        private Category category;
-
+        private String noun;
+        private String verb;
+        private String adv;
     }
 }
