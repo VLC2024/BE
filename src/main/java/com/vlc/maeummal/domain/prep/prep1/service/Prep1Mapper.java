@@ -18,7 +18,7 @@ public class Prep1Mapper {
         dto.setOption1(entity.getOption1());
         dto.setOption2(entity.getOption2());
         dto.setOption3(entity.getOption3());
-        dto.setOption4(entity.getOption4());
+//        dto.setOption4(entity.getOption4());
         dto.setImageUrl(entity.getImageUrl());
         return dto;
     }
@@ -34,7 +34,7 @@ public class Prep1Mapper {
         entity.setOption1(dto.getOption1());
         entity.setOption2(dto.getOption2());
         entity.setOption3(dto.getOption3());
-        entity.setOption4(dto.getOption4());
+//        entity.setOption4(dto.getOption4());
         entity.setImageUrl(dto.getImageUrl());
         return entity;
     }

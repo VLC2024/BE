@@ -2,6 +2,8 @@ package com.vlc.maeummal.domain.prep.prep1.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vlc.maeummal.domain.prep.prep1.dto.CompletionRequestDto;
+import com.vlc.maeummal.domain.prep.prep1.dto.CompletionResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
@@ -56,13 +58,21 @@ public class OpenAIService {
         // API endpoint와 body 형식에 맞게 호출
         // 반환된 텍스트를 처리하여 필요한 형태로 반환
 
-        String apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions";
+        String apiUrl = "https://api.openai.com/v1/chat/completions";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
 
+        // 메시지 포맷 맞추기
+        List<Map<String, String>> messages = new ArrayList<>();
+        Map<String, String> userMessage = new HashMap<>();
+        userMessage.put("role", "user");
+        userMessage.put("content", prompt);
+        messages.add(userMessage);
+
         Map<String, Object> body = new HashMap<>();
-        body.put("prompt", prompt);
+        body.put("model", "gpt-3.5-turbo");
+        body.put("messages", messages);
         body.put("max_tokens", 50);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
@@ -70,12 +80,29 @@ public class OpenAIService {
 
         try {
             JsonNode root = objectMapper.readTree(response.getBody());
-            String generatedText = root.path("choices").get(0).path("text").asText();
+            String generatedText = root.path("choices").get(0).path("message").path("content").asText();
             return generatedText.trim();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+
+//        Map<String, Object> body = new HashMap<>();
+//        body.put("model", "gpt-3.5-turbo");
+//        body.put("prompt", prompt);
+//        body.put("max_tokens", 50);
+//
+//        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+//        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, request, String.class);
+//
+//        try {
+//            JsonNode root = objectMapper.readTree(response.getBody());
+//            String generatedText = root.path("choices").get(0).path("text").asText();
+//            return generatedText.trim();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 
 }
