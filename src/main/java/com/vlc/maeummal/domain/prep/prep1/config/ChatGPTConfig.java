@@ -22,15 +22,21 @@ public class ChatGPTConfig {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+        RestTemplate template = new RestTemplate();
+        template.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().add(
+                    "Authorization"
+                    ,"Bearer "+secretKey);
+            return execution.execute(request,body);
+        });
+        return template;
     }
 
-    @Bean
-    public HttpHeaders httpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + secretKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
-    }
+//    @Bean
+//    public HttpHeaders httpHeaders() {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", "Bearer " + secretKey);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        return headers;
+//    }
 }

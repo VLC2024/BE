@@ -17,8 +17,10 @@ public class QuizService {
     @Autowired
     private OpenAIService openAIService;
 
+    @Autowired
     private Prep1Repository prep1Repository;
 
+    @Autowired
     private Prep1Mapper prep1Mapper;
 
     public List<String> generateOptions(String correctAnswer) {
@@ -26,7 +28,7 @@ public class QuizService {
         options.add(correctAnswer);
 
         // OpenAI GPT-4 API를 사용하여 임의의 보기를 생성
-        for (int i = 0; i < 2; i++) {  // 두 개의 임의의 보기를 생성
+        for (int i = 0; i < 3; i++) {  // 세 개의 임의의 보기를 생성
             String prompt = "Generate a similar phrase to: \"" + correctAnswer + "\"";
             String generatedOption = openAIService.generateText(prompt);
             options.add(generatedOption);

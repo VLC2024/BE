@@ -1,9 +1,13 @@
 package com.vlc.maeummal.domain.prep.prep1.dto;
 
+import com.amazonaws.services.s3.internal.eventstreaming.Message;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 프롬프트 요청 DTO
@@ -17,12 +21,13 @@ import lombok.NoArgsConstructor;
 public class CompletionRequestDto {
 
     private String model;
-
+    private List<Message> messages;
     private String prompt;
 
     @Builder
-    CompletionRequestDto(String model, String prompt) {
+    public CompletionRequestDto(String model, String prompt) {
         this.model = model;
+        this.messages = new ArrayList<>();
         this.prompt = prompt;
     }
 
