@@ -15,6 +15,5 @@ public class ServiceConfig {
 
     @Bean
     public OpenAiService getOpenAiService() {
-        return new OpenAiService(apiKey, Duration.ofSeconds(30));
-    }
+        return new OpenAiService(apiKey, Duration.ofSeconds(30));}
 }

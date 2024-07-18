@@ -1,9 +1,7 @@
 package com.vlc.maeummal.domain.member.service;
 
-import com.vlc.maeummal.domain.member.controller.MemberController;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
-import jakarta.persistence.Id;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
