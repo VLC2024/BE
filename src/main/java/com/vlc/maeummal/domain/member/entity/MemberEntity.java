@@ -1,7 +1,4 @@
 package com.vlc.maeummal.domain.member.entity;
-
-
-
 import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 
 import com.vlc.maeummal.global.enums.Gender;
@@ -52,7 +49,5 @@ public class MemberEntity {
 
     @Column(nullable = true, unique = true)
     private Long PinCode;
-
-
 
 }
