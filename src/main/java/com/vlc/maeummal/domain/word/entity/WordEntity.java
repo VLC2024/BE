@@ -25,7 +25,7 @@ public class WordEntity extends BaseEntity {
     private String image;
     @Column(nullable = true)
     private String prompt;
-    @Column(nullable = true)
+    @Column(nullable=true)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

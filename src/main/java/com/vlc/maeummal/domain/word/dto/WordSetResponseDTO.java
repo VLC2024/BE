@@ -3,15 +3,10 @@ package com.vlc.maeummal.domain.word.dto;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.enums.Category;
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class WordSetResponseDTO {
@@ -69,15 +64,14 @@ public class WordSetResponseDTO {
         String meaning;
         String prompt;
         String description;
-        @Nullable
-        MultipartFile image;
+        String image;
 
 
         public static GetWordDTO getWordDTO (WordEntity wordEntity) {
             return GetWordDTO.builder()
                         .wordId(wordEntity.getId())
                         .meaning(wordEntity.getMeaning())
-                        .image(null)
+                        .image(wordEntity.getImage())
                         .prompt(wordEntity.getPrompt())
                         .description(wordEntity.getDescription())
                         .build();

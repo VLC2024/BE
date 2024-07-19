@@ -13,15 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 
-import static com.vlc.maeummal.global.apiPayload.ApiResponse.onSuccess;
-
 @Controller
-@RequestMapping("word")
+@RequestMapping("/word")
 @RequiredArgsConstructor
 public class WordSetController {
 
@@ -29,8 +25,7 @@ public class WordSetController {
 
     private final AmazonS3 s3Client;
 
-
-    @GetMapping("/wordSet") // 수정 필요 (이미지 )
+    @GetMapping("/wordSet")
     public ResponseEntity<?> getWordSet(@RequestParam Long wordSetId){
         WordSetResponseDTO.GetWordSetDTO wordSet = wordService.getWordSet(wordSetId);
         if (wordSet == null) {
@@ -38,8 +33,15 @@ public class WordSetController {
         }
         return ResponseEntity.ok(ApiResponse.onSuccess(wordSet));
     }
+    @GetMapping("/wordSet/all")
+    public ResponseEntity<?> getAllWordSet(){
+        List<WordSetResponseDTO.GetWordSetDTO> wordSetDTOList = wordService.getAllWordSet();
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(wordSetDTOList));
+    }
+
     @PostMapping("/wordSet")
-    public ResponseEntity<?> getWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSet){
+    public ResponseEntity<?> createWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSet){
         // wordSet를 저장
         wordService.saveWordSetWithWords(wordSet.getWordSetDTO(), wordSet.getWordDTOList());
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
@@ -64,16 +66,5 @@ public class WordSetController {
 
     }
 
-
-
-//@PostMapping(value = "/wordSet", consumes = "multipart/form-data")
-//public ResponseEntity<?> createWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSetDTO) {
-//
-//
-//
-//    wordService.saveWordSetWithWords(WordSetRequestDTO.GetWordSetDTO.getWordSetDTO(wordSetDTO), wordDTOList);
-//
-//        return ResponseEntity.ok(ApiResponse.successWithoutResult());
-//    }
 
 }
