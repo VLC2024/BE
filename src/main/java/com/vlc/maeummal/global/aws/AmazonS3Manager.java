@@ -1,6 +1,7 @@
 package com.vlc.maeummal.global.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -25,8 +26,6 @@ public class AmazonS3Manager{
     private final AmazonConfig amazonConfig;
 
     private final UuidRepository uuidRepository;
-
-
 
     public String uploadFileWithoutImg(String keyName, MultipartFile file){
         ObjectMetadata metadata = new ObjectMetadata();

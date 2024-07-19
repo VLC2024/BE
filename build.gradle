@@ -25,6 +25,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -37,6 +39,7 @@ dependencies {
      * jpa 추가
      * */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     /*
     * 2024.05.03 by kcw
     * mysql, h2
@@ -47,22 +50,18 @@ dependencies {
 
     /**
      * 24.6.18 dalle3
-     *
-     *
-     *
      * */
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    //GPT 의존성 추가
     implementation 'com.theokanning.openai-gpt3-java:client:0.10.0'
     implementation 'com.theokanning.openai-gpt3-java:service:0.10.0'
 
     implementation 'com.stripe:stripe-java:22.10.0'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
     implementation 'sh.platform:config:2.2.2'
-
-
 
     /**
      * 2024.05.07 by kyb
@@ -71,12 +70,14 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name:'jjwt', version:'0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.3.1' // jwt 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
     /**
      * 2024.07.15
      * aws s3
      * by kcw
-    */
+     */
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     /**
      * 2024.07.16
      * mokmultipartfile
@@ -84,6 +85,7 @@ dependencies {
      * */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    implementation 'commons-codec:commons-codec:1.15' // 적절한 버전으로 대체
 
 }
 

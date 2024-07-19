@@ -67,7 +67,6 @@ public class WordSetResponseDTO {
         String image;
 
 
-
         public static GetWordDTO getWordDTO (WordEntity wordEntity) {
             return GetWordDTO.builder()
                         .wordId(wordEntity.getId())
@@ -79,26 +78,3 @@ public class WordSetResponseDTO {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
