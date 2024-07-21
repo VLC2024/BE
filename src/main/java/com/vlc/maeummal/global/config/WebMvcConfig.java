@@ -16,6 +16,7 @@ public class WebMvcConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/ai/**")
                         .allowedOrigins("*")
+                        .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
         };
