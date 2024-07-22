@@ -76,7 +76,7 @@ public class Prep2Service {
     }
 
     // 카테고리를 기반으로 prompt 생성하는 메서드 (여기서는 단순 예시로 정적 문자열 반환)
-    private String generateSentence(Prep2RequestDTO.RequestDTO requestDTO) {
+    public String generateSentence(Prep2RequestDTO.GetWordDTO requestDTO) {
         // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
         String noun = requestDTO.getNoun();
         String verb = requestDTO.getVerb();
@@ -87,7 +87,7 @@ public class Prep2Service {
         return sentence;
     }
 
-    public Prep2ResponseDTO.getImageDTO createImageResponse(Prep2RequestDTO.RequestDTO requestDTO) {
+    /*public Prep2ResponseDTO.getImageDTO createImageResponse(Prep2RequestDTO.GetWordDTO requestDTO) {
         // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
         String noun = requestDTO.getNoun();
         String verb = requestDTO.getVerb();
@@ -98,5 +98,5 @@ public class Prep2Service {
         String sentence = String.format("%s이/가 %s %s", noun, adv, verb);
 
         return new Prep2ResponseDTO.getImageDTO(imgLink, sentence);
-    }
+    }*/
 }

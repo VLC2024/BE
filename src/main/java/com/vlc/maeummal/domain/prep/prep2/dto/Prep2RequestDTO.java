@@ -14,7 +14,7 @@ public class Prep2RequestDTO {
 
     @Getter
     @Setter
-    public static class RequestDTO {
+    public static class GetWordDTO {
 
         private String noun;
         private String verb;

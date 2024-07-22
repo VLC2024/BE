@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 
 
 public class Prep2ResponseDTO {
@@ -31,7 +32,7 @@ public class Prep2ResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public  static class getImageDTO{
-        private String img;
+        private ResponseEntity<?> img;
         private String sentence;
     }
 
