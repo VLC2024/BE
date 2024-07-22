@@ -30,7 +30,7 @@ public class Prep2ResponseDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public  static class makeImg{
+    public  static class getImageDTO{
         private String img;
         private String sentence;
     }

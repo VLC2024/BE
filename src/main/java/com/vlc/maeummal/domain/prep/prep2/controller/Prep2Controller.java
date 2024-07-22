@@ -21,7 +21,7 @@ public class Prep2Controller {
         return prep2Service.getPrompt(requestDTO.getCategory().toString());
     }
     @PostMapping("/makeImg")
-    public Prep2ResponseDTO.makeImg createImage(@RequestBody Prep2RequestDTO.RequestDTO requestDTO) {
+    public Prep2ResponseDTO.getImageDTO createImage(@RequestBody Prep2RequestDTO.RequestDTO requestDTO) {
         return prep2Service.createImageResponse(requestDTO);
     }
 }

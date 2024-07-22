@@ -75,7 +75,19 @@ public class Prep2Service {
         return String.format("%s 주제에 맞는 형용사, 부사, 명사를 각각 3개씩 랜덤으로 뽑아줘", category);
     }
 
-    public Prep2ResponseDTO.makeImg createImageResponse(Prep2RequestDTO.RequestDTO requestDTO) {
+    // 카테고리를 기반으로 prompt 생성하는 메서드 (여기서는 단순 예시로 정적 문자열 반환)
+    private String generateSentence(Prep2RequestDTO.RequestDTO requestDTO) {
+        // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
+        String noun = requestDTO.getNoun();
+        String verb = requestDTO.getVerb();
+        String adv = requestDTO.getAdv();
+
+        String sentence = String.format("%s이/가 %s %s", noun, adv, verb);
+
+        return sentence;
+    }
+
+    public Prep2ResponseDTO.getImageDTO createImageResponse(Prep2RequestDTO.RequestDTO requestDTO) {
         // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
         String noun = requestDTO.getNoun();
         String verb = requestDTO.getVerb();
@@ -85,6 +97,6 @@ public class Prep2Service {
         String imgLink = "https://example.com/image.jpg";
         String sentence = String.format("%s이/가 %s %s", noun, adv, verb);
 
-        return new Prep2ResponseDTO.makeImg(imgLink, sentence);
+        return new Prep2ResponseDTO.getImageDTO(imgLink, sentence);
     }
 }
