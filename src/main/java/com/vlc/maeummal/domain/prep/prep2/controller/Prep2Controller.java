@@ -32,8 +32,8 @@ public class Prep2Controller {
     @PostMapping("/image")
     public Prep2ResponseDTO.getImageDTO generateImage(@RequestBody Prep2RequestDTO.GetWordDTO requestDTO) {
         String sentence = prep2Service.generateSentence(requestDTO);
-        ResponseEntity<?> image = new ResponseEntity<>(aiService.generatePicture(sentence), HttpStatus.OK);
+        String image = aiService.generatePicture(sentence);
 
-        return new Prep2ResponseDTO.getImageDTO(image, sentence);
+        return new Prep2ResponseDTO.getImageDTO(sentence, image);
     }
 }

@@ -32,8 +32,8 @@ public class Prep2ResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public  static class getImageDTO{
-        private ResponseEntity<?> img;
         private String sentence;
+        private String img;
     }
 
 }
