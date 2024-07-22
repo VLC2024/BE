@@ -12,12 +12,9 @@ import java.util.Random;
 
 @Service
 public class Prep2Service {
-    private final Prep2Repository prep2Repository;
-
     @Autowired
-    public Prep2Service(Prep2Repository prep2Repository) {
-        this.prep2Repository = prep2Repository;
-    }
+    private Prep2Repository prep2Repository;
+
 //    private final GptApiClient gptApiClient;
 //
 //    @Autowired
@@ -42,11 +39,12 @@ public class Prep2Service {
         return new Prep2ResponseDTO.getPromptDTO(prompt, noun1, noun2, noun3, verb1, verb2, verb3, adv1, adv2, adv3);
     }
 
-    public void saveCategory(Prep2RequestDTO.CategoryRequestDTO requestDTO) {
+    public void saveCategory(Prep2RequestDTO.GetCategoryDTO requestDTO) {
         // 새로운 엔티티 생성 및 저장
-        Prep2Entity newEntity = new Prep2Entity();
-        newEntity.setCategory(Category.valueOf(requestDTO.getCategory().toString()));
-        prep2Repository.save(newEntity);
+        Prep2Entity prep2Entity = Prep2Entity.builder()
+                .category(requestDTO.getCategory())
+                .build();
+        prep2Repository.save(prep2Entity);
     }
 
     // 임의의 형용사, 부사, 명사를 생성하는 메서드 (실제 GPT API와 연계하지 않고 랜덤 값으로 대체)
@@ -75,5 +73,18 @@ public class Prep2Service {
     // 카테고리를 기반으로 prompt 생성하는 메서드 (여기서는 단순 예시로 정적 문자열 반환)
     private String generatePrompt(String category) {
         return String.format("%s 주제에 맞는 형용사, 부사, 명사를 각각 3개씩 랜덤으로 뽑아줘", category);
+    }
+
+    public Prep2ResponseDTO.makeImg createImageResponse(Prep2RequestDTO.RequestDTO requestDTO) {
+        // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
+        String noun = requestDTO.getNoun();
+        String verb = requestDTO.getVerb();
+        String adv = requestDTO.getAdv();
+
+        // 예제 이미지 링크와 문장 생성
+        String imgLink = "https://example.com/image.jpg";
+        String sentence = String.format("%s이/가 %s %s", noun, adv, verb);
+
+        return new Prep2ResponseDTO.makeImg(imgLink, sentence);
     }
 }

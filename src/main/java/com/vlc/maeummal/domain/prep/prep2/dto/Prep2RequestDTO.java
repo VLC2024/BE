@@ -8,8 +8,8 @@ public class Prep2RequestDTO {
 
     @Getter
     @Setter
-    public static class CategoryRequestDTO {
-        private Category category;
+    public static class GetCategoryDTO {
+        Category category;
     }
 
     @Getter

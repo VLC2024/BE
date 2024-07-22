@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("prep2")
 public class Prep2Controller {
-
-    private final Prep2Service prep2Service;
-
     @Autowired
-    public Prep2Controller(Prep2Service prep2Service) {
-        this.prep2Service = prep2Service;
-    }
+    private Prep2Service prep2Service;
 
     @PostMapping("/")
-    public Prep2ResponseDTO.getPromptDTO getPrompt(@RequestBody Prep2RequestDTO.CategoryRequestDTO requestDTO) {
+    public Prep2ResponseDTO.getPromptDTO getPrompt(@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
         prep2Service.saveCategory(requestDTO);
         return prep2Service.getPrompt(requestDTO.getCategory().toString());
+    }
+    @PostMapping("/makeImg")
+    public Prep2ResponseDTO.makeImg createImage(@RequestBody Prep2RequestDTO.RequestDTO requestDTO) {
+        return prep2Service.createImageResponse(requestDTO);
     }
 }
