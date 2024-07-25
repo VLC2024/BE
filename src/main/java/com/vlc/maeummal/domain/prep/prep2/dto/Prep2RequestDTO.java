@@ -20,4 +20,5 @@ public class Prep2RequestDTO {
         private String verb;
         private String adv;
     }
+
 }
