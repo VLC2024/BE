@@ -47,7 +47,7 @@ public class WordSetController {
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
 
-    /**
+    /** Test code
      * word 생성을 위해 문장 전달
      * request : meaning
      * return : image
