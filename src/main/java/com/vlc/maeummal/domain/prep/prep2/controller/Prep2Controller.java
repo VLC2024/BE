@@ -28,7 +28,7 @@ public class Prep2Controller {
     public ResponseEntity<?> getPrompt(@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
 
         String category = requestDTO.getCategory().toString();
-        Prep2ResponseDTO.GeneratedWordsDTO responseDTO = prep2Service.saveDTO(category);
+        Prep2ResponseDTO.GeneratedWordsDTO responseDTO = prep2Service.generateWords(category);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDTO));
     }

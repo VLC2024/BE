@@ -20,7 +20,7 @@ import java.util.Random;
 public class Prep2Service {
     @Autowired
     private ChatGPTService chatGPTService;
-    public Prep2ResponseDTO.GeneratedWordsDTO saveDTO(String category){
+    public Prep2ResponseDTO.GeneratedWordsDTO generateWords(String category){
         List<String> nouns = generateNouns(category);
         List<String> verbs = generateVerbs(category);
         List<String> advs = generateAdvs(category);
