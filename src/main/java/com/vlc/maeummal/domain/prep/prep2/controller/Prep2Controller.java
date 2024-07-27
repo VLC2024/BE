@@ -28,7 +28,7 @@ public class Prep2Controller {
     private S3Service s3Service;
 
     @PostMapping("/")
-    public ResponseEntity<?> GetWords (@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
+    public ResponseEntity<?> getWords (@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
 
         String category = requestDTO.getCategory().toString();
         Prep2ResponseDTO.generatedWordsDTO responseDTO = prep2Service.generateWords(category);
