@@ -26,6 +26,7 @@ public class Prep2Controller {
     @PostMapping("/")
     public Prep2ResponseDTO.getPromptDTO getPrompt(@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
         prep2Service.saveCategory(requestDTO);
+        ResponseEntity<> responseEntity = new ResponseEntity()
         return prep2Service.getPrompt(requestDTO.getCategory().toString());
     }
 

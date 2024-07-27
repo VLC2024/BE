@@ -14,14 +14,6 @@ import java.util.Random;
 public class Prep2Service {
     @Autowired
     private Prep2Repository prep2Repository;
-
-//    private final GptApiClient gptApiClient;
-//
-//    @Autowired
-//    public Prep2Service(GptApiClient gptApiClient) {
-//        this.gptApiClient = gptApiClient;
-//    }
-
     public Prep2ResponseDTO.getPromptDTO getPrompt(String category) {
         // 임의의 형용사, 부사, 명사를 생성하는 로직 (실제 GPT API와 연계하지 않고 랜덤 값으로 대체)
         String prompt = generatePrompt(category);
