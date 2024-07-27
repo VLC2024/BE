@@ -4,6 +4,7 @@ import com.vlc.maeummal.domain.prep.prep2.dto.Prep2RequestDTO;
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2ResponseDTO;
 import com.vlc.maeummal.domain.prep.prep2.service.Prep2Service;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import com.vlc.maeummal.global.openAi.dalle.service.AiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,12 @@ public class Prep2Controller {
     private AiService aiService;
 
     @PostMapping("/")
-    public Prep2ResponseDTO.getPromptDTO getPrompt(@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
-        prep2Service.saveCategory(requestDTO);
-//        ResponseEntity<> responseEntity = new ResponseEntity();
-        return prep2Service.getPrompt(requestDTO.getCategory().toString());
+    public ResponseEntity<?> getPrompt(@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
+
+        String category = requestDTO.getCategory().toString();
+        Prep2ResponseDTO.GeneratedWordsDTO responseDTO = prep2Service.saveDTO(category);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(responseDTO));
     }
 
     @PostMapping("/image")

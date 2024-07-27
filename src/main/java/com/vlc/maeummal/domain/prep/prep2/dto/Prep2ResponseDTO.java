@@ -1,9 +1,6 @@
 package com.vlc.maeummal.domain.prep.prep2.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.http.ResponseEntity;
 
 
@@ -11,11 +8,11 @@ public class Prep2ResponseDTO {
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class getPromptDTO{
+    public static class GeneratedWordsDTO{
 
-        private String prompt;
         private String noun1;
         private String noun2;
         private String noun3;
