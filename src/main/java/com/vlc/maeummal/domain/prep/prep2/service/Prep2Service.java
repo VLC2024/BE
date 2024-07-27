@@ -8,14 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class Prep2Service {
     @Autowired
     private ChatGPTService chatGPTService;
 
-    public Prep2ResponseDTO.generatedWordsDTO generateWords(String category){
+    public Prep2ResponseDTO.generatedWordsDTO generateWords(String category) {
         List<String> nouns = generateNouns(category);
         List<String> verbs = generateVerbs(category);
         List<String> advs = generateAdvs(category);
@@ -35,38 +37,27 @@ public class Prep2Service {
                 .adv4(advs.get(3))
                 .build();
     }
+
     private List<String> generateNouns(String category) {
-        List<String> nouns = new ArrayList<>();
-
-        for (int i = 0; i < 4; i++) {
-            String prompt = "Generate an noun related to the category: \"" + category + "\"";
-            String generatedNouns = chatGPTService.generateText(prompt);
-            nouns.add(generatedNouns);
-        }
-
-        return nouns;
+        return generateUniqueWords(category, "noun");
     }
+
     private List<String> generateVerbs(String category) {
-        List<String> verbs = new ArrayList<>();
-
-        for (int i = 0; i < 4; i++) {
-            String prompt = "Generate an verb related to the category: \"" + category + "\"";
-            String generatedVerbs = chatGPTService.generateText(prompt);
-            verbs.add(generatedVerbs);
-        }
-
-        return verbs;
+        return generateUniqueWords(category, "verb");
     }
+
     private List<String> generateAdvs(String category) {
-        List<String> adverbs = new ArrayList<>();
+        return generateUniqueWords(category, "adverb");
+    }
 
-        for (int i = 0; i < 4; i++) {
-            String prompt = "Generate an adverb related to the category: \"" + category + "\"";
-            String generatedAdvs = chatGPTService.generateText(prompt);
-            adverbs.add(generatedAdvs);
+    private List<String> generateUniqueWords(String category, String wordType) {
+        Set<String> uniqueWords = new HashSet<>();
+        while (uniqueWords.size() < 4) {
+            String prompt = String.format("Generate a %s related to the category: \"%s\"", wordType, category);
+            String generatedWord = chatGPTService.generateText(prompt);
+            uniqueWords.add(generatedWord);
         }
-
-        return adverbs;
+        return new ArrayList<>(uniqueWords);
     }
 
 
