@@ -51,7 +51,7 @@ public class Prep2Service {
     }
 
     private List<String> generateUniqueWords(String category, String wordType) {
-        Set<String> uniqueWords = new HashSet<>();
+        Set<String> uniqueWords = new HashSet<>(); // 선택지 중복 제거
         while (uniqueWords.size() < 4) {
             String prompt = String.format("Generate a %s related to the category: \"%s\"", wordType, category);
             String generatedWord = chatGPTService.generateText(prompt);

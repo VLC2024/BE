@@ -36,7 +36,7 @@ public class Prep2Controller {
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDTO));
     }
 
-    @PostMapping("/image")
+    @PostMapping("/result")
     public ResponseEntity<?> getImageFromS3(@RequestBody Prep2RequestDTO.GetWordDTO requestDTO) {
         String sentence = prep2Service.makeSentence(requestDTO);
         String base64ImageData = aiService.generatePicture(sentence); // base64 data
