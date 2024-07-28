@@ -5,7 +5,6 @@ import com.vlc.maeummal.domain.prep.prep2.dto.Prep2ResponseDTO;
 import com.vlc.maeummal.domain.prep.prep2.service.Prep2Service;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
-import com.vlc.maeummal.global.aws.service.S3Service;
 import com.vlc.maeummal.global.openAi.dalle.service.AiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class Prep2Controller {
     private Prep2Service prep2Service;
     @Autowired
     private AiService aiService;
-    @Autowired
-    private S3Service s3Service;
 
     @PostMapping("/")
     public ResponseEntity<?> getWords (@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
@@ -44,7 +41,7 @@ public class Prep2Controller {
 
         //  Base64 데이터를 MultipartFile로 변환하여 S3에 업로드
         try {
-            imageUrl = s3Service.uploadImageToS3(base64ImageData);
+            imageUrl = aiService.uploadImageToS3(base64ImageData);
             log.info("Image uploaded successfully to S3. URL: {}", imageUrl);
 
             Prep2ResponseDTO.getImageDTO responseDTO = new Prep2ResponseDTO.getImageDTO(sentence, imageUrl);

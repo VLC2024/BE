@@ -2,7 +2,6 @@ package com.vlc.maeummal.domain.prep.prep2.service;
 
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2RequestDTO;
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2ResponseDTO;
-import com.vlc.maeummal.global.aws.service.S3Service;
 import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
