@@ -1,6 +1,8 @@
 package com.vlc.maeummal.domain.member.entity;
+import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 
+import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -49,5 +52,11 @@ public class MemberEntity {
 
     @Column(nullable = true, unique = true)
     private Long PinCode;
+
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <LessonEntity> lessonEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <FeedbackEntity> feedbackEntityList = new ArrayList<>();
 
 }
