@@ -24,7 +24,7 @@ public class Prep1Entity {
     @Column(name = "detailed_situation", length = 50)
     private String detailedSituation;
 
-    @Column(name = "answer", length = 20)
+    @Column(name = "answer", length = 225)
     private String answer;
 
     @Column(name = "explanation", length = 50)
