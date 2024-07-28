@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/**","/auth/**").permitAll()
                         .requestMatchers("/prep1/**").permitAll()
                         .anyRequest().authenticated())
-                .cors(cors -> cors.disable());
+                .cors();
 
         http.addFilterAfter(jwtAuthenricationFilter, UsernamePasswordAuthenticationFilter.class);
 
