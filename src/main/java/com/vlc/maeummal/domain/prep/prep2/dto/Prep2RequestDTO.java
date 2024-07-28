@@ -8,16 +8,17 @@ public class Prep2RequestDTO {
 
     @Getter
     @Setter
-    public static class CategoryRequestDTO {
-        private Category category;
+    public static class GetCategoryDTO {
+        Category category;
     }
 
     @Getter
     @Setter
-    public static class RequestDTO {
+    public static class GetWordDTO {
 
         private String noun;
         private String verb;
         private String adv;
     }
+
 }
