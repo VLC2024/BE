@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -37,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/**","/auth/**").permitAll()
                         .requestMatchers("/prep1/**").permitAll()
                         .anyRequest().authenticated())
-                .cors();
+                .cors(Customizer.withDefaults()); // CORS 설정을 명시적으로 추가
 
         http.addFilterAfter(jwtAuthenricationFilter, UsernamePasswordAuthenticationFilter.class);
 
