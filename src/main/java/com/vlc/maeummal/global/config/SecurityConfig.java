@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**", "/auth/**").permitAll()
+                        .requestMatchers("/health").permitAll()
                         .requestMatchers("/prep1/**").permitAll()
                         .anyRequest().authenticated())
                 .cors(withDefaults()); // CORS 설정을 명시적으로 추가
