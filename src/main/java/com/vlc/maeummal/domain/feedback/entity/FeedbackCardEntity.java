@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FeedbackCard")
+@Table(name = "feedbackCard")
 public class FeedbackCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,8 @@ public class FeedbackCardEntity {
     @JoinColumn(name = "feedbackId")
     private FeedbackEntity feedback;
 
-
+    public void setFeedback(FeedbackEntity feedback) {
+        this.feedback = feedback;
+    }
 
 }

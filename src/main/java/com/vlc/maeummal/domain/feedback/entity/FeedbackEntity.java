@@ -1,9 +1,8 @@
 package com.vlc.maeummal.domain.feedback.entity;
 
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
-import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
-import com.vlc.maeummal.global.common.Template;
+import com.vlc.maeummal.global.common.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,24 +29,38 @@ public class FeedbackEntity extends BaseEntity {
     private String aiFeedback;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "student_id")
     private MemberEntity student;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "teacher_id")
     private MemberEntity teacher;
 
-    @Enumerated
-    private Template templateType;
+    @Enumerated(EnumType.STRING)
+    private TemplateType templateType;
 
     @Column(nullable = true)
     private Integer imageNum;
 
-    @OneToMany(mappedBy = "feedbackCard", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<FeedbackCardEntity> feedbackCardEntityList = new ArrayList<>();
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackCardEntity> correctFeedbackCards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackCardEntity> studentFeedbackCards = new ArrayList<>();
 
+    public void setCorrectFeedbackCards(List<FeedbackCardEntity> correctFeedbackCards) {
+        this.correctFeedbackCards = correctFeedbackCards;
+        for (FeedbackCardEntity card : correctFeedbackCards) {
+            card.setFeedback(this);
+        }
+    }
 
+    public void setStudentFeedbackCards(List<FeedbackCardEntity> studentFeedbackCards) {
+        this.studentFeedbackCards = studentFeedbackCards;
+        for (FeedbackCardEntity card : studentFeedbackCards) {
+            card.setFeedback(this);
+        }
+    }
 
 
 }

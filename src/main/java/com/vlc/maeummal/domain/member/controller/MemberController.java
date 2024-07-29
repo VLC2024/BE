@@ -68,6 +68,7 @@ public class MemberController {
         if(member != null){
             final String token = tokenProvider.createToken(member);
             final MemberDTO resposeMemberDTO = MemberDTO.builder()
+                    .id(member.getMemberId())
                     .name(member.getName())
                     .email(member.getEmail())
                     .token(token)

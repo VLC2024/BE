@@ -1,8 +1,7 @@
 package com.vlc.maeummal.domain.template.template3.entity;
 
-import com.vlc.maeummal.domain.word.entity.WordEntity;
-import com.vlc.maeummal.domain.word.entity.WordSetEntity;
-import com.vlc.maeummal.global.common.BaseEntity;
+//import com.vlc.maeummal.domain.template.common.Template;
+import com.vlc.maeummal.global.common.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "template3")
-public class Template3Entity extends BaseEntity {
+public class Template3Entity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "template3_id")
@@ -35,6 +34,12 @@ public class Template3Entity extends BaseEntity {
     @OneToMany(mappedBy = "template3", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ImageCardEntity> imageCardEntityList = new ArrayList<>();
 
-
+//    @PostLoad
+//    private void setTemplateType() {
+//        // 엔티티가 로드된 후에 타입을 설정합니다.
+//        this.setType(TemplateType.TEMPLATE3);
+//    }
+    @Enumerated(EnumType.STRING)
+    TemplateType type;
 
 }
