@@ -1,7 +1,5 @@
 package com.vlc.maeummal.domain.word.service;
 
-import com.amazonaws.util.IOUtils;
-import com.vlc.maeummal.domain.lesson.dto.WordDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
@@ -18,26 +16,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WordService {
-    @Autowired
-    WordSetRepository wordSetRepository;
+    private final WordSetRepository wordSetRepository;
 
     private final AmazonS3Manager s3Manager;
 
     private final UuidRepository uuidRepository;
 
     private final WordRepository wordRepository;
-
 
     // id -> wordset반환
     public WordSetResponseDTO.GetWordSetDTO getWordSet(Long setId) {
@@ -48,6 +43,13 @@ public class WordService {
         return wordSetResponseDTO;
 
     }
+    public List<WordSetResponseDTO.GetWordSetDTO> getAllWordSet() {
+        // db에서 가져옴, dto변환
+        List<WordSetEntity> wordSetDTOList = wordSetRepository.findAll();
+        return wordSetDTOList.stream().map(wordSet -> WordSetResponseDTO.GetWordSetDTO.getWordSetDTO(wordSet)).collect(Collectors.toList());
+
+    }
+
     // 1. word meaning 가져온다.
     // 2. 이미지를 생성한다.
     // 2. 이미지를 s3에 저장
@@ -104,7 +106,5 @@ public class WordService {
         }
             return savedWordSet;
         }
-
-
 
 }

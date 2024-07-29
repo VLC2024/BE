@@ -3,6 +3,7 @@ package com.vlc.maeummal.domain.member.controller;
 import com.vlc.maeummal.domain.member.dto.MemberDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MemberService;
+import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.apiPayload.code.ErrorReasonDTO;
 import com.vlc.maeummal.global.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class MemberController {
 
     @Autowired
     private TokenProvider tokenProvider;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO){
@@ -41,12 +42,12 @@ public class MemberController {
                     .build();
 
             MemberEntity registeredMember = memberService.create(member);
-            MemberDTO responseMemberDTO = memberDTO.builder()
+            MemberDTO responseMemberDTO = MemberDTO.builder()
                     .email(registeredMember.getEmail())
                     .password(registeredMember.getPassword())
                     .build();
-
-            return ResponseEntity.ok().body(responseMemberDTO);
+            log.info("회원가입 성공 : " + member.getEmail());
+            return ResponseEntity.ok(ApiResponse.onSuccess(responseMemberDTO));
         } catch (Exception e){
             ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
                     .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -67,12 +68,13 @@ public class MemberController {
 
         if(member != null){
             final String token = tokenProvider.createToken(member);
-            final MemberDTO resposeMemberDTO = MemberDTO.builder()
+            final MemberDTO responseMemberDTO = MemberDTO.builder()
                     .name(member.getName())
                     .email(member.getEmail())
                     .token(token)
                     .build();
-            return ResponseEntity.ok().body(resposeMemberDTO);
+            log.info("로그인 성공 : " + member.getEmail());
+            return ResponseEntity.ok(ApiResponse.onSuccess(responseMemberDTO));
         } else {
             ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
                     .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)

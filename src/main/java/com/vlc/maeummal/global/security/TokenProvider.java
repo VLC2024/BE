@@ -14,7 +14,7 @@ import java.util.Date;
 @Slf4j
 @Service
 public class TokenProvider {
-    private static final String SECRET_KEY = "DKAMDAKFEOQKRRLDNJS";
+    private static final String SECRET_KEY = "DKAMDAKFEOQKRRLDNJSasdfalskejflaskdDSFASDFLSADLFKJEkjsldfka2115645jslASDFKLJeflask3jdflsakdjflaseifjalskdfjASaASLDKFJasAWELKFJ";
 
     //jwt token 생성 메소드
     public String createToken(MemberEntity memberEntity){
