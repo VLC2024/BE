@@ -19,6 +19,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @EnableWebSecurity
 @Slf4j
 @Configuration
@@ -34,9 +36,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**", "/auth/**").permitAll()
+                        .requestMatchers("/health").permitAll()
                         .requestMatchers("/prep1/**").permitAll()
+                        .requestMatchers("/prep2/**").permitAll()
                         .anyRequest().authenticated())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // CORS 설정 명시
+                .cors(withDefaults()); // CORS 설정을 명시적으로 추가
 
         http.addFilterAfter(jwtAuthenricationFilter, UsernamePasswordAuthenticationFilter.class);
 
