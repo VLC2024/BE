@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/**", "/auth/**").permitAll()
                         .requestMatchers("/health").permitAll()
                         .requestMatchers("/prep1/**").permitAll()
+                        .requestMatchers("/prep2/**").permitAll()
                         .anyRequest().authenticated())
                 .cors(withDefaults()); // CORS 설정을 명시적으로 추가
 
