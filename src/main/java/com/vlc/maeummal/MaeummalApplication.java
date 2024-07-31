@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+//@ComponentScan("com.theokanning.openai.service")
+//@ComponentScan(basePackages = "com.vlc.maeummal")
 public class MaeummalApplication {
 
     public static void main(String[] args) {
