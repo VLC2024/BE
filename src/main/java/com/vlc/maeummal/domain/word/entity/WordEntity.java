@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.word.entity;
 
 import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
+import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class WordEntity extends BaseEntity {
     private String image;
     @Column(nullable = true)
     private String prompt;
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,4 +37,8 @@ public class WordEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "temp5_id")
     private Template5Entity temp5;
+
+    @ManyToOne
+    @JoinColumn(name = "temp1_id")
+    private Template1Entity template1Entity;
 }
