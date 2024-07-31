@@ -2,6 +2,8 @@ package com.vlc.maeummal.domain.word.repository;
 
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +14,7 @@ public interface WordRepository extends JpaRepository<WordEntity, Long> {
 
     // word 가져오기
     Optional<WordEntity> findById(Long id);
-
+    WordEntity findWordById(Long id);
     // set id로 word list 가져오기
 
     /*

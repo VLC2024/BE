@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.word.entity;
 
+import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
 import com.vlc.maeummal.global.enums.Gender;
@@ -32,6 +33,5 @@ public class WordSetEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL, orphanRemoval = true)
     List <WordEntity> wordEntities = new ArrayList<>();
-
 
 }

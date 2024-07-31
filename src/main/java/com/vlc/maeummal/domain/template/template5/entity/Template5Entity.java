@@ -1,4 +1,3 @@
-/*
 package com.vlc.maeummal.domain.template.template5.entity;
 
 import com.vlc.maeummal.domain.word.entity.WordEntity;
@@ -19,14 +18,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "template5")
+@Table(name = "temp5")
 public class Template5Entity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "template_5")
+    @Column(name = "temp5_id")
     private Long id;
 
-    @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<WordEntity> wordEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "temp5", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <WordEntity> wordEntities = new ArrayList<>();
+
 }
-*/
