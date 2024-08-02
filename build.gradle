@@ -92,3 +92,6 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+jar { // ci set
+    enabled = false
+}

@@ -1,3 +1,4 @@
+
 package com.vlc.maeummal.domain.word.repository;
 
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
@@ -22,3 +23,4 @@ public interface WordSetRepository extends JpaRepository<WordSetEntity, Long> {
     @Override
     List<WordSetEntity> findAll();
 }
+

@@ -1,6 +1,8 @@
 package com.vlc.maeummal.domain.word.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,4 +35,8 @@ public class WordEntity extends BaseEntity {
     @JoinColumn(name = "wordSetId")
     @JsonIgnore
     private WordSetEntity wordSet;
+
+    @ManyToOne
+    @JoinColumn(name = "temp1_id")
+    private Template1Entity template1Entity;
 }

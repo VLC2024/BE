@@ -1,9 +1,10 @@
-package com.vlc.maeummal.domain.word.entity;
+/*
+package com.vlc.maeummal.domain.template.template5.entity;
 
-import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
+import com.vlc.maeummal.domain.word.entity.WordEntity;
+import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
-import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,19 +19,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="wordSet")
-public class WordSetEntity extends BaseEntity {
+@Table(name = "template5")
+public class Template5Entity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wordSet_id")
+    @Column(name = "template_5")
     private Long id;
-    @Column(nullable=true)
-    private String title;
-    @Column(nullable=true)
-    private String description;
-    @Enumerated(EnumType.STRING)
-    private Category category;
 
     @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <WordEntity> wordEntities = new ArrayList<>();
+    List<WordEntity> wordEntities = new ArrayList<>();
 }
+*/
