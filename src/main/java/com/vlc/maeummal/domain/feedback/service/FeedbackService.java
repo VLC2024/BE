@@ -201,9 +201,11 @@
 package com.vlc.maeummal.domain.feedback.service;
 
 import com.vlc.maeummal.domain.feedback.dto.FeedbackRequestDTO;
+import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
@@ -238,6 +240,36 @@ public class FeedbackService extends BaseEntity {
      *
      * Todo: AI 피드백 생성해서 저장하기
      */
+
+    public List<FeedbackResponseDTO.GetFeedbackDTO> getAllFeedback() {
+        List<FeedbackEntity> feedbackEntities = feedbackRepository.findAll();
+        return feedbackEntities.stream()
+                .map(this::mapToGetFeedbackDTO)
+                .collect(Collectors.toList());
+    }
+
+    private FeedbackResponseDTO.GetFeedbackDTO mapToGetFeedbackDTO(FeedbackEntity feedbackEntity) {
+        // 제목을 templateId로 조회
+        String title = template3Repository.findById(feedbackEntity.getTemplateId())
+                .map(Template3Entity::getDescription)// TOdo 제목으로 수정해야함(lesson생성 후)
+                .orElse("Unknown");
+
+        // DTO로 변환
+        return FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity, title);
+    }
+
+    public List<FeedbackResponseDTO.GetFeedbackDetailDTO> getAllFeedbackFromStudent(Long studentId) {
+        // MemberEntity가 존재하지 않을 경우 예외를 발생시킵니다.
+        MemberEntity member = memberRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + studentId));
+
+        // 학생에 대한 피드백을 모두 가져옵니다.
+        List<FeedbackEntity> feedbackList = feedbackRepository.findAllByStudent(member);
+        return feedbackList.stream()
+                .map(FeedbackResponseDTO.GetFeedbackDetailDTO::convertToFeedbackDetail)
+                .collect(Collectors.toList());
+
+    }
 
     public void setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Long templateId = studentAnswerDTO.getTemplateId();

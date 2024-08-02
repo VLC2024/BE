@@ -1,13 +1,17 @@
 package com.vlc.maeummal.domain.feedback.repository;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FeedbackRepository extends JpaRepository<FeedbackEntity, Long> {
     FeedbackEntity save(FeedbackEntity feedback);
     List<FeedbackEntity> findAllBy();
+
+    List<FeedbackEntity> findAllByStudent(MemberEntity student);
 
 }
 /**

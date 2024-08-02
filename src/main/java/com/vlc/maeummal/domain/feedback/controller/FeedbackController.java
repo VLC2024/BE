@@ -1,16 +1,21 @@
 package com.vlc.maeummal.domain.feedback.controller;
 
 import com.vlc.maeummal.domain.feedback.dto.FeedbackRequestDTO;
+import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
+import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.service.FeedbackService;
+import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
+import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.apiPayload.code.status.SuccessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.vlc.maeummal.global.apiPayload.code.status.*;
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/feedback")
@@ -43,4 +48,29 @@ public class FeedbackController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    // 모든 피드백 리스트 반환
+// TOdo 포스트맨 테스트
+    @GetMapping("/all")
+    public ApiResponse<List<FeedbackResponseDTO.GetFeedbackDTO>> getAllFeedback() {
+        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getAllFeedback();
+        return ApiResponse.of(SuccessStatus._OK,  feedbackEntityList);
+
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getFeedbackFromId(@RequestParam(value = "id") Long studentId) {
+        List<FeedbackResponseDTO.GetFeedbackDetailDTO> feedbackList = feedbackService.getAllFeedbackFromStudent(studentId);
+        if (feedbackList == null) {
+            ApiErrResponse<FeedbackEntity> errorResponse = ApiErrResponse.onFailureWithCode(
+                    ErrorStatus._NOT_FOUND_FEEDBACK,
+                    ErrorStatus._NOT_FOUND_FEEDBACK.getMessage(),
+                    null
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } else {
+            ApiResponse< List<FeedbackResponseDTO.GetFeedbackDetailDTO>> successResponse = ApiResponse.of(SuccessStatus._OK, feedbackList);
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
+        }
+    }
+
 }
