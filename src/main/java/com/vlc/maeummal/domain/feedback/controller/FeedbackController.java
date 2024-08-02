@@ -49,15 +49,28 @@ public class FeedbackController {
         }
     }
     // 모든 피드백 리스트 반환
-// TOdo 포스트맨 테스트
+
+//    @GetMapping("/all/")
+//    public ApiResponse<List<FeedbackResponseDTO.GetFeedbackDTO>> getAllFeedback() {
+//        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getAllFeedback();
+//        return ApiResponse.of(SuccessStatus._OK,  feedbackEntityList);
+//
+//    }
     @GetMapping("/all")
-    public ApiResponse<List<FeedbackResponseDTO.GetFeedbackDTO>> getAllFeedback() {
+    public ApiResponse<List<FeedbackResponseDTO.GetFeedbackDTO>> getAllFeedbackFromStudentId(@RequestParam(value = "id") Long studentId) {
         List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getAllFeedback();
         return ApiResponse.of(SuccessStatus._OK,  feedbackEntityList);
 
     }
+    @GetMapping("/detail")
+    public ApiResponse<FeedbackResponseDTO.GetFeedbackDetailDTO> getFeedbackDetailFromId(@RequestParam(value = "id") Long id) {
+      FeedbackResponseDTO.GetFeedbackDetailDTO feedback = feedbackService.getFeedbackDetail(id);
+        return ApiResponse.of(SuccessStatus._OK,  feedback);
 
-    @GetMapping()
+    }
+
+// 사용 x
+    @GetMapping("/not/use")
     public ResponseEntity<?> getFeedbackFromId(@RequestParam(value = "id") Long studentId) {
         List<FeedbackResponseDTO.GetFeedbackDetailDTO> feedbackList = feedbackService.getAllFeedbackFromStudent(studentId);
         if (feedbackList == null) {

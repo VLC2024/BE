@@ -11,6 +11,8 @@ public interface FeedbackRepository extends JpaRepository<FeedbackEntity, Long> 
     FeedbackEntity save(FeedbackEntity feedback);
     List<FeedbackEntity> findAllBy();
 
+    Optional<FeedbackEntity> findById(Long id);
+
     List<FeedbackEntity> findAllByStudent(MemberEntity student);
 
 }

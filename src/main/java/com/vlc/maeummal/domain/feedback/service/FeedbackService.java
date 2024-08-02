@@ -241,6 +241,13 @@ public class FeedbackService extends BaseEntity {
      * Todo: AI 피드백 생성해서 저장하기
      */
 
+    public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long id){
+        FeedbackEntity feedbackEntity = feedbackRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("FeedbackDetail not found with id: " + id));
+        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
+
+
+    }
     public List<FeedbackResponseDTO.GetFeedbackDTO> getAllFeedback() {
         List<FeedbackEntity> feedbackEntities = feedbackRepository.findAll();
         return feedbackEntities.stream()
