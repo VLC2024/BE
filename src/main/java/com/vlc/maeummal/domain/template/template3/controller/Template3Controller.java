@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.vlc.maeummal.domain.template.template3.dto.Template3RequestDTO;
 import com.vlc.maeummal.domain.template.template3.dto.Template3ResponseDTO;
 import com.vlc.maeummal.domain.template.template3.service.Template3Service;
+import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class Template3Controller {
         template3Service.saveTemplate3WithImageCards(template3.getTemplate3DTO(), template3.getImageCardDTOList());
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
+
 
 }
 
