@@ -27,21 +27,22 @@ public class Template5Service {
     private WordListRepository wordListRepository;
 
     // 1. 선택한 단어장 가져오기 : 선택한 단어장 ID list -> 선택한 단어장의 단어 ID list
-    public List<Long> getSelectedWordSetList(Template5RequestDTO.GetSelectedWordSetDTO wordSetIdDTO){
+    public List<Long> getSelectedWordSetList(Template5RequestDTO.GetSelectedWordSetDTO wordSetIdDTO) {
         // 단어장ID로 단어장 조회하여 단어장에 있는 단어들만 추출
         List<Long> wordSetIdList = wordSetIdDTO.getWordSetIdList();
         List<Long> wordIdList = new ArrayList<>();
 
-        for (Long wordSetId : wordSetIdList){
+        for (Long wordSetId : wordSetIdList) {
             List<WordEntity> wordList = wordRepository.findByWordSetId(wordSetId);
-            for (WordEntity word : wordList){
+            for (WordEntity word : wordList) {
                 wordIdList.add(word.getId());
             }
         }
 
         return wordIdList;
     }
-    public Template5ResponseDTO.GetWordListDTO randomWords(List<Long> wordIdList) {
+
+    public Template5ResponseDTO.GetTemplate5DTO randomWords(List<Long> wordIdList) {
         // wordIdList에서 랜덤으로 3개 뽑기
         Collections.shuffle(wordIdList);
         List<Long> randomWordIdList = wordIdList.subList(0, 3);
@@ -66,7 +67,7 @@ public class Template5Service {
         Template5Entity savedTemplate5Entity = saveTemplate5Entity(selectedWordEntities);
 
         // DTO에 단어 리스트 설정. DB에서 가져오도록 구현
-        Template5ResponseDTO.GetWordListDTO wordListDTO = Template5ResponseDTO.GetWordListDTO.builder()
+        Template5ResponseDTO.GetTemplate5DTO wordListDTO = Template5ResponseDTO.GetTemplate5DTO.builder()
                 .temp5_id(savedTemplate5Entity.getId())
                 .wordList(selectedWordList)
                 .build();
@@ -95,5 +96,25 @@ public class Template5Service {
         }
 
         return savedTemplate5Entity;
+    }
+
+    // id를 통해
+    public Template5ResponseDTO.GetTemplate5DTO getTemplate5(Long temp5Id) {
+        List<WordSetResponseDTO.GetWordDTO> wordDTOList = new ArrayList<>();
+
+        // 1. temp5_id를 이용해 temp5_word 테이블에서 word id 접근
+        List<WordListEntity> wordListEntities = wordListRepository.findByTemp5_Id(temp5Id);
+
+        // 2. word id DTO로 변환
+        for (WordListEntity wordListEntity : wordListEntities) {
+            WordEntity wordEntity = wordListEntity.getWord();
+            WordSetResponseDTO.GetWordDTO wordDTO = WordSetResponseDTO.GetWordDTO.getWordDTO(wordEntity);
+            wordDTOList.add(wordDTO);
+        }
+
+        return Template5ResponseDTO.GetTemplate5DTO.builder()
+                .temp5_id(temp5Id)
+                .wordList(wordDTOList)
+                .build();
     }
 }

@@ -31,13 +31,12 @@ public class Template5ResponseDTO {
 
         List<Long> wordIdList;
     }
-
-    // 단어 DTO : 랜덤으로 골라진 단어 카드 3개 보여주기
+    // Template5 DTO
     @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetWordListDTO{
+    public static class GetTemplate5DTO{
         Long temp5_id;
 
         List<WordSetResponseDTO.GetWordDTO> wordList;
