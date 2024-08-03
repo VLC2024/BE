@@ -4,9 +4,11 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.enums.Gender;
+import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +27,6 @@ public class MemberEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable=true)
-    private String nickname;
-
 
     @Column(nullable=false, unique = true)
     private String email;
@@ -35,23 +34,20 @@ public class MemberEntity {
     @Column(nullable=false)
     private String password;
 
-    @Column(nullable=true)
+    @Column
     private String name;
 
-    @Column(nullable=true)
+    @Column
     private String phoneNumber;
 
-    @Column(nullable=true)
+    @Column
     private String image;
 
-    @Column(nullable=true)
-    private String age;
+    @Column
+    private LocalDate birthDay;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Column(nullable = true, unique = true)
-    private Long PinCode;
 
 //    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
 //    List <LessonEntity> lessonEntityList = new ArrayList<>();
