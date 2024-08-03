@@ -2,12 +2,16 @@ package com.vlc.maeummal.domain.word.entity;
 
 import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
+import com.vlc.maeummal.domain.template.template5.entity.WordListEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,9 +38,8 @@ public class WordEntity extends BaseEntity {
     @JoinColumn(name = "wordSetId")
     private WordSetEntity wordSet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "temp5_id")
-    private Template5Entity temp5;
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<WordListEntity> wordListEntities = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "temp1_id")

@@ -39,14 +39,15 @@ public class Template5Controller {
 
     @PostMapping("/create_template5")
     public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetSelectedWordSetDTO wordSetDTO){
-        Template5ResponseDTO.GetWordIdListDTO wordIdListDTO = template5Service.getSelectedWordSetList(wordSetDTO);
+        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetDTO);
         Template5ResponseDTO.GetWordListDTO wordListDTO = template5Service.randomWords(wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
     }
 
+    // 템플릿 조회
 
+    // 템플릿 수강
+    // 피드백
 
-    // 템플릿5 저장 : template5/save_new_temp5/{temp5_id}
-    // Req: 추출한 단어 3개 + 템플릿 ID / Res: 저장되었습니다. or 실패했습니다.
 }
