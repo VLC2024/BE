@@ -3,6 +3,7 @@ package com.vlc.maeummal.global.apiPayload;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.vlc.maeummal.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,5 +20,8 @@ public class ApiErrResponse<T> {
 
     public static <T> ApiErrResponse<T> onFailure(String code, String message, T data){
         return new ApiErrResponse<>(false, code, message, data);
+    }
+    public static <T> ApiErrResponse<T> onFailureWithCode(BaseErrorCode code, String message, T data) {
+        return new ApiErrResponse<>(false, code.getReasonHttpStatus().getCode(), message, data);
     }
 }

@@ -15,6 +15,8 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
@@ -106,5 +108,9 @@ public class WordService {
         }
             return savedWordSet;
         }
+
+    public List<WordSetEntity> getAllWordSetFromTitleContaining(String title){
+        return wordSetRepository.findByTitleContaining(title);
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.vlc.maeummal.domain.word.entity;
 
-import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template5.entity.WordListEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
@@ -36,6 +36,7 @@ public class WordEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wordSetId")
+    @JsonIgnore
     private WordSetEntity wordSet;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)

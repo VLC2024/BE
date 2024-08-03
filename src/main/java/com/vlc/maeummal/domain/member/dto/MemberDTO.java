@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 public class MemberDTO {
 
+    private Long id;
     private String email;
     private String password;
     private String name;
