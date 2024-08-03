@@ -3,10 +3,12 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 //import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 
 import com.vlc.maeummal.domain.word.entity.WordEntity;
+import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,13 +16,13 @@ import java.util.List;
 
 @Data
 @Entity
-@Builder
+@SuperBuilder
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="member")
-public class MemberEntity {
+public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

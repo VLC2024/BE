@@ -1,13 +1,13 @@
 package com.vlc.maeummal.domain.member.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.vlc.maeummal.global.enums.Role;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @Entity
-@Builder
+@SuperBuilder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -16,4 +16,9 @@ import lombok.*;
 public class TeacherEntity extends MemberEntity{
     @Column(nullable=true)
     private String organization;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Role role = Role.T;
 }

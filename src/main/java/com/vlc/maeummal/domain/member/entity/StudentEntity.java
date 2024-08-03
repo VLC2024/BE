@@ -3,10 +3,11 @@ package com.vlc.maeummal.domain.member.entity;
 import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @Entity
-@Builder
+@SuperBuilder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -22,5 +23,6 @@ public class StudentEntity extends MemberEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private Role role = Role.S;
 }
