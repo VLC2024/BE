@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -27,6 +24,7 @@ public class MemberController {
     @Autowired
     private TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private String  token = "";
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO){
@@ -67,7 +65,7 @@ public class MemberController {
                 passwordEncoder);
 
         if(member != null){
-            final String token = tokenProvider.createToken(member);
+            token = tokenProvider.createToken(member);
 
             final MemberDTO responseMemberDTO = MemberDTO.builder()
 
@@ -77,6 +75,27 @@ public class MemberController {
                     .build();
             log.info("로그인 성공 : " + member.getEmail());
             return ResponseEntity.ok(ApiResponse.onSuccess(responseMemberDTO));
+        } else {
+            ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .isSuccess(false)
+                    .code("INTERNAL_SERVER_ERROR")
+                    .message("An internal server error occurred.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReasonDTO);
+        }
+    }
+    @GetMapping("/token")
+    public ResponseEntity<?> getToken(@RequestBody MemberDTO memberDTO){
+        MemberEntity member = memberService.getByCredentials(
+                memberDTO.getEmail(),
+                memberDTO.getPassword(),
+                passwordEncoder);
+
+        if(member != null){
+
+            MemberDTO.GetTokenDTO tokenDTO = MemberDTO.GetTokenDTO.getTokenDTO(token);
+            return ResponseEntity.ok(ApiResponse.onSuccess(tokenDTO));
         } else {
             ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
                     .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
