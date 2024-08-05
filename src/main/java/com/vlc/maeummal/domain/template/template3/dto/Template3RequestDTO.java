@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.template.template3.dto;
 
+import com.vlc.maeummal.global.common.TemplateType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,11 +19,13 @@ public class Template3RequestDTO {
         String description;
 //        String hint;
         Integer imageNum;
+        TemplateType templateType;
 
         public static Template3RequestDTO.GetTemplate3DTO getTemplate3DTO(Template3RequestDTO.GetTemplate3DTO template3DTO) {
             return GetTemplate3DTO.builder()
                     .description(template3DTO.description)
                     .imageNum(template3DTO.imageNum)
+                    .templateType(template3DTO.templateType)
                     .build();
         }
 

@@ -1,5 +1,7 @@
 package com.vlc.maeummal.domain.feedback.dto;
 
+import com.vlc.maeummal.global.common.TemplateType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,12 +20,16 @@ public class FeedbackRequestDTO {
         Long templateId;
         List<String> answerList;
         Long studentId;
+        @Enumerated()
+        TemplateType templateType;
+
 
         public static FeedbackRequestDTO.GetAnswer getStudentAnswerDTO(FeedbackRequestDTO.GetAnswer answerDTO) {
             return GetAnswer.builder()
                     .studentId(answerDTO.studentId)
                     .templateId(answerDTO.templateId)
                     .answerList(answerDTO.answerList)
+                    .templateType(answerDTO.templateType)
                     .build();
         }
     }

@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.template.template3.entity;
 
 //import com.vlc.maeummal.domain.template.common.Template;
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.global.common.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "template3")
-public class Template3Entity  {
+public class Template3Entity extends TemplateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "template3_id")
