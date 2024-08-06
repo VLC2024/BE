@@ -30,7 +30,7 @@ public class MemberService {
         // 이미 존재하는 계정일 경우
         if(memberRepository.existsByEmail(email)){
             log.warn("ID already exists {}", email);
-            return null; // 한번더 체크 필요
+            throw new RuntimeException("이미 존재하는 계정입니다.");
         }
         else {
             log.info("create member Entity {}",email);
@@ -63,10 +63,11 @@ public class MemberService {
         // 이미 존재하는 계정일 경우
         if(memberRepository.existsByEmail(email)){
             log.warn("ID already exists {}", email);
-            return null; // 한번더 체크 필요
+            throw new RuntimeException("이미 존재하는 계정입니다.");
         }
         else {
-            log.info("create member Entity {}",email);
+
+            log.info("회원가입 성공 : " + member.getEmail());
             return memberRepository.save(member);
         }
     }
@@ -100,7 +101,7 @@ public class MemberService {
             return null; // 한번더 체크 필요
         }
         else {
-            log.info("create member Entity {}",email);
+            log.info("회원가입 성공 : " + member.getEmail());
             return memberRepository.save(member);
         }
     }
