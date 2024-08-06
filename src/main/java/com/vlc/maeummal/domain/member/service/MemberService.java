@@ -18,27 +18,6 @@ public class MemberService {
     private MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
-    public MemberEntity create(final MemberEntity memberEntity){
-        // memberEntity가 null이면 사용자가 필요한 정보를 입력하지 않음
-        if(memberEntity == null){
-            throw new RuntimeException("Invalid arguments");
-        }
-
-        final String email = memberEntity.getEmail();
-
-        // 이미 존재하는 계정일 경우
-        if(memberRepository.existsByEmail(email)){
-            log.warn("ID already exists {}", email);
-            throw new RuntimeException("이미 존재하는 계정입니다.");
-        }
-        else {
-            log.info("create member Entity {}",email);
-            return memberRepository.save(memberEntity);
-        }
-
-    }
-
     // 회원가입시, 교사 정보 저장
     public MemberEntity createTeacher(TeacherDTO teacherDTO){
         if(teacherDTO == null || teacherDTO.getPassword() == null){
