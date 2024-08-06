@@ -1,26 +1,23 @@
 package com.vlc.maeummal.domain.member.entity;
-import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
-//import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 
-import com.vlc.maeummal.domain.word.entity.WordEntity;
+import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
+import com.vlc.maeummal.global.enums.Iq;
 import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
-@SuperBuilder
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name="member")
 public class MemberEntity extends BaseEntity {
 
@@ -28,7 +25,6 @@ public class MemberEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
-
 
     @Column(nullable=false, unique = true)
     private String email;
@@ -49,15 +45,37 @@ public class MemberEntity extends BaseEntity {
     private LocalDate birthDay;
 
     @Enumerated(EnumType.STRING)
+    @Column
     private Gender gender;
 
-//    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List <LessonEntity> lessonEntityList = new ArrayList<>();
+    @Column(nullable=true)
+    private String pinCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=true)
+    private Iq iq;
+
+    @Column
+    private Integer score; // 뱃지 획득용 총 점수
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackEntity> feedbackEntityListForStudent = new ArrayList<>();
+    private List<FeedbackEntity> feedbackEntityListForStudent;
+
+    @ManyToOne
+    @JoinColumn(name="teacher_id")
+    private MemberEntity teacher;
+
+    @Column(nullable=true)
+    private String organization;
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackEntity> feedbackEntityListForTeacher = new ArrayList<>();
+    private List<FeedbackEntity> feedbackEntityListForTeacher;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberEntity> matchingStudents;
 
 }

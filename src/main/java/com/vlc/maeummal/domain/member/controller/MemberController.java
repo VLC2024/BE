@@ -1,6 +1,8 @@
 package com.vlc.maeummal.domain.member.controller;
 
 import com.vlc.maeummal.domain.member.dto.MemberDTO;
+import com.vlc.maeummal.domain.member.dto.StudentDTO;
+import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
@@ -28,25 +30,46 @@ public class MemberController {
     private TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO){
+//    @RequestMapping("/signup")
+    @PostMapping("/signup/student")
+    public ResponseEntity<?> registerStudent(@RequestBody MemberDTO memberDTO){
         try{
             if(memberDTO == null || memberDTO.getPassword() == null){
                 throw  new RuntimeException("Invalid Password value.");
             }
 
             //member 생성
-            MemberEntity member = MemberEntity.builder()
+            MemberEntity student = MemberEntity.builder()
                     .email(memberDTO.getEmail())
                     .password(passwordEncoder.encode(memberDTO.getPassword()))
                     .build();
 
-            MemberEntity registeredMember = memberService.create(member);
-            MemberDTO responseMemberDTO = MemberDTO.builder()
+            MemberEntity registeredMember = memberService.create(student);
+            StudentDTO responseMemberDTO = StudentDTO.builder()
                     .email(registeredMember.getEmail())
                     .password(registeredMember.getPassword())
                     .build();
-            log.info("회원가입 성공 : " + member.getEmail());
+            log.info("회원가입 성공 : " + student.getEmail());
+            return ResponseEntity.ok(ApiResponse.onSuccess(responseMemberDTO));
+        } catch (Exception e){
+            ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .isSuccess(false)
+                    .code("INTERNAL_SERVER_ERROR")
+                    .message("An internal server error occurred.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReasonDTO);
+        }
+    }
+    @PostMapping("/signup/teacher")
+    public ResponseEntity<?> registerTeacher(@RequestBody TeacherDTO teacher){
+        try{
+            MemberEntity registeredMember = memberService.createTeacher(teacher);
+            TeacherDTO responseMemberDTO = TeacherDTO.builder()
+                    .email(registeredMember.getEmail())
+                    .password(registeredMember.getPassword())
+                    .build();
+            log.info("회원가입 성공 : " + teacher.getEmail());
             return ResponseEntity.ok(ApiResponse.onSuccess(responseMemberDTO));
         } catch (Exception e){
             ErrorReasonDTO errorReasonDTO = ErrorReasonDTO.builder()
@@ -71,7 +94,6 @@ public class MemberController {
 
             final MemberDTO responseMemberDTO = MemberDTO.builder()
 
-                    .name(member.getName())
                     .email(member.getEmail())
                     .token(token)
                     .build();
