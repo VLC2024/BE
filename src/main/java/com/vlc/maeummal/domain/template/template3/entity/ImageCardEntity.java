@@ -1,6 +1,5 @@
 package com.vlc.maeummal.domain.template.template3.entity;
 
-import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,10 +20,6 @@ public class ImageCardEntity {
 
     @Column(nullable = true)
     private String image;
-//    @Column(nullable = true)
-//    private String prompt;
-//    @Column(nullable=true)
-//    private String description;
     @Column(nullable=true)
     private String adjective;
     @Column(nullable=true)
@@ -33,5 +28,8 @@ public class ImageCardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template3Id")
     private Template3Entity template3;
+
+    @Column(nullable=true)
+    private String hint;
 
 }
