@@ -1,10 +1,6 @@
 package com.vlc.maeummal.domain.member.dto;
 
-import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
-import com.vlc.maeummal.domain.member.entity.MemberEntity;
-import com.vlc.maeummal.global.enums.Role;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,4 +11,19 @@ public class MemberDTO {
     private String email;
     private String password;
     private String token;
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetTokenDTO{
+
+        private String token;
+
+        public static MemberDTO.GetTokenDTO getTokenDTO (String token) {
+            return MemberDTO.GetTokenDTO.builder()
+                    .token(token)
+                    .build();
+        }
+    }
 }
