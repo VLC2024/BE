@@ -1,5 +1,5 @@
 package com.vlc.maeummal.global.enums;
 
-public enum Role {
-    TEACHER,STUDENT
+public enum Iq {
+    SEVERE, MILD
 }

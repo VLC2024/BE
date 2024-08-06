@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -43,10 +42,10 @@ public class FeedbackEntity extends BaseEntity {
     private Integer imageNum;
 
     @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackCardEntity> correctFeedbackCards = new ArrayList<>();
+    private List<FeedbackCardEntity> correctFeedbackCards;
 
     @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackCardEntity> studentFeedbackCards = new ArrayList<>();
+    private List<FeedbackCardEntity> studentFeedbackCards;
 
     public void setCorrectFeedbackCards(List<FeedbackCardEntity> correctFeedbackCards) {
         this.correctFeedbackCards = correctFeedbackCards;
