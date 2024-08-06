@@ -10,7 +10,7 @@
 //import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 //import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 //import com.vlc.maeummal.global.common.BaseEntity;
-//import com.vlc.maeummal.global.common.TemplateType;
+//import com.vlc.maeummal.global.enums.TemplateType;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.stereotype.Service;
@@ -207,21 +207,17 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
 import com.vlc.maeummal.global.common.BaseEntity;
-import com.vlc.maeummal.global.common.TemplateType;
+import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

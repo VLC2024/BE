@@ -51,6 +51,7 @@ public class Template3Service {
                 .type(template3DTO.getTemplateType())
                 .imageNum(template3DTO.getImageNum())
                 .imageCardEntityList(new ArrayList<>())
+                .optionList(template3DTO.getOptions())
                 .build();
 
         // Step 2: Template3Entity 저장

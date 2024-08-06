@@ -1,13 +1,12 @@
 package com.vlc.maeummal.domain.feedback.dto;
 
-import com.vlc.maeummal.global.common.TemplateType;
+import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FeedbackRequestDTO {

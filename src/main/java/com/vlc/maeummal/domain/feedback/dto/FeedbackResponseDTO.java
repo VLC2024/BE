@@ -2,15 +2,13 @@ package com.vlc.maeummal.domain.feedback.dto;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
-import com.vlc.maeummal.global.common.TemplateType;
-import jakarta.persistence.Column;
+import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
