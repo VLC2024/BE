@@ -2,7 +2,7 @@ package com.vlc.maeummal.domain.feedback.entity;
 
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
-import com.vlc.maeummal.global.common.TemplateType;
+import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,5 @@
 package com.vlc.maeummal.domain.feedback.entity;
 
-import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

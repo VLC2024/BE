@@ -7,17 +7,14 @@ import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template3.repository.ImageCardRepository;
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
 import com.vlc.maeummal.global.aws.AmazonS3Manager;
-import com.vlc.maeummal.global.aws.Uuid;
 import com.vlc.maeummal.global.aws.UuidRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,8 +48,10 @@ public class Template3Service {
         // Step 1: DTO를 Entity로 매핑
         Template3Entity template3Entity = Template3Entity.builder()
                 .description(template3DTO.getDescription())
+                .type(template3DTO.getTemplateType())
                 .imageNum(template3DTO.getImageNum())
                 .imageCardEntityList(new ArrayList<>())
+                .optionList(template3DTO.getOptions())
                 .build();
 
         // Step 2: Template3Entity 저장

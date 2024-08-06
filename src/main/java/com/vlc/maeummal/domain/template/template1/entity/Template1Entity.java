@@ -1,7 +1,7 @@
 package com.vlc.maeummal.domain.template.template1.entity;
 
 import com.vlc.maeummal.domain.word.entity.WordEntity;
-import com.vlc.maeummal.domain.word.entity.WordSetEntity;
+import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +28,10 @@ public class Template1Entity {
     @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WordEntity> wordEntities = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    TemplateType type;
+    @Column(nullable = true)
+    private Integer imageNum;
+    @Column(nullable = true)
+    private String description;
 }
