@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.member.service;
 
+import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
@@ -56,7 +57,52 @@ public class MemberService {
         if(member == null){
             throw new RuntimeException("Invalid arguments");
         }
-        return memberRepository.save(member);
+
+        final String email = member.getEmail();
+
+        // 이미 존재하는 계정일 경우
+        if(memberRepository.existsByEmail(email)){
+            log.warn("ID already exists {}", email);
+            return null; // 한번더 체크 필요
+        }
+        else {
+            log.info("create member Entity {}",email);
+            return memberRepository.save(member);
+        }
+    }
+
+    // 회원가입 시, 학생 정보 저장
+    public MemberEntity createStudent(StudentDTO studentDTO){
+        if(studentDTO == null || studentDTO.getPassword() == null){
+            throw  new RuntimeException("Invalid Password value.");
+        }
+        MemberEntity member = MemberEntity.builder()
+                .email(studentDTO.getEmail())
+                .password(passwordEncoder.encode(studentDTO.getPassword()))
+                .name(studentDTO.getName())
+                .phoneNumber(studentDTO.getPhoneNumber())
+                .birthDay(studentDTO.getBirthDay())
+                .gender(studentDTO.getGender())
+                .role(studentDTO.getRole())
+                .pinCode(studentDTO.getPinCode())
+                .iq(studentDTO.getIq())
+                .build();
+
+        if(member == null){
+            throw new RuntimeException("Invalid arguments");
+        }
+
+        final String email = member.getEmail();
+
+        // 이미 존재하는 계정일 경우
+        if(memberRepository.existsByEmail(email)){
+            log.warn("ID already exists {}", email);
+            return null; // 한번더 체크 필요
+        }
+        else {
+            log.info("create member Entity {}",email);
+            return memberRepository.save(member);
+        }
     }
 
     public MemberEntity getByCredentials(final String email, final String password, final PasswordEncoder encoder){

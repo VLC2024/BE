@@ -1,7 +1,9 @@
 package com.vlc.maeummal.domain.member.dto;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.global.enums.Gender;
 import com.vlc.maeummal.global.enums.Iq;
+import com.vlc.maeummal.global.enums.Role;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -21,7 +23,8 @@ public class StudentDTO {
     private String phoneNumber;
     private String image;
     private LocalDate birthDay;
-    private String gender;
+    private Gender gender;
+    private Role role = Role.STUDENT;
     private String token;
     private Integer score;
     private String pinCode;

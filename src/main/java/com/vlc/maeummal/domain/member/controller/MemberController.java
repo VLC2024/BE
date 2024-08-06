@@ -32,19 +32,9 @@ public class MemberController {
 
 //    @RequestMapping("/signup")
     @PostMapping("/signup/student")
-    public ResponseEntity<?> registerStudent(@RequestBody MemberDTO memberDTO){
+    public ResponseEntity<?> registerStudent(@RequestBody StudentDTO student){
         try{
-            if(memberDTO == null || memberDTO.getPassword() == null){
-                throw  new RuntimeException("Invalid Password value.");
-            }
-
-            //member 생성
-            MemberEntity student = MemberEntity.builder()
-                    .email(memberDTO.getEmail())
-                    .password(passwordEncoder.encode(memberDTO.getPassword()))
-                    .build();
-
-            MemberEntity registeredMember = memberService.create(student);
+            MemberEntity registeredMember = memberService.createStudent(student);
             StudentDTO responseMemberDTO = StudentDTO.builder()
                     .email(registeredMember.getEmail())
                     .password(registeredMember.getPassword())

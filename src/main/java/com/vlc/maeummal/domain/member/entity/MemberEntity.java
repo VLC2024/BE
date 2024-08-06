@@ -13,6 +13,8 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -48,7 +50,7 @@ public class MemberEntity extends BaseEntity {
     @Column
     private Gender gender;
 
-    @Column(nullable=true)
+    @Column(nullable=true, unique = true)
     private String pinCode;
 
     @Enumerated(EnumType.STRING)
@@ -78,4 +80,12 @@ public class MemberEntity extends BaseEntity {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEntity> matchingStudents;
 
+    // PIN 코드 생성자
+    @PrePersist
+    private void generatePinCode() {
+        if (this.pinCode == null) {
+            this.pinCode = UUID.randomUUID().toString();
+        }
+    }
 }
+
