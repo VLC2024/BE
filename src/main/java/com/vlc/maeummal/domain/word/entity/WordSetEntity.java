@@ -1,9 +1,7 @@
 package com.vlc.maeummal.domain.word.entity;
 
-import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
-import com.vlc.maeummal.global.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
