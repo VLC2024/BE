@@ -2,7 +2,7 @@ package com.vlc.maeummal.domain.word.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
-import com.vlc.maeummal.domain.template.template5.entity.WordListEntity;
+import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,8 +39,8 @@ public class WordEntity extends BaseEntity {
     @JsonIgnore
     private WordSetEntity wordSet;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<WordListEntity> wordListEntities = new ArrayList<>();
+    /*@OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<WordCardEntity> wordListEntities = new ArrayList<>();*/
 
     @ManyToOne
     @JoinColumn(name = "temp1_id")

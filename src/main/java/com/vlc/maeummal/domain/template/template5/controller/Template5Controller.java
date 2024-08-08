@@ -39,13 +39,12 @@ public class Template5Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetSelectedWordSetDTO wordSetDTO){
-        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetDTO);
+    public ResponseEntity<?> getSelectedWordSet(@RequestParam Long wordSetId){
+        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetId);
         Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
     }
-
     // 템플릿 조회
     @GetMapping("/get")
     public ResponseEntity<?> getTemplate5(@RequestParam Long temp5Id){
