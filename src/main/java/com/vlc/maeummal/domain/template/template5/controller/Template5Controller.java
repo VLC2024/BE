@@ -55,6 +55,11 @@ public class Template5Controller {
         return ResponseEntity.ok(ApiResponse.onSuccess(template5));
     }
 
-    // 피드백
+    // 전체 템플릿 조회
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTemplate5(){
+        List<Template5ResponseDTO.GetTemplate5DTO> template5DTOList = template5Service.getAllTemplate5();
+        return ResponseEntity.ok(ApiResponse.onSuccess(template5DTOList));
+    }
 
 }
