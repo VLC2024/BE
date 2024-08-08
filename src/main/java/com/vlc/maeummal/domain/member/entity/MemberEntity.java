@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table(name="member")
-public class MemberEntity {
+public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
