@@ -2,6 +2,7 @@ package com.vlc.maeummal.domain.feedback.dto;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,7 @@ public class FeedbackResponseDTO {
          String image;
         String adjective;
         String noun;
+        Integer answerNumber;
     }
 
     @Builder
@@ -90,15 +92,10 @@ public class FeedbackResponseDTO {
                             .image(card.getImage())
                             .adjective(card.getAdjective())
                             .noun(card.getNoun())
+                            .answerNumber(card.getAnswerNumber())
                             .build())
                     .collect(Collectors.toList());
         }
-
-
-
-
-
-
 
 
         /**

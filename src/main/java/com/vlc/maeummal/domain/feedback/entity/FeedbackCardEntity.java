@@ -31,6 +31,9 @@ public class FeedbackCardEntity {
     @JoinColumn(name = "feedbackId")
     private FeedbackEntity feedback;
 
+    @Column(nullable = true)
+    private Integer answerNumber;
+
     public void setFeedback(FeedbackEntity feedback) {
         this.feedback = feedback;
     }
