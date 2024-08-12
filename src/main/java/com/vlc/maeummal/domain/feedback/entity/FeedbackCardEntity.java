@@ -20,17 +20,22 @@ public class FeedbackCardEntity {
     @Column(nullable = true)
     private String image;
    // 아래 두 값은 템플릿 별로 사용여부 결정.
-    // 배열 기반 템프릿 (2,4) -> 아래 필드 사용 x
-    // 매칭 기반 템프릿 (1, 3, 5) -> 아래 필드 사용 0
+    // 배열 기반 템플릿 (2,4) -> 아래 필드 사용 x
+    // 매칭 기반 템플릿 (1, 3, 5) -> 아래 필드 사용 0
     @Column(nullable=true)
     private String adjective;
     @Column(nullable=true)
     private String noun;
 
+    @Column
+    private String meaning;
+    @Column
+    private String description;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedbackId")
     private FeedbackEntity feedback;
-
     @Column(nullable = true)
     private Integer answerNumber;
 

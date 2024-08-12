@@ -31,8 +31,7 @@ public class FeedbackController {
      * @return ResponseEntity 피드백 생성 결과
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createFeedback(
-            @RequestBody  FeedbackRequestDTO.GetAnswer feedbackRequestDTO) {
+    public ResponseEntity<?> createFeedback(@RequestBody  FeedbackRequestDTO.GetAnswer feedbackRequestDTO) {
 
         try {
             log.info(" in try FeedbackController: " + feedbackRequestDTO);

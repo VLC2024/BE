@@ -49,6 +49,8 @@ public class FeedbackResponseDTO {
          String image;
         String adjective;
         String noun;
+        String meaning;
+        String description;
         Integer answerNumber;
     }
 
@@ -92,6 +94,8 @@ public class FeedbackResponseDTO {
                             .image(card.getImage())
                             .adjective(card.getAdjective())
                             .noun(card.getNoun())
+                            .meaning(card.getMeaning())
+                            .description(card.getDescription())
                             .answerNumber(card.getAnswerNumber())
                             .build())
                     .collect(Collectors.toList());
