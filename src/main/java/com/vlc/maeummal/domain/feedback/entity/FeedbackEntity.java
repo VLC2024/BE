@@ -2,6 +2,7 @@ package com.vlc.maeummal.domain.feedback.entity;
 
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
+import com.vlc.maeummal.global.enums.CardType;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -43,25 +46,45 @@ public class FeedbackEntity extends BaseEntity {
     @Column(nullable = true)
     private Integer imageNum;
 
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackCardEntity> correctFeedbackCards;
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<FeedbackCardEntity> feedbackCards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackCardEntity> studentFeedbackCards;
+    public List<FeedbackCardEntity> getCorrectFeedbackCards() {
+        return feedbackCards.stream()
+                .filter(card -> card.getCardType() == CardType.CORRECT)
+                .collect(Collectors.toList());
+    }
 
+
+    public List<FeedbackCardEntity> getStudentFeedbackCards() {
+        return feedbackCards.stream()
+                .filter(card -> card.getCardType() == CardType.STUDENT)
+                .collect(Collectors.toList());
+    }
+    // 카드를 설정하는 메서드
     public void setCorrectFeedbackCards(List<FeedbackCardEntity> correctFeedbackCards) {
-        this.correctFeedbackCards = correctFeedbackCards;
+        if (this.feedbackCards == null) {
+            this.feedbackCards = new ArrayList<>();
+        }
         for (FeedbackCardEntity card : correctFeedbackCards) {
             card.setFeedback(this);
         }
+
+        correctFeedbackCards.forEach(card -> card.setCardType(CardType.CORRECT));
+        this.feedbackCards.addAll(correctFeedbackCards);
     }
 
     public void setStudentFeedbackCards(List<FeedbackCardEntity> studentFeedbackCards) {
-        this.studentFeedbackCards = studentFeedbackCards;
+        if (this.feedbackCards == null) {
+            this.feedbackCards = new ArrayList<>();
+        }
         for (FeedbackCardEntity card : studentFeedbackCards) {
             card.setFeedback(this);
         }
+        studentFeedbackCards.forEach(card -> card.setCardType(CardType.STUDENT));
+        this.feedbackCards.addAll(studentFeedbackCards);
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.vlc.maeummal.domain.feedback.dto;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.AllArgsConstructor;
@@ -29,15 +30,19 @@ public class FeedbackResponseDTO {
         String title;
 
         public static FeedbackResponseDTO.GetFeedbackDTO getFeedback(FeedbackEntity feedbackEntity, String title) {
+            MemberEntity student = feedbackEntity.getStudent();
+            Long studentId = (student != null) ? student.getMemberId() : null; // Null 체크 후 ID 설정
+
             return GetFeedbackDTO.builder()
                     .id(feedbackEntity.getId())
                     .templateType(feedbackEntity.getTemplateType())
                     .aiFeedback(feedbackEntity.getAiFeedback())
                     .createdAt(feedbackEntity.getCreatedAt())
-                    .studentId(feedbackEntity.getStudent().getMemberId())
+                    .studentId(studentId) // Null 체크 후 studentId 설정
                     .title(title)
                     .build();
         }
+
     }
 
     @Getter
@@ -70,7 +75,7 @@ public class FeedbackResponseDTO {
 
 
         public static GetFeedbackDetailDTO convertToFeedbackDetail(FeedbackEntity feedbackEntity) {
-            return FeedbackResponseDTO.GetFeedbackDetailDTO.builder()
+            return GetFeedbackDetailDTO.builder()
                     .id(feedbackEntity.getId())
                     .templateId(feedbackEntity.getTemplateId())
                     .aiFeedback(feedbackEntity.getAiFeedback())
@@ -82,9 +87,7 @@ public class FeedbackResponseDTO {
                     .studentFeedbackCards(convertToCardDtoList(feedbackEntity.getStudentFeedbackCards()))
                     .build();
         }
-    }
 
-        // FeedbackCardEntity 리스트를 FeedbackCardDTO 리스트로 변환
         private static List<FeedbackResponseDTO.FeedbackCardDTO> convertToCardDtoList(List<FeedbackCardEntity> feedbackCardEntities) {
             return feedbackCardEntities.stream()
                     .map(card -> FeedbackCardDTO.builder()
@@ -97,6 +100,7 @@ public class FeedbackResponseDTO {
                     .collect(Collectors.toList());
         }
 
+    }
 
         /**
          *

@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.feedback.entity;
 
+import com.vlc.maeummal.global.enums.CardType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,9 @@ public class FeedbackCardEntity {
 
     @Column(nullable = true)
     private Integer answerNumber;
+    // 새롭게 추가된 필드
+    @Enumerated(EnumType.STRING)
+    private CardType cardType;
 
     public void setFeedback(FeedbackEntity feedback) {
         this.feedback = feedback;
