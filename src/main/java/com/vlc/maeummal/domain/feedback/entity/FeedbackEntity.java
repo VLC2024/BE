@@ -27,6 +27,8 @@ public class FeedbackEntity extends BaseEntity {
 
     private String aiFeedback;
 
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private MemberEntity student;
