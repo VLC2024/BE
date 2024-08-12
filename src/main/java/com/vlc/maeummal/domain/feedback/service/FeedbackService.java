@@ -211,10 +211,14 @@ import com.vlc.maeummal.domain.template.template1.repository.Template1Repository
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
+import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
+import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
+import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -230,6 +234,9 @@ public class FeedbackService extends BaseEntity {
     final Template1Repository template1Repository;
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
+
+    @Autowired
+    Template5Repository template5Repository;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -361,6 +368,19 @@ public class FeedbackService extends BaseEntity {
      * 재료 : 학생의 답 & 이미지 카드 s
      * 조건 : 각 템플릿 마다 사용되는 리스트
      * */
+    public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+
+        // Todo 기본 정보 설정 - 공통
+
+        // Todo 정답 리스트 & 학생 답 리스트 포맷
+
+    }
+    public void processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        // Todo 기본 정보 설정 - 공통
+
+        // Todo 정답 리스트 & 학생 답 리스트 포맷
+
+    }
     public void processTemplate3ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Template3Entity template3 = template3Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<ImageCardEntity> imageCardEntities = template3.getImageCardEntityList();
@@ -375,20 +395,6 @@ public class FeedbackService extends BaseEntity {
         feedbackRepository.save(feedbackEntity);
 
     }
-
-    public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-
-        // Todo 기본 정보 설정 - 공통
-
-        // Todo 정답 리스트 & 학생 답 리스트 포맷
-
-    }
-    public void processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-        // Todo 기본 정보 설정 - 공통
-
-        // Todo 정답 리스트 & 학생 답 리스트 포맷
-
-    }
     public void processTemplate4ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
 
@@ -396,10 +402,17 @@ public class FeedbackService extends BaseEntity {
 
     }
     public void processTemplate5ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        Template5Entity template5 = template5Repository.findById(studentAnswerDTO.getTemplateId()).get();
+        List<WordCardEntity> wordCardEntities = template5.getWordListEntities();
+        log.info("in processTemplate3ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
-
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template5, studentAnswerDTO, wordCardEntities);
         // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntity(wordCardEntities));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntity(wordCardEntities, studentAnswerDTO));
 
+        log.info("in processTemplate3ToFeedback: 2");
+        feedbackRepository.save(feedbackEntity);
     }
 
 
@@ -490,7 +503,7 @@ public class FeedbackService extends BaseEntity {
             case TEMPLATE4:
 //                return template4Repository.existsById(templateId);
             case TEMPLATE5:
-//                return template5Repository.existsById(templateId);
+                return template5Repository.existsById(templateId);
             default:
                 return false;
         }
