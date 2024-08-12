@@ -209,6 +209,9 @@ import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
+import com.vlc.maeummal.domain.template.template2.entity.StoryCardEntity;
+import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
+import com.vlc.maeummal.domain.template.template2.repository.Template2Repository;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
@@ -233,6 +236,7 @@ public class FeedbackService extends BaseEntity {
 
     final Template3Repository template3Repository;
     final Template1Repository template1Repository;
+    final Template2Repository template2Repository;
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
 
@@ -378,8 +382,16 @@ public class FeedbackService extends BaseEntity {
     }
     public void processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
+        Template2Entity template2 = template2Repository.findById(studentAnswerDTO.getTemplateId()).get();
+        List<StoryCardEntity> storyCardEntityList = template2.getStoryCardEntityList();
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template2, studentAnswerDTO);
 
         // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
+
+        log.info("in processTemplate2ToFeedback: ");
+        feedbackRepository.save(feedbackEntity);
 
     }
     public void processTemplate3ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
@@ -389,7 +401,7 @@ public class FeedbackService extends BaseEntity {
         // Todo 기본 정보 설정 - 공통
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template3, studentAnswerDTO);
         // TOdo 각자 수행.
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromImageCards(imageCardEntities));
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromImageCards(imageCardEntities));
         feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromImageCards(imageCardEntities, studentAnswerDTO));
 
         log.info("in processTemplate3ToFeedback: 2");
@@ -415,6 +427,7 @@ public class FeedbackService extends BaseEntity {
         log.info("in processTemplate3ToFeedback: 2");
         feedbackRepository.save(feedbackEntity);
     }
+
 
 
 /**
@@ -471,10 +484,42 @@ public class FeedbackService extends BaseEntity {
         return studentFeedbackCardEntities;
     }
     /**
+     *
+     * using by : temp2, temp4
+     * */
+    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromStoryCards(List<StoryCardEntity> storyCardEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        if (storyCardEntities == null || studentAnswerDTO == null) {
+            throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
+        }
+
+        List<String> answerList = studentAnswerDTO.getAnswerList();
+        if (answerList == null) {
+            throw new IllegalArgumentException("Student answer list cannot be null");
+        }
+        if (answerList.size() != storyCardEntities.size()) {
+            throw new IllegalArgumentException("Answer list size does not match the image card entities size");
+        }
+        List<FeedbackCardEntity> studentFeedbackCardEntities = IntStream.range(0, storyCardEntities.size())
+                .mapToObj(index -> {
+                    StoryCardEntity storyCard = storyCardEntities.get(index);
+                    Integer answerNumber = studentAnswerDTO.getAnswerList().size() > index
+                            ? Integer.parseInt(studentAnswerDTO.getAnswerList().get(index))
+                            : null;
+
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(storyCard.getImage());
+                    feedbackCard.setAnswerNumber(answerNumber);
+
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return studentFeedbackCardEntities;
+    }
+    /**
      * 정답 리스트를 FeedbackCard로 포맷
      * who? 이미지-동사-명사 형태의 값을 가지고 있는 템플릿 사용 권장
      * */
-    public List<FeedbackCardEntity> setFeedbackCardEntitiesFromImageCards(List<ImageCardEntity> imageCardEntities) {
+    public List<FeedbackCardEntity> setFeedbackCardEntityFromImageCards(List<ImageCardEntity> imageCardEntities) {
         List<FeedbackCardEntity> feedbackCardEntities = imageCardEntities.stream()
                 .map(imageCard -> {
                     FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
@@ -485,6 +530,22 @@ public class FeedbackService extends BaseEntity {
                 })
                 .collect(Collectors.toList());
         return feedbackCardEntities;
+    }
+    /**
+     *
+     * using by : temp2, temp4
+     * */
+    public List<FeedbackCardEntity> setFeedbackCardEntityFromStoryCards(List<StoryCardEntity> storyCardEntities) {
+        List<FeedbackCardEntity> feedbackCardEntities = storyCardEntities.stream()
+                .map(storyCard -> {
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(storyCard.getImage());
+                    feedbackCard.setAnswerNumber(storyCard.getAnswerNumber());
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return feedbackCardEntities;
+
     }
 
     /**
@@ -543,7 +604,7 @@ public class FeedbackService extends BaseEntity {
             case TEMPLATE1:
 //                return template1Repository.existsById(templateId);
             case TEMPLATE2:
-//                return template2Repository.existsById(templateId);
+                return template2Repository.existsById(templateId);
             case TEMPLATE3:
                 return template3Repository.existsById(templateId);
             case TEMPLATE4:
