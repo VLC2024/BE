@@ -220,6 +220,7 @@ import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
 import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,13 +262,26 @@ public class FeedbackService extends BaseEntity {
  * 특정 피드백 찾기
  * 모든 템플릿 사용 가능
  * */
-    public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long id){
-        FeedbackEntity feedbackEntity = feedbackRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("FeedbackDetail not found with id: " + id));
-        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
+//    public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long id){
+//        FeedbackEntity feedbackEntity = feedbackRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("FeedbackDetail not found with id: " + id));
+//        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
+//
+//
+//    }
+public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
+    FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
 
-
+    // 추가적인 검증이 필요한 경우
+    if (feedbackEntity.getStudent() == null) {
+        // 로깅하거나 적절한 처리를 수행할 수 있습니다.
+        throw new IllegalStateException("Student information is missing in feedback");
     }
+
+    return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
+}
+
     /**
      * 모든 피드백 리스트 가져오기
      * 모든 템플릿 사용 가능
