@@ -48,6 +48,8 @@ public class FeedbackResponseDTO {
          String image;
         String adjective;
         String noun;
+        String meaning;
+        String description;
     }
 
     @Builder
@@ -90,6 +92,8 @@ public class FeedbackResponseDTO {
                             .image(card.getImage())
                             .adjective(card.getAdjective())
                             .noun(card.getNoun())
+                            .meaning(card.getMeaning())
+                            .description(card.getDescription())
                             .build())
                     .collect(Collectors.toList());
         }

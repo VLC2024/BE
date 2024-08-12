@@ -207,6 +207,7 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
@@ -386,10 +387,10 @@ public class FeedbackService extends BaseEntity {
         List<ImageCardEntity> imageCardEntities = template3.getImageCardEntityList();
         log.info("in processTemplate3ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
-        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template3, studentAnswerDTO, imageCardEntities);
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template3, studentAnswerDTO);
         // TOdo 각자 수행.
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntity(imageCardEntities));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntity(imageCardEntities, studentAnswerDTO));
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromImageCards(imageCardEntities));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromImageCards(imageCardEntities, studentAnswerDTO));
 
         log.info("in processTemplate3ToFeedback: 2");
         feedbackRepository.save(feedbackEntity);
@@ -406,10 +407,10 @@ public class FeedbackService extends BaseEntity {
         List<WordCardEntity> wordCardEntities = template5.getWordListEntities();
         log.info("in processTemplate3ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
-        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template5, studentAnswerDTO, wordCardEntities);
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template5, studentAnswerDTO);
         // Todo 정답 리스트 & 학생 답 리스트 포맷
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntity(wordCardEntities));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntity(wordCardEntities, studentAnswerDTO));
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromWordCards(wordCardEntities));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromWordCards(wordCardEntities, studentAnswerDTO));
 
         log.info("in processTemplate3ToFeedback: 2");
         feedbackRepository.save(feedbackEntity);
@@ -421,31 +422,25 @@ public class FeedbackService extends BaseEntity {
  * 재료 : 학생의 답 & 이미지 카드 s
  * 조건 : 템플릿 별 사용하는 리스트 필요
  * */
-    public FeedbackEntity setFeedbackEntityWithoutList(Template3Entity template3, FeedbackRequestDTO.GetAnswer studentAnswerDTO,
-                                            List<ImageCardEntity> imageCardEntities) {
+    public FeedbackEntity setFeedbackEntityWithoutList(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         FeedbackEntity feedbackEntity = FeedbackEntity.builder()
-                .templateId(template3.getId())
+                .templateId(template.getId())
                 .aiFeedback("template ai feedback....")
-                .templateType(template3.getType())
-                .imageNum(template3.getImageNum())
+                .templateType(template.getType())
+                .imageNum(template.getImageNum())
                 .templateType(studentAnswerDTO.getTemplateType())
                 .student(memberRepository.findById(studentAnswerDTO.getStudentId())
                         .orElse(null))
                 .teacher(memberRepository.findById(studentAnswerDTO.getStudentId())
                         .orElse(null)) // Todo: 교사로 수정해야 함
                 .build();
-//// TOdo 이 부분 수정
-
-//        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntity(imageCardEntities));
-//        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntity(imageCardEntities, studentAnswerDTO));
-
         return feedbackEntity;
     }
     /**
      * 학생 답 리스트를 FeedbackCard로 포맷
      * who? 이미지-동사-명사 형태의 값을 가지고 있는 템플릿 사용 권장
      * */
-    public List<FeedbackCardEntity> setStudentFeedbackCardEntity(List<ImageCardEntity> imageCardEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromImageCards(List<ImageCardEntity> imageCardEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         if (imageCardEntities == null || studentAnswerDTO == null) {
             throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
         }
@@ -479,7 +474,7 @@ public class FeedbackService extends BaseEntity {
      * 정답 리스트를 FeedbackCard로 포맷
      * who? 이미지-동사-명사 형태의 값을 가지고 있는 템플릿 사용 권장
      * */
-    public List<FeedbackCardEntity> setFeedbackCardEntity(List<ImageCardEntity> imageCardEntities) {
+    public List<FeedbackCardEntity> setFeedbackCardEntitiesFromImageCards(List<ImageCardEntity> imageCardEntities) {
         List<FeedbackCardEntity> feedbackCardEntities = imageCardEntities.stream()
                 .map(imageCard -> {
                     FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
@@ -492,6 +487,57 @@ public class FeedbackService extends BaseEntity {
         return feedbackCardEntities;
     }
 
+    /**
+     * 학생 답 리스트를 FeedbackCard로 포맷
+     * who? 이미지-동사-명사 형태의 값을 가지고 있는 템플릿 사용 권장
+     * */
+    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromWordCards(List<WordCardEntity> wordCardEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        if (wordCardEntities == null || studentAnswerDTO == null) {
+            throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
+        }
+
+        List<String> answerList = studentAnswerDTO.getAnswerList();
+        if (answerList == null) {
+            throw new IllegalArgumentException("Student answer list cannot be null");
+        }
+        if (answerList.size() != wordCardEntities.size()) {
+            throw new IllegalArgumentException("Answer list size does not match the image card entities size");
+        }
+
+        List<FeedbackCardEntity> studentFeedbackCardEntities = IntStream.range(0, wordCardEntities.size())
+                .mapToObj(index -> {
+                    WordCardEntity wordCard = wordCardEntities.get(index);
+
+                    String studentMeaing = studentAnswerDTO.getAnswerList().size() > index
+                            ? studentAnswerDTO.getAnswerList().get(index)
+                            : null;
+
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(wordCard.getImage());
+                    feedbackCard.setMeaning(studentMeaing);
+                    feedbackCard.setDescription(wordCard.getDescription());
+
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return studentFeedbackCardEntities;
+    }
+    /**
+     * 정답 리스트를 FeedbackCard로 포맷
+     * who? 이미지-동사-명사 형태의 값을 가지고 있는 템플릿 사용 권장
+     * */
+    public List<FeedbackCardEntity> setFeedbackCardEntitiesFromWordCards(List<WordCardEntity> wordCardEntities) {
+        List<FeedbackCardEntity> feedbackCardEntities = wordCardEntities.stream()
+                .map(wordCard -> {
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(wordCard.getImage());
+                    feedbackCard.setMeaning(wordCard.getMeaning());
+                    feedbackCard.setDescription(wordCard.getDescription());
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return feedbackCardEntities;
+    }
     public boolean isValidate(Long templateId, TemplateType templateType) {
         switch (templateType) {
             case TEMPLATE1:
