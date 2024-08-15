@@ -8,6 +8,7 @@ import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.domain.word.service.WordService;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.apiPayload.code.status.SuccessStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class WordSetController {
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
 
-    /**
+    /** Test code
      * word 생성을 위해 문장 전달
      * request : meaning
      * return : image
@@ -64,6 +65,12 @@ public class WordSetController {
         // return image url
         return ResponseEntity.ok(ApiResponse.onSuccess(imageUrl));
 
+    }
+    @GetMapping("/title")
+    public ResponseEntity<ApiResponse<List<WordSetEntity>>> retrieveWordSetFromTitleContaining(
+            @RequestParam(value = "title") String title) {
+        List<WordSetEntity> wordSets = wordService.getAllWordSetFromTitleContaining(title);
+        return ResponseEntity.ok(ApiResponse.of(SuccessStatus._OK, wordSets));
     }
 
 

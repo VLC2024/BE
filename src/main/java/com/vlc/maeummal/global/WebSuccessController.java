@@ -16,3 +16,4 @@ public class WebSuccessController {
         return new ResponseEntity<>("Health Check OK", HttpStatus.OK);
     }
 }
+

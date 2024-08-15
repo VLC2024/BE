@@ -1,57 +1,90 @@
 package com.vlc.maeummal.domain.member.entity;
-import com.vlc.maeummal.domain.lesson.entity.LessonEntity;
 
+import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
+import com.vlc.maeummal.global.enums.Iq;
+import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.util.List;
 
-@Data
+import java.util.UUID;
+
 @Entity
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name="member")
-public class MemberEntity {
+public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable=true)
-    private String nickname;
-
-    @Column(nullable=false)
+    @Column(nullable=false, unique = true)
     private String email;
 
     @Column(nullable=false)
     private String password;
 
-    @Column(nullable=true)
+    @Column
     private String name;
 
-    @Column(nullable=true)
+    @Column
     private String phoneNumber;
 
-    @Column(nullable=true)
+    @Column
     private String image;
 
-    @Column(nullable=true)
-    private String age;
+    @Column
+    private LocalDate birthDay;
 
     @Enumerated(EnumType.STRING)
+    @Column
     private Gender gender;
 
-    @Column(nullable = true, unique = true)
-    private Long PinCode;
+    @Column(nullable=true, unique = true)
+    private String pinCode;
 
-    // 매칭된 선생님의 ID를 저장할 필드
-    @Column(nullable = true)
-    private Long teacherId;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=true)
+    private Iq iq;
 
+    @Column
+    private Integer score; // 뱃지 획득용 총 점수
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackEntity> feedbackEntityListForStudent;
+
+    @ManyToOne
+    @JoinColumn(name="teacher_id")
+    private MemberEntity teacher;
+
+    @Column(nullable=true)
+    private String organization;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackEntity> feedbackEntityListForTeacher;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberEntity> matchingStudents;
+
+    // PIN 코드 생성자
+    @PrePersist
+    private void generatePinCode() {
+        if (this.pinCode == null) {
+            this.pinCode = UUID.randomUUID().toString();
+        }
+    }
 }

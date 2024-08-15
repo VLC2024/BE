@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.template.template5.controller;
 
+import com.vlc.maeummal.domain.template.template3.dto.Template3ResponseDTO;
 import com.vlc.maeummal.domain.template.template5.dto.Template5RequestDTO;
 import com.vlc.maeummal.domain.template.template5.dto.Template5ResponseDTO;
 import com.vlc.maeummal.domain.template.template5.service.Template5Service;
@@ -30,23 +31,35 @@ public class Template5Controller {
       [POST] Req: 선택한 단어장 ID List / Res: 추출한 단어 3개 + 템플릿 ID
      */
 
-    @GetMapping("/create_template5")
+    @GetMapping("/create")
     public ResponseEntity<?> getAllWordSet(){
         List<WordSetResponseDTO.GetWordSetDTO> wordSetDTOList = wordService.getAllWordSet();
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordSetDTOList));
     }
 
-    @PostMapping("/create_template5")
-    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetSelectedWordSetDTO wordSetDTO){
-        Template5ResponseDTO.GetWordIdListDTO wordIdListDTO = template5Service.getSelectedWordSetList(wordSetDTO);
-        Template5ResponseDTO.GetWordListDTO wordListDTO = template5Service.randomWords(wordIdListDTO);
+    @PostMapping("/create")
+    public ResponseEntity<?> getSelectedWordSet(@RequestParam Long wordSetId){
+        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetId);
+        Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
     }
+    // 템플릿 조회
+    @GetMapping("/get")
+    public ResponseEntity<?> getTemplate5(@RequestParam Long temp5Id){
+        Template5ResponseDTO.GetTemplate5DTO template5 = template5Service.getTemplate5(temp5Id);
+        if (template5 == null) {
+            return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿이 없습니다.", null));
+        }
+        return ResponseEntity.ok(ApiResponse.onSuccess(template5));
+    }
 
+    // 전체 템플릿 조회
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTemplate5(){
+        List<Template5ResponseDTO.GetTemplate5DTO> template5DTOList = template5Service.getAllTemplate5();
+        return ResponseEntity.ok(ApiResponse.onSuccess(template5DTOList));
+    }
 
-
-    // 템플릿5 저장 : template5/save_new_temp5/{temp5_id}
-    // Req: 추출한 단어 3개 + 템플릿 ID / Res: 저장되었습니다. or 실패했습니다.
 }

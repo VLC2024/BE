@@ -1,7 +1,10 @@
 
 package com.vlc.maeummal.domain.lesson.entity;
 
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
+import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
 import jakarta.persistence.*;
@@ -9,12 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.vlc.maeummal.domain.lesson.entity.*;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 
 @Data
 @Entity
@@ -31,21 +29,22 @@ public class LessonEntity extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column
-    private String content;
+//    @Column(nullable = true)
+//    private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer view;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    @Column(nullable = false)
+    private Integer level;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private MemberEntity creator;
 
     @Column(nullable = false)
-    private Integer difficulty;
+    private Long templateId;
 
-    @Column(nullable = false)
-    private String creator;
 
-//    @OneToMany(mappedBy = "lessonEntity", cascade = CascadeType.ALL)
-//    private List<WordEntity> words = new ArrayList<>();
+
 }

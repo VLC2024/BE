@@ -3,10 +3,8 @@ package com.vlc.maeummal.domain.word.dto;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.enums.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 
 public class WordSetResponseDTO {
@@ -65,6 +63,7 @@ public class WordSetResponseDTO {
         String prompt;
         String description;
         String image;
+        Long wordSetId;
 
 
         public static GetWordDTO getWordDTO (WordEntity wordEntity) {
