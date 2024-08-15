@@ -50,4 +50,8 @@ public class MemberEntity {
     @Column(nullable = true, unique = true)
     private Long PinCode;
 
+    // 매칭된 선생님의 ID를 저장할 필드
+    @Column(nullable = true)
+    private Long teacherId;
+
 }
