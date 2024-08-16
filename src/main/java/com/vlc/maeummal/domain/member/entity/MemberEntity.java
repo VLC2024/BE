@@ -88,4 +88,3 @@ public class MemberEntity extends BaseEntity {
         }
     }
 }
-
