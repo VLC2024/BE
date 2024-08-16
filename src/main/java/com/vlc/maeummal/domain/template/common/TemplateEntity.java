@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 public abstract class TemplateEntity {
 
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -29,8 +30,6 @@ public abstract class TemplateEntity {
 
     String title;
 
-//    @OneToOne(mappedBy = "template")
-//    private LessonEntity lesson;
     @Column(nullable = true)
     Integer level;
 

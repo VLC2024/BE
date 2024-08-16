@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 @Controller
 @RestController
-@RequestMapping("/api/templates")
+@RequestMapping("/templates")
 @AllArgsConstructor
 public class TemplateController {
 
