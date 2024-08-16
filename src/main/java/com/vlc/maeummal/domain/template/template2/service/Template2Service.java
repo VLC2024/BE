@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.template.template2.service;
 
+
 import com.vlc.maeummal.domain.template.template2.dto.Template2RequestDTO;
 import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
 import com.vlc.maeummal.domain.template.template2.entity.StoryCardEntity;
