@@ -71,7 +71,7 @@ public class FeedbackResponseDTO {
         private Long studentId;
         private Long teacherId;
         private TemplateType templateType;
-        private Integer imageNum;
+        private String imageNum;
         private List<FeedbackCardDTO> correctFeedbackCards;
         private List<FeedbackCardDTO> studentFeedbackCards;
 
@@ -84,7 +84,7 @@ public class FeedbackResponseDTO {
                     .studentId(feedbackEntity.getStudent().getMemberId())
                     .teacherId(feedbackEntity.getTeacher().getMemberId())
                     .templateType(feedbackEntity.getTemplateType())
-                    .imageNum(feedbackEntity.getImageNum())
+                    .imageNum(feedbackEntity.getImageNum().toString())
                     .correctFeedbackCards(convertToCardDtoList(feedbackEntity.getCorrectFeedbackCards()))
                     .studentFeedbackCards(convertToCardDtoList(feedbackEntity.getStudentFeedbackCards()))
                     .build();

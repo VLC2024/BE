@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.template.template1.entity;
 
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
@@ -34,4 +35,5 @@ public class Template1Entity {
     private Integer imageNum;
     @Column(nullable = true)
     private String description;
+
 }
