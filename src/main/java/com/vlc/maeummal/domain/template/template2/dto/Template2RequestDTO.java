@@ -17,31 +17,7 @@ public class Template2RequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetTemplate2DTO {
-        /**
-         *
-         *  private Long id;
-         *
-         *     @Column(nullable = true)
-         *     private String title;
-         *
-         *     @Column(nullable = true)
-         *     private String description;
-         *     @Column(nullable = true)
-         *     private String hint;
-         *
-         *     @Column(nullable = true)
-         *     private Integer imageNum;
-         *
-         *     @OneToMany(mappedBy = "template2", cascade = CascadeType.ALL, orphanRemoval = true)
-         *     List<StoryCardEntity> storyCardEntityList = new ArrayList<>();
-         *
-         *     @Column(nullable = false)
-         *     @Enumerated(EnumType.STRING)
-         *     TemplateType type;
-         *
-         *
-         *
-         * */
+
         String title;
         String description;
         String hint;
