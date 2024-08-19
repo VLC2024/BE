@@ -1,6 +1,6 @@
 package com.vlc.maeummal.domain.template.template4.repository;
 
-import com.vlc.maeummal.domain.template.template2.entity.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,7 @@
-package com.vlc.maeummal.domain.template.template2.entity;
+package com.vlc.maeummal.domain.template.common;
 
 import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import jakarta.persistence.*;
