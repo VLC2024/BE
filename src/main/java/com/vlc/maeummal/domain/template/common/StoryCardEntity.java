@@ -31,11 +31,15 @@ public class StoryCardEntity {
     @Column(nullable = true)
     private String description;
 
-    @Column(nullable = true)
-    private Integer cardCount; // 카드 갯수
+//    @Column(nullable = true)
+//    private Integer cardCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template2Id")
     private Template2Entity template2;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "template4Id")
+    private Template4Entity template4;
 
 }
