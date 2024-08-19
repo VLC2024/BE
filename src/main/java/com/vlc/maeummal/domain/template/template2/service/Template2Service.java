@@ -3,9 +3,9 @@ package com.vlc.maeummal.domain.template.template2.service;
 
 import com.vlc.maeummal.domain.template.template2.dto.Template2RequestDTO;
 import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
-import com.vlc.maeummal.domain.template.template2.entity.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
-import com.vlc.maeummal.domain.template.template2.repository.StoryCardRepository;
+import com.vlc.maeummal.domain.template.common.StoryCardRepository;
 import com.vlc.maeummal.domain.template.template2.repository.Template2Repository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
