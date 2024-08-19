@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.prep.prep1.controller;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.prep.prep1.dto.Prep1DTO;
 import com.vlc.maeummal.domain.prep.prep1.service.OpenAIService;
 import com.vlc.maeummal.domain.prep.prep1.service.Prep1Mapper;
@@ -7,8 +8,12 @@ import com.vlc.maeummal.domain.prep.prep1.service.QuizService;
 import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.Uuid;
 import com.vlc.maeummal.global.aws.UuidRepository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
+import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.openAi.Base64DecodedMultipartFile;
 import com.vlc.maeummal.global.openAi.dalle.service.AiService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +38,9 @@ public class ImageTextController {
     private Prep1Mapper prep1Mapper; // Prep1Mapper 필드 추가
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
+    private ChallengeService challengeService;
+
+    private UserAuthorizationConverter userAuthorizationConverter;
 
     public ImageTextController(OpenAIService openAIService, AiService aiService, QuizService quizService, Prep1Mapper prep1Mapper, AmazonS3Manager s3Manager, UuidRepository uuidRepository) {
         this.openAIService = openAIService;
@@ -103,6 +111,7 @@ public class ImageTextController {
         String selectedOption = (String) payload.get("selectedOption");
 
         boolean isCorrect = quizService.checkAnswer(questionId, selectedOption);
+        challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.PREP);
 
         Map<String, Object> response = new HashMap<>();
         response.put("isCorrect", isCorrect);

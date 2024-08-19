@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.word.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
@@ -9,14 +10,17 @@ import com.vlc.maeummal.domain.word.service.WordService;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.apiPayload.code.status.SuccessStatus;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
+import com.vlc.maeummal.global.enums.MissionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
-
+@Slf4j
 @Controller
 @RequestMapping("/word")
 @RequiredArgsConstructor
@@ -26,9 +30,11 @@ public class WordSetController {
 
     private final AmazonS3 s3Client;
 
+
     @GetMapping("/wordSet")
     public ResponseEntity<?> getWordSet(@RequestParam Long wordSetId){
         WordSetResponseDTO.GetWordSetDTO wordSet = wordService.getWordSet(wordSetId);
+
         if (wordSet == null) {
             return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("낱말카드", "해당하는 낱말 카드가 없습니다.", null));
         }

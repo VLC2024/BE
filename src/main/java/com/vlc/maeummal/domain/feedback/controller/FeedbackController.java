@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.feedback.controller;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackRequestDTO;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
@@ -23,7 +24,8 @@ import java.util.List;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
-
+//    private final UserAuthorizationConverter userAuthorizationConverter;
+    private final ChallengeService challengeService;
     /**
      * 피드백을 생성합니다.
      *
@@ -32,6 +34,8 @@ public class FeedbackController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> createFeedback(@RequestBody  FeedbackRequestDTO.GetAnswer feedbackRequestDTO) {
+//        Long memberId = userAuthorizationConverter.getCurrentUserId();
+//        challengeService.completeMission(memberId, MissionType.TEMP);
 
         try {
             log.info(" in try FeedbackController: " + feedbackRequestDTO);
@@ -46,6 +50,7 @@ public class FeedbackController {
             log.error("Exception occurred while creating feedback: ", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
     }
     // 모든 피드백 리스트 반환
 
