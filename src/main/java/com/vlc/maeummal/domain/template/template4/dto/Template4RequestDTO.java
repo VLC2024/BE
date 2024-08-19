@@ -1,6 +1,5 @@
 package com.vlc.maeummal.domain.template.template4.dto;
 
-import com.vlc.maeummal.domain.template.template2.dto.Template2RequestDTO;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

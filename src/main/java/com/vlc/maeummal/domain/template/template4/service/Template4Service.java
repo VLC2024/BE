@@ -2,9 +2,13 @@ package com.vlc.maeummal.domain.template.template4.service;
 
 import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import com.vlc.maeummal.domain.template.common.StoryCardRepository;
+import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
+import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
+import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,7 @@ public class Template4Service {
             StoryCardEntity storyCardEntity = StoryCardEntity.builder()
                     .image(storyCardDTO.getImage())
                     .answerNumber(storyCardDTO.getAnswerNumber())
+                    .description(storyCardDTO.getDescription())
                     .template4(savedTemplate4)
                     .build();
 
@@ -41,6 +46,12 @@ public class Template4Service {
         storyCardRepository.saveAll(savedTemplate4.getStoryCardEntityList());
 
         return savedTemplate4;
+    }
+
+    public Template4ResponseDTO.GetTemplate4DTO getTemplate4(Long template4Id) {
+        Template4Entity template4Entity = template4Repository.findById(template4Id)
+                .orElseThrow(() -> new EntityNotFoundException("템플릿을 찾을 수 없습니다."));
+        return Template4ResponseDTO.GetTemplate4DTO.convertTemplate4DTO(template4Entity);
     }
 
 }
