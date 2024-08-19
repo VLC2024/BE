@@ -23,4 +23,9 @@ public class TemplateController {
     public ApiResponse<List<TemplateResponseDTO.GetTemplates>>getAllTemplates() {
         return ApiResponse.onSuccess(templateService.getAllTemplateList());
     }
+    @GetMapping("/recent")
+    public ApiResponse<List<TemplateResponseDTO.GetTemplates>> getRecentTemplates() {
+        return ApiResponse.onSuccess(templateService.getRecentTemplates());
+
+    }
 }

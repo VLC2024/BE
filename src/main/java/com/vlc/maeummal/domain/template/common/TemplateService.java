@@ -37,7 +37,7 @@ public class TemplateService {
         Comparator<TemplateEntity> comparator = (o1, o2) -> {
             LocalDateTime createdAt1 = o1.getCreatedAt();
             LocalDateTime createdAt2 = o2.getCreatedAt();
-            return createdAt1.compareTo(createdAt2); // 오름차순
+            return createdAt2.compareTo(createdAt1); // 오름차순
         };
 
         // 리스트 정렬
@@ -49,6 +49,14 @@ public class TemplateService {
                 .collect(Collectors.toList());
 
 
+    }
+    public List<TemplateResponseDTO.GetTemplates> getRecentTemplates() {
+        List<TemplateResponseDTO.GetTemplates> templates = getAllTemplateList()
+                .stream()
+                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt())) // 내림차순 정렬
+                .limit(5) // 가장 최근 5개로 제한
+                .collect(Collectors.toList());
 
+        return templates;
     }
 }
