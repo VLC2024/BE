@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.feedback.service;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackRequestDTO;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
@@ -19,11 +20,13 @@ import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
 import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
 import com.vlc.maeummal.global.common.BaseEntity;
+import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +46,7 @@ public class FeedbackService extends BaseEntity {
 
     @Autowired
     Template5Repository template5Repository;
+    final ChallengeService challengeService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -135,10 +139,15 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         Long templateId = studentAnswerDTO.getTemplateId();
         TemplateType type = studentAnswerDTO.getTemplateType();
 
+        Long memberId = memberRepository.findById(studentAnswerDTO.getStudentId())
+                .map(MemberEntity::getMemberId) // MemberEntity가 존재하면 MemberId를 반환합니다
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getTemplateId()));
+        log.info("memberId" + memberId + "   ");
+        challengeService.completeMission(memberId, MissionType.TEMP);
+
         if (isValidate(templateId, type)) {
             switchForTemplateType(studentAnswerDTO, studentAnswerDTO.getTemplateType());
 
-//            processTemplateToFeedback(template.get(), answerList, studentAnswerDTO);
         } else {
             throw new IllegalArgumentException("Template id not found with id: " + templateId);
         }

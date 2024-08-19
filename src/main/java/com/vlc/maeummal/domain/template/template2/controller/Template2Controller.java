@@ -5,6 +5,7 @@ import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
 import com.vlc.maeummal.domain.template.template2.service.Template2Service;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ public class Template2Controller {
         if (template2 == null) {
             return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿이 없습니다.", null));
         }
+
+
         return ResponseEntity.ok(ApiResponse.onSuccess(template2));
     }
 
