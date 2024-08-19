@@ -31,7 +31,7 @@ public class Template4Entity extends TemplateEntity {
     private String hint;
 
     @Column(nullable = true)
-    private Integer imageNum;
+    private Integer imageNum; // 피드백시 필요
 
     @OneToMany(mappedBy = "template4", cascade = CascadeType.ALL, orphanRemoval = true)
     List<StoryCardEntity> storyCardEntityList = new ArrayList<>();

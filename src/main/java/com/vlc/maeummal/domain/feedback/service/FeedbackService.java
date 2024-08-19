@@ -15,6 +15,8 @@ import com.vlc.maeummal.domain.template.template2.repository.Template2Repository
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
+import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
+import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
 import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
 import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -36,13 +39,12 @@ import java.util.stream.IntStream;
 public class FeedbackService extends BaseEntity {
 
     final Template3Repository template3Repository;
+    final Template4Repository template4Repository;
     final Template1Repository template1Repository;
     final Template2Repository template2Repository;
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
-
-    @Autowired
-    Template5Repository template5Repository;
+    final Template5Repository template5Repository;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -224,8 +226,17 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
     }
     public void processTemplate4ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
+        Template4Entity template4 = template4Repository.findById(studentAnswerDTO.getTemplateId()).get();
+
+        List<StoryCardEntity> storyCardEntityList = template4.getStoryCardEntityList();
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template4, studentAnswerDTO);
 
         // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
+
+        log.info("in processTemplate4ToFeedback: ");
+        feedbackRepository.save(feedbackEntity);
 
     }
     public void processTemplate5ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
@@ -256,6 +267,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
                 .templateType(template.getType())
                 .imageNum(template.getImageNum())
                 .templateType(studentAnswerDTO.getTemplateType())
+                .solution(template.getDescription())
                 .student(memberRepository.findById(studentAnswerDTO.getStudentId())
                         .orElse(null))
                 .teacher(memberRepository.findById(studentAnswerDTO.getStudentId())
@@ -323,6 +335,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
                     FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
                     feedbackCard.setImage(storyCard.getImage());
                     feedbackCard.setAnswerNumber(answerNumber);
+                    feedbackCard.setDescription(storyCard.getDescription());
 
                     return feedbackCard;
                 })
@@ -422,7 +435,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
             case TEMPLATE3:
                 return template3Repository.existsById(templateId);
             case TEMPLATE4:
-//                return template4Repository.existsById(templateId);
+                return template4Repository.existsById(templateId);
             case TEMPLATE5:
                 return template5Repository.existsById(templateId);
             default:

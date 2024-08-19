@@ -2,8 +2,6 @@ package com.vlc.maeummal.domain.template.template4.service;
 
 import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import com.vlc.maeummal.domain.template.common.StoryCardRepository;
-import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
-import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
@@ -26,6 +24,7 @@ public class Template4Service {
                 .title(requestDTO.getTitle())
                 .description(requestDTO.getDescription())
                 .hint(requestDTO.getHint())
+                .imageNum(requestDTO.getStoryCardEntityList().size())
                 .storyCardEntityList(new ArrayList<>())
                 .type(requestDTO.getType())
                 .build();
