@@ -5,6 +5,7 @@ import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.apiPayload.code.status.SuccessStatus;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChallengeController {
     final ChallengeService challengeService;
+    final UserAuthorizationConverter userAuthorizationConverter;
 
     @GetMapping("/get")
     public ApiResponse<ChallengeResponseDTO.GetChallengeDTO> isCompleteChallenge(@RequestParam(value = "studentId") Long studentId) {
         return ApiResponse.onSuccess(challengeService.getChallnege(studentId));
 
+    }
+    @GetMapping("/getMember")
+    public void  getMember() {
+       log.info("member info = " + userAuthorizationConverter.getCurrentUserId());
     }
 }

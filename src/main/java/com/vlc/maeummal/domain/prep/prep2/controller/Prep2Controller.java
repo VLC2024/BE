@@ -1,11 +1,15 @@
 package com.vlc.maeummal.domain.prep.prep2.controller;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2RequestDTO;
 import com.vlc.maeummal.domain.prep.prep2.dto.Prep2ResponseDTO;
 import com.vlc.maeummal.domain.prep.prep2.service.Prep2Service;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
+import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.openAi.dalle.service.AiService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +22,18 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping("prep2")
+@AllArgsConstructor
 public class Prep2Controller {
-    @Autowired
-    private Prep2Service prep2Service;
-    @Autowired
-    private AiService aiService;
+
+    final private Prep2Service prep2Service;
+
+    final private AiService aiService;
+    final private UserAuthorizationConverter userAuthorizationConverter;
+    final private ChallengeService challengeService;
 
     @PostMapping("/")
     public ResponseEntity<?> getWords (@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
+
 
         String category = requestDTO.getCategory().toString();
         Prep2ResponseDTO.generatedWordsDTO responseDTO = prep2Service.generateWords(category);
@@ -39,6 +47,7 @@ public class Prep2Controller {
         String sentence = prep2Service.makeSentence(requestDTO);
         String base64ImageData = aiService.generatePicture(sentence); // base64 data
         String imageUrl = null;
+        challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.PREP);
 
         //  Base64 데이터를 MultipartFile로 변환하여 S3에 업로드
         try {
