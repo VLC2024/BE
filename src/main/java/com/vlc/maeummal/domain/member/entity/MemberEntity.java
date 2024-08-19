@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.member.entity;
 
+import com.vlc.maeummal.domain.challenge.entity.ChallengeEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
@@ -7,8 +8,6 @@ import com.vlc.maeummal.global.enums.Iq;
 import com.vlc.maeummal.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -79,6 +78,9 @@ public class MemberEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEntity> matchingStudents;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ChallengeEntity challenge; //  챌린지
 
     // PIN 코드 생성자
     @PrePersist

@@ -59,4 +59,13 @@ public class TemplateService {
 
         return templates;
     }
+    public List<TemplateResponseDTO.GetTemplates> retrieveTemplateUsingTitle(String title) {
+        List<TemplateResponseDTO.GetTemplates> templates = getAllTemplateList()
+                .stream()
+                .filter(template -> template.getTitle().toLowerCase().contains(title.toLowerCase())) // 부분 문자열 검색
+                .collect(Collectors.toList());
+
+        return templates;
+    }
+
 }

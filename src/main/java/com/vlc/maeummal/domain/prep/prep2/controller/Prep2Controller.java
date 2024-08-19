@@ -30,6 +30,7 @@ public class Prep2Controller {
         String category = requestDTO.getCategory().toString();
         Prep2ResponseDTO.generatedWordsDTO responseDTO = prep2Service.generateWords(category);
 
+
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDTO));
     }
 
