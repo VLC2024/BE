@@ -32,6 +32,8 @@ public class FeedbackEntity extends BaseEntity {
 
     private String title;
 
+    private String solution; // 선생님이 작성한 템플릿에 대한 해설
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private MemberEntity student;
