@@ -29,12 +29,10 @@ import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -150,10 +148,9 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
 
         if (isValidate(templateId, type)) {
             switch (type) {
-//                case TEMPLATE1: // TODO 반환값 설정
-//                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
-//                    // Return null or an appropriate default value if TEMPLATE1 does not need to return an ID
-//                    return feedbackEntity1 != null ? feedbackEntity1.getId() : null;
+                case TEMPLATE1: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity1.getId());
                 case TEMPLATE2: // TODO 반환값 설정
                     FeedbackEntity feedbackEntity2 = processTemplate2ToFeedback(studentAnswerDTO);
                     return getFeedbackDetail(feedbackEntity2.getId());
@@ -234,8 +231,10 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
      * 학생의 답 & 정답 으로 피드백 만드는 함수 호출
      * 재료 : 학생의 답 & 이미지 카드 s
      * 조건 : 각 템플릿 마다 사용되는 리스트
-     * */
-    public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+     *
+     * @return
+     */
+    public FeedbackEntity processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Template1Entity template1 = template1Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<WordEntity> wordEntities = template1.getWordEntities();
         log.info("in processTemplate1ToFeedback: 1");
@@ -248,6 +247,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         log.info("in processTemplate1ToFeedback: 2");
         feedbackRepository.save(feedbackEntity);
 
+        return feedbackEntity;
     }
     public FeedbackEntity processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
