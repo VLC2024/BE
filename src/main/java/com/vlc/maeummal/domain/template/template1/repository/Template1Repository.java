@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface Template1Repository extends JpaRepository<Template1Entity, Integer>{
+public interface Template1Repository extends JpaRepository<Template1Entity, Long>{
 
-    Optional<Template1Entity> findById(Integer id);
+    Optional<Template1Entity> findById(Long id);
 }

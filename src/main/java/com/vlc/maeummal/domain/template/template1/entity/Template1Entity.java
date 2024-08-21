@@ -24,7 +24,7 @@ public class Template1Entity extends TemplateEntity {
     @Id
     @Column(name = "temp1_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Builder.Default
     @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)

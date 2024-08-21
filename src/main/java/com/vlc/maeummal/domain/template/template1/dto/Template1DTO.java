@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Template1DTO {
-    private Integer id;
+    private Long id;
     @Builder.Default
     private List<WordSetRequestDTO.GetWordDTO> words = new ArrayList<>();
 }

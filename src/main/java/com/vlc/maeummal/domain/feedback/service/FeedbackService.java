@@ -390,7 +390,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
      * 조건 : 각 템플릿 마다 사용되는 리스트
      * */
     public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-        Template1Entity template1 = template1Repository.findById(Math.toIntExact(studentAnswerDTO.getTemplateId())).get();
+        Template1Entity template1 = template1Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<WordEntity> wordEntities = template1.getWordEntities();
         log.info("in processTemplate1ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
@@ -671,7 +671,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
     public boolean isValidate(Long templateId, TemplateType templateType) {
         switch (templateType) {
             case TEMPLATE1:
-                return template1Repository.existsById(Math.toIntExact(templateId));
+                return template1Repository.existsById(templateId);
             case TEMPLATE2:
                 return template2Repository.existsById(templateId);
             case TEMPLATE3:

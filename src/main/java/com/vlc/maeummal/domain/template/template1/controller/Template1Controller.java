@@ -22,7 +22,7 @@ public class Template1Controller {
     }
 
     @PostMapping("/{id}/add-random-words")
-    public ResponseEntity<Template1DTO> addRandomWordsToTemplate(@PathVariable Integer id) {
+    public ResponseEntity<Template1DTO> addRandomWordsToTemplate(@PathVariable Long id) {
         Template1DTO updatedTemplate = template1Service.addRandomWordsToTemplate(id);
         return ResponseEntity.ok(updatedTemplate);
     }
@@ -34,7 +34,7 @@ public class Template1Controller {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<Template1DTO> getTemplateById(@RequestParam Integer temp1Id) {
+    public ResponseEntity<Template1DTO> getTemplateById(@RequestParam Long temp1Id) {
         Template1DTO template = template1Service.getTemplateById(temp1Id);
         return ResponseEntity.ok(template);
     }
