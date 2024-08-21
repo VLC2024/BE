@@ -1,8 +1,7 @@
 package com.vlc.maeummal.domain.template.template2.entity;
 
+import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
-import com.vlc.maeummal.global.converter.StringListConverter;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.word.service;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
@@ -9,7 +10,10 @@ import com.vlc.maeummal.domain.word.repository.WordSetRepository;
 import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.Uuid;
 import com.vlc.maeummal.global.aws.UuidRepository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
+import com.vlc.maeummal.global.enums.MissionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WordService {
@@ -35,11 +39,15 @@ public class WordService {
     private final UuidRepository uuidRepository;
 
     private final WordRepository wordRepository;
+    private final UserAuthorizationConverter userAuthorizationConverter;
+    private final ChallengeService challengeService;
 
     // id -> wordset반환
     public WordSetResponseDTO.GetWordSetDTO getWordSet(Long setId) {
         // db에서 가져옴, dto변환
         WordSetResponseDTO.GetWordSetDTO wordSetResponseDTO = WordSetResponseDTO.GetWordSetDTO.getWordSetDTO(wordSetRepository.findById(setId).get());
+        challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.WORD);
+        log.info("wordset member id : " + userAuthorizationConverter.getCurrentUserId());
 
         // return
         return wordSetResponseDTO;

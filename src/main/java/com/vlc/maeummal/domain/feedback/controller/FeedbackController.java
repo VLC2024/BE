@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.feedback.controller;
 
+import com.vlc.maeummal.domain.challenge.service.ChallengeService;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackRequestDTO;
 import com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.vlc.maeummal.global.apiPayload.code.status.*;
@@ -23,7 +25,8 @@ import java.util.List;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
-
+//    private final UserAuthorizationConverter userAuthorizationConverter;
+    private final ChallengeService challengeService;
     /**
      * 피드백을 생성합니다.
      *
@@ -32,20 +35,33 @@ public class FeedbackController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> createFeedback(@RequestBody  FeedbackRequestDTO.GetAnswer feedbackRequestDTO) {
+//        Long memberId = userAuthorizationConverter.getCurrentUserId();
+//        challengeService.completeMission(memberId, MissionType.TEMP);
 
         try {
-            log.info(" in try FeedbackController: " + feedbackRequestDTO);
-            // 피드백을 설정합니다.
-            feedbackService.setFeedbackFromAnswer(feedbackRequestDTO);
-            log.info("error in FeedbackController: " + feedbackRequestDTO);
-            // 성공 응답 반환 (여기서 실제 응답 데이터는 FeedbackResponseDTO로 설정할 수 있습니다)
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            // Call the service method to process the feedback and get the saved Feedback ID
+            FeedbackResponseDTO.GetFeedbackDetailDTO savedFeedback =
+                    feedbackService.setFeedbackFromAnswer(feedbackRequestDTO);
+
+            // Log the successful operation
+            log.info("Successfully processed feedback with ID: " + savedFeedback);
+
+            // Return the ID in the response
+            return ResponseEntity.ok(savedFeedback);
+        } catch (UsernameNotFoundException e) {
+            // Log specific exception details
+            log.error("User not found: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (IllegalArgumentException e) {
+            // Log specific exception details
+            log.error("Invalid argument: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            // 예외 처리 및 에러 응답 반환
-            log.info("error in FeedbackController this is not valid: " + feedbackRequestDTO);
-            log.error("Exception occurred while creating feedback: ", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            // Log the generic exception details
+            log.error("An unexpected error occurred: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
+
     }
     // 모든 피드백 리스트 반환
 

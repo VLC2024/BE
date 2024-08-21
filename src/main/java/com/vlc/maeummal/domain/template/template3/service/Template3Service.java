@@ -10,13 +10,14 @@ import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.UuidRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Template3Service {
@@ -62,13 +63,17 @@ public class Template3Service {
             ImageCardEntity imageCardEntity = ImageCardEntity.builder()
                     .image(imageCardDTO.getImage()) // 이미지 URL 저장
                     .adjective(imageCardDTO.getAdjective())
+                    .hint(imageCardDTO.getHint())
                     .noun(imageCardDTO.getNoun())
                     .template3(savedTemplate3) // 저장된 Template3Entity와 연관시키기
                     .build();
+            log.info("imageCard hint : " + imageCardDTO.getHint());
 
             // 각 ImageCardEntity를 저장된 Template3Entity에 추가
             savedTemplate3.getImageCardEntityList().add(imageCardEntity);
+            log.info("imageCard hint : " + imageCardDTO.getHint());
         }
+
 
         // Step 4: ImageCardEntity 저장
         imageCardRepository.saveAll(savedTemplate3.getImageCardEntityList());
