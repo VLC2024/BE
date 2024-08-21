@@ -31,6 +31,23 @@ public class Template1Service {
     }
 
     @Transactional
+    public List<Template1DTO> getAllTemplates() {
+        List<Template1Entity> templates = template1Repository.findAll();
+        return templates.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Template1DTO getTemplateById(Integer templateId) {
+        Optional<Template1Entity> optionalTemplate = template1Repository.findById(templateId);
+        if (optionalTemplate.isEmpty()) {
+            throw new RuntimeException("Template1Entity not found with id: " + templateId);
+        }
+        return convertToDTO(optionalTemplate.get());
+    }
+
+    @Transactional
     public Template1DTO addRandomWordsToTemplate(Integer templateId) {
         Optional<Template1Entity> optionalTemplate = template1Repository.findById(templateId);
         if (optionalTemplate.isEmpty()) {

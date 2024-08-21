@@ -208,6 +208,7 @@ import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
 import com.vlc.maeummal.domain.template.template2.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
@@ -218,6 +219,7 @@ import com.vlc.maeummal.domain.template.template3.repository.Template3Repository
 import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
 import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
+import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.EntityNotFoundException;
@@ -388,10 +390,17 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
      * 조건 : 각 템플릿 마다 사용되는 리스트
      * */
     public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-
+        Template1Entity template1 = template1Repository.findById(Math.toIntExact(studentAnswerDTO.getTemplateId())).get();
+        List<WordEntity> wordEntities = template1.getWordEntities();
+        log.info("in processTemplate1ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
-
+        FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template1, studentAnswerDTO);
         // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromWords(wordEntities));
+        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromWords(wordEntities, studentAnswerDTO));
+
+        log.info("in processTemplate1ToFeedback: 2");
+        feedbackRepository.save(feedbackEntity);
 
     }
     public void processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
@@ -442,6 +451,51 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         feedbackRepository.save(feedbackEntity);
     }
 
+
+    // temp1에서 사용
+    public List<FeedbackCardEntity> setFeedbackCardEntitiesFromWords(List<WordEntity> wordEntities) {
+        List<FeedbackCardEntity> feedbackCardEntities = wordEntities.stream()
+                .map(word -> {
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(word.getImage());
+                    feedbackCard.setMeaning(word.getMeaning());
+                    feedbackCard.setDescription(word.getDescription());
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return feedbackCardEntities;
+    }
+    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromWords(List<WordEntity> wordEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        if (wordEntities == null || studentAnswerDTO == null) {
+            throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
+        }
+
+        List<String> answerList = studentAnswerDTO.getAnswerList();
+        if (answerList == null) {
+            throw new IllegalArgumentException("Student answer list cannot be null");
+        }
+        if (answerList.size() != wordEntities.size()) {
+            throw new IllegalArgumentException("Answer list size does not match the image card entities size");
+        }
+
+        List<FeedbackCardEntity> studentFeedbackCardEntities = IntStream.range(0, wordEntities.size())
+                .mapToObj(index -> {
+                    WordEntity word = wordEntities.get(index);
+
+                    String studentMeaing = studentAnswerDTO.getAnswerList().size() > index
+                            ? studentAnswerDTO.getAnswerList().get(index)
+                            : null;
+
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(word.getImage());
+                    feedbackCard.setMeaning(studentMeaing);
+                    feedbackCard.setDescription(word.getDescription());
+
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return studentFeedbackCardEntities;
+    }
 
 
 /**
@@ -613,10 +667,11 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
                 .collect(Collectors.toList());
         return feedbackCardEntities;
     }
+
     public boolean isValidate(Long templateId, TemplateType templateType) {
         switch (templateType) {
             case TEMPLATE1:
-//                return template1Repository.existsById(templateId);
+                return template1Repository.existsById(Math.toIntExact(templateId));
             case TEMPLATE2:
                 return template2Repository.existsById(templateId);
             case TEMPLATE3:

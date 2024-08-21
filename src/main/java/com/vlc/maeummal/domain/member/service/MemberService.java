@@ -97,41 +97,4 @@ public class MemberService {
         return null;
     }
 
-    @Transactional
-    public MemberEntity addStudentToTeacher(Long teacherId, Long studentPinCode) {
-        MemberEntity teacher = memberRepository.findById(String.valueOf(teacherId))
-                .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
-
-        MemberEntity student = memberRepository.findByPinCode(studentPinCode)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        // 학생의 teacherId 필드를 매칭된 선생님의 memberId로 설정
-        student.setTeacherId(teacher.getMemberId());
-        memberRepository.save(student);
-
-        return teacher;
-    }
-
-    @Transactional
-    public MemberEntity removeStudentFromTeacher(Long teacherId, Long studentPinCode) {
-        MemberEntity teacher = memberRepository.findById(String.valueOf(teacherId))
-                .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
-
-        MemberEntity student = memberRepository.findByPinCode(studentPinCode)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        // 학생의 teacherId 필드를 null로 설정하여 매칭 해제
-        if (student.getTeacherId().equals(teacher.getMemberId())) {
-            student.setTeacherId(null);
-            memberRepository.save(student);
-        }
-
-        return teacher;
-    }
-
-    public List<MemberEntity> getStudentsOfTeacher(Long teacherId) {
-        return memberRepository.findAll().stream()
-                .filter(student -> teacherId.equals(student.getTeacherId()))
-                .toList();
-    }
 }

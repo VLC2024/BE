@@ -15,5 +15,5 @@ public interface MemberRepository extends JpaRepository<MemberEntity,String> {
 
     MemberEntity findByEmailAndPassword(String email, String password);
 
-    Optional<MemberEntity> findByPinCode(Long pinCode);
+//    Optional<MemberEntity> findByPinCode(Long pinCode);
 }

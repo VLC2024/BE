@@ -26,4 +26,17 @@ public class Template1Controller {
         Template1DTO updatedTemplate = template1Service.addRandomWordsToTemplate(id);
         return ResponseEntity.ok(updatedTemplate);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Template1DTO>> getAllTemplates() {
+        List<Template1DTO> templates = template1Service.getAllTemplates();
+        return ResponseEntity.ok(templates);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<Template1DTO> getTemplateById(@RequestParam Integer temp1Id) {
+        Template1DTO template = template1Service.getTemplateById(temp1Id);
+        return ResponseEntity.ok(template);
+    }
+
 }
