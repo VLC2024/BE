@@ -70,7 +70,7 @@ public class MemberController {
             final String token = tokenProvider.createToken(member);
 
             final MemberDTO responseMemberDTO = MemberDTO.builder()
-
+                    .id(member.getMemberId())
                     .email(member.getEmail())
                     .token(token)
                     .build();
