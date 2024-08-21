@@ -10,6 +10,7 @@ import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.UuidRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,9 @@ public class Template3Service {
 
             // 각 ImageCardEntity를 저장된 Template3Entity에 추가
             savedTemplate3.getImageCardEntityList().add(imageCardEntity);
+            log.info("imageCard hint : " + imageCardDTO.getHint());
         }
+
 
         // Step 4: ImageCardEntity 저장
         imageCardRepository.saveAll(savedTemplate3.getImageCardEntityList());

@@ -136,63 +136,98 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
      * Controller에서 호출되는 메인 메소드
      *
      * */
-
-    public void setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public FeedbackResponseDTO.GetFeedbackDetailDTO setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Long templateId = studentAnswerDTO.getTemplateId();
         TemplateType type = studentAnswerDTO.getTemplateType();
 
         Long memberId = memberRepository.findById(studentAnswerDTO.getStudentId())
-                .map(MemberEntity::getMemberId) // MemberEntity가 존재하면 MemberId를 반환합니다
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getTemplateId()));
-        log.info("memberId" + memberId + "   ");
+                .map(MemberEntity::getMemberId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getStudentId()));
+
         challengeService.completeMission(memberId, MissionType.TEMP);
 
         if (isValidate(templateId, type)) {
-            switchForTemplateType(studentAnswerDTO, studentAnswerDTO.getTemplateType());
-
+            switch (type) {
+//                case TEMPLATE1: // TODO 반환값 설정
+//                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
+//                    // Return null or an appropriate default value if TEMPLATE1 does not need to return an ID
+//                    return feedbackEntity1 != null ? feedbackEntity1.getId() : null;
+                case TEMPLATE2: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity2 = processTemplate2ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity2.getId());
+                case TEMPLATE3: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity3 = processTemplate3ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity3.getId());
+                case TEMPLATE4: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity4 =processTemplate4ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity4.getId());
+                case TEMPLATE5: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity5 =processTemplate5ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity5.getId());
+                default:
+                    throw new IllegalArgumentException("Unknown template type: " + studentAnswerDTO.getTemplateType());
+            }
         } else {
             throw new IllegalArgumentException("Template id not found with id: " + templateId);
         }
     }
 
-    public void switchForTemplateType(FeedbackRequestDTO.GetAnswer studentAnswerDTO, TemplateType templateType) {
-        // 템플릿 타입에 따라 적절한 리포지토리와 함수 선택
+//    public void setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+//        Long templateId = studentAnswerDTO.getTemplateId();
+//        TemplateType type = studentAnswerDTO.getTemplateType();
+//
+//        Long memberId = memberRepository.findById(studentAnswerDTO.getStudentId())
+//                .map(MemberEntity::getMemberId) // MemberEntity가 존재하면 MemberId를 반환합니다
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getTemplateId()));
+//        log.info("memberId" + memberId + "   ");
+//        challengeService.completeMission(memberId, MissionType.TEMP);
+//
+//        if (isValidate(templateId, type)) {
+//            switchForTemplateType(studentAnswerDTO, studentAnswerDTO.getTemplateType());
+//
+//        } else {
+//            throw new IllegalArgumentException("Template id not found with id: " + templateId);
+//        }
+//    }
 
-        switch (templateType) {
-            case TEMPLATE1:
-                processTemplate1ToFeedback(
-                        studentAnswerDTO
-
-                );
-                break;
-            case TEMPLATE2:
-                processTemplate2ToFeedback(
-                        studentAnswerDTO
-
-                );
-                break;
-            case TEMPLATE3:
-                processTemplate3ToFeedback(
-                        studentAnswerDTO
-
-                );
-                break;
-            case TEMPLATE4:
-                processTemplate4ToFeedback(
-                        studentAnswerDTO
-
-                );
-                break;
-            case TEMPLATE5:
-                processTemplate5ToFeedback(
-                        studentAnswerDTO
-
-                );
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown template type: " + studentAnswerDTO.getTemplateType());
-        }
-    }
+//    public void switchForTemplateType(FeedbackRequestDTO.GetAnswer studentAnswerDTO, TemplateType templateType) {
+//        // 템플릿 타입에 따라 적절한 리포지토리와 함수 선택
+//
+//        switch (templateType) {
+//            case TEMPLATE1:
+//                processTemplate1ToFeedback(
+//                        studentAnswerDTO
+//
+//                );
+//                break;
+//            case TEMPLATE2:
+//                processTemplate2ToFeedback(
+//                        studentAnswerDTO
+//
+//                );
+//                break;
+//            case TEMPLATE3:
+//                processTemplate3ToFeedback(
+//                        studentAnswerDTO
+//
+//                );
+//                break;
+//            case TEMPLATE4:
+//                processTemplate4ToFeedback(
+//                        studentAnswerDTO
+//
+//                );
+//                break;
+//            case TEMPLATE5:
+//                processTemplate5ToFeedback(
+//                        studentAnswerDTO
+//
+//                );
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Unknown template type: " + studentAnswerDTO.getTemplateType());
+//        }
+//    }
     /**
      * 학생의 답 & 정답 으로 피드백 만드는 함수 호출
      * 재료 : 학생의 답 & 이미지 카드 s
@@ -205,7 +240,7 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         // Todo 정답 리스트 & 학생 답 리스트 포맷
 
     }
-    public void processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public FeedbackEntity processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
         Template2Entity template2 = template2Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<StoryCardEntity> storyCardEntityList = template2.getStoryCardEntityList();
@@ -215,11 +250,12 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
         feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
 
+        // Todo 반환
         log.info("in processTemplate2ToFeedback: ");
-        feedbackRepository.save(feedbackEntity);
-
+        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
+        return feedback;
     }
-    public void processTemplate3ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public FeedbackEntity processTemplate3ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Template3Entity template3 = template3Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<ImageCardEntity> imageCardEntities = template3.getImageCardEntityList();
         log.info("in processTemplate3ToFeedback: 1");
@@ -228,12 +264,13 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         // TOdo 각자 수행.
         feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromImageCards(imageCardEntities));
         feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromImageCards(imageCardEntities, studentAnswerDTO));
-
+        // Todo 반환
         log.info("in processTemplate3ToFeedback: 2");
-        feedbackRepository.save(feedbackEntity);
+        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
+        return feedback;
 
     }
-    public void processTemplate4ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public FeedbackEntity processTemplate4ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
         Template4Entity template4 = template4Repository.findById(studentAnswerDTO.getTemplateId()).get();
 
@@ -243,12 +280,13 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         // Todo 정답 리스트 & 학생 답 리스트 포맷
         feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
         feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
-
+        // Todo 반환
         log.info("in processTemplate4ToFeedback: ");
-        feedbackRepository.save(feedbackEntity);
+        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
+        return feedback;
 
     }
-    public void processTemplate5ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+    public FeedbackEntity processTemplate5ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Template5Entity template5 = template5Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<WordCardEntity> wordCardEntities = template5.getWordListEntities();
         log.info("in processTemplate3ToFeedback: 1");
@@ -257,9 +295,10 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         // Todo 정답 리스트 & 학생 답 리스트 포맷
         feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromWordCards(wordCardEntities));
         feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromWordCards(wordCardEntities, studentAnswerDTO));
-
+        // Todo 반환
         log.info("in processTemplate3ToFeedback: 2");
-        feedbackRepository.save(feedbackEntity);
+        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
+        return feedback;
     }
 
 
