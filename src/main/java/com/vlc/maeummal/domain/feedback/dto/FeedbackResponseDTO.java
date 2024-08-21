@@ -33,16 +33,39 @@ public class FeedbackResponseDTO {
 
 
         public static FeedbackResponseDTO.GetFeedbackDTO getFeedback(FeedbackEntity feedbackEntity, String title) {
+//            MemberEntity student = feedbackEntity.getStudent();
+//            Long studentId = (student != null) ? student.getMemberId() : null; // Null 체크 후 ID 설정
+
+
+//            return GetFeedbackDTO.builder()
+//                    .id(feedbackEntity.getId())
+//                    .templateType(feedbackEntity.getTemplateType())
+//                    .aiFeedback(feedbackEntity.getAiFeedback())
+//                    .createdAt(feedbackEntity.getCreatedAt())
+//                    .studentId(studentId) // Null 체크 후 studentId 설정
+//                    .title(title)
+//                    .build();
+            // Define default values
+            Long defaultId = -1L;
+            TemplateType defaultTemplateType = TemplateType.UNKNOWN;  // Assuming UNKNOWN is a valid enum value
+            String defaultAiFeedback = "No feedback available";
+            LocalDateTime defaultCreatedAt = LocalDateTime.now();
+            LocalDateTime defaultUpdatedAt = LocalDateTime.now();
+            Long defaultStudentId = -1L;
+            String defaultTitle = "Untitled";
+
+            // Fetch student and check for null
             MemberEntity student = feedbackEntity.getStudent();
-            Long studentId = (student != null) ? student.getMemberId() : null; // Null 체크 후 ID 설정
+            Long studentId = (student != null) ? student.getMemberId() : defaultStudentId;
 
             return GetFeedbackDTO.builder()
-                    .id(feedbackEntity.getId())
-                    .templateType(feedbackEntity.getTemplateType())
-                    .aiFeedback(feedbackEntity.getAiFeedback())
-                    .createdAt(feedbackEntity.getCreatedAt())
-                    .studentId(studentId) // Null 체크 후 studentId 설정
-                    .title(title)
+                    .id(feedbackEntity.getId() != null ? feedbackEntity.getId() : defaultId)
+                    .templateType(feedbackEntity.getTemplateType() != null ? feedbackEntity.getTemplateType() : defaultTemplateType)
+                    .aiFeedback(feedbackEntity.getAiFeedback() != null ? feedbackEntity.getAiFeedback() : defaultAiFeedback)
+                    .createdAt(feedbackEntity.getCreatedAt() != null ? feedbackEntity.getCreatedAt() : defaultCreatedAt)
+                    .updatedAt(feedbackEntity.getUpdatedAt() != null ? feedbackEntity.getUpdatedAt() : defaultUpdatedAt)
+                    .studentId(studentId)
+                    .title(title != null ? title : defaultTitle)
                     .build();
         }
 

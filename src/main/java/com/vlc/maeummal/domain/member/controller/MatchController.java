@@ -1,9 +1,11 @@
 package com.vlc.maeummal.domain.member.controller;
 
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
+import com.vlc.maeummal.domain.member.dto.StudentResponseDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MatchService;
 import com.vlc.maeummal.domain.member.service.MemberService;
+import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -41,5 +43,11 @@ public class MatchController {
         List<StudentDTO> students = matchService.getStudentsByTeacherId(teacherId);
         return ResponseEntity.ok(students);
     }
+    @GetMapping("/get")
+    public ResponseEntity<?> getMatchedStudent(@RequestParam(value = "studentId") Long studentId) {
+        StudentResponseDTO.GetStudentDTO student = matchService.getStudentByStudentId(studentId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(student));
+    }
+
 
 }
