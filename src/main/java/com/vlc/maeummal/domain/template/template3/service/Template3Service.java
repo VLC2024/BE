@@ -66,6 +66,7 @@ public class Template3Service {
                     .noun(imageCardDTO.getNoun())
                     .template3(savedTemplate3) // 저장된 Template3Entity와 연관시키기
                     .build();
+            log.info("imageCard hint : " + imageCardDTO.getHint());
 
             // 각 ImageCardEntity를 저장된 Template3Entity에 추가
             savedTemplate3.getImageCardEntityList().add(imageCardEntity);
