@@ -31,7 +31,48 @@ public class Template1Service {
     }
 
     @Transactional
-    public Template1DTO addRandomWordsToTemplate(Integer templateId) {
+    public List<Template1DTO> getAllTemplates() {
+        List<Template1Entity> templates = template1Repository.findAll();
+        return templates.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Template1DTO getTemplateById(Long templateId) {
+        Optional<Template1Entity> optionalTemplate = template1Repository.findById(templateId);
+        if (optionalTemplate.isEmpty()) {
+            throw new RuntimeException("Template1Entity not found with id: " + templateId);
+        }
+        return convertToDTO(optionalTemplate.get());
+    }
+
+//    @Transactional
+//    public Template1DTO addRandomWordsToTemplate(Integer templateId) {
+//        Optional<Template1Entity> optionalTemplate = template1Repository.findById(templateId);
+//        if (optionalTemplate.isEmpty()) {
+//            throw new RuntimeException("Template1Entity not found with id: " + templateId);
+//        }
+//
+//        Template1Entity template = optionalTemplate.get();
+//
+//        List<WordEntity> allWords = wordRepository.findAll();
+//        if (allWords.size() < 3) {
+//            throw new RuntimeException("Not enough WordEntities to select 3 random words.");
+//        }
+//
+//        Collections.shuffle(allWords);
+//        List<WordEntity> randomWords = allWords.subList(0, 3);
+//
+//        template.getWordEntities().addAll(randomWords);
+//        randomWords.forEach(word -> word.setWordSet(null));
+//
+//        Template1Entity updatedTemplate = template1Repository.save(template);
+//        return convertToDTO(updatedTemplate);
+//    }
+
+    @Transactional
+    public Template1DTO addRandomWordsToTemplate(Long templateId) {
         Optional<Template1Entity> optionalTemplate = template1Repository.findById(templateId);
         if (optionalTemplate.isEmpty()) {
             throw new RuntimeException("Template1Entity not found with id: " + templateId);
@@ -47,12 +88,20 @@ public class Template1Service {
         Collections.shuffle(allWords);
         List<WordEntity> randomWords = allWords.subList(0, 3);
 
-        template.getWordEntities().addAll(randomWords);
-        randomWords.forEach(word -> word.setWordSet(null));
+        // 양방향 연관 관계 설정
+        for (WordEntity word : randomWords) {
+            word.setTemplate1Entity(template); // WordEntity에 template1Entity 설정
+            template.getWordEntities().add(word); // Template1Entity에 WordEntity 추가
+        }
 
-        Template1Entity updatedTemplate = template1Repository.save(template);
-        return convertToDTO(updatedTemplate);
+        // template과 word 엔티티들을 데이터베이스에 저장
+        template1Repository.save(template);
+        wordRepository.saveAll(randomWords);
+
+        return convertToDTO(template);
     }
+
+
 
     private Template1DTO convertToDTO(Template1Entity template) {
         List<WordSetRequestDTO.GetWordDTO> wordDTOs = Optional.ofNullable(template.getWordEntities())
