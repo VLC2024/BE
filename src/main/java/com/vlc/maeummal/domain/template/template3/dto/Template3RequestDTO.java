@@ -44,7 +44,7 @@ public class Template3RequestDTO {
         String image;
         String adjective;
         String noun;
-       String hint;
+        String hint;
 
         public static Template3RequestDTO.GetImageCardDTO getImageCardDTO(Template3RequestDTO.GetImageCardDTO imageCardDTO) {
             return GetImageCardDTO.builder()
