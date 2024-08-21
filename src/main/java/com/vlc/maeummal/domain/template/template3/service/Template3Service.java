@@ -62,6 +62,7 @@ public class Template3Service {
             ImageCardEntity imageCardEntity = ImageCardEntity.builder()
                     .image(imageCardDTO.getImage()) // 이미지 URL 저장
                     .adjective(imageCardDTO.getAdjective())
+                    .hint(imageCardDTO.getHint())
                     .noun(imageCardDTO.getNoun())
                     .template3(savedTemplate3) // 저장된 Template3Entity와 연관시키기
                     .build();
