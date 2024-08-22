@@ -23,6 +23,7 @@ public class StudentResponseDTO {
         Long studentId;
         String name;
         String phoneNumber;
+        String profileImage;
         String iq;
         List<FeedbackResponseDTO.GetFeedbackDTO> feedbackTwo;
         Map<String, Integer> templateChart;
@@ -32,6 +33,7 @@ public class StudentResponseDTO {
                     .studentId(student.getMemberId())
                     .name(student.getName())
                     .phoneNumber(student.getPhoneNumber())
+                    .profileImage(student.getImage())
                     .iq(convertIqToString(student.getIq()))
                     .feedbackTwo(feedbackList)
                     .templateChart(chart)
@@ -59,22 +61,18 @@ public class StudentResponseDTO {
     public static class GetStudentAprroximateDTO {
         Long studentId;
         String name;
-        String phoneNumber;
-        String iq;
-        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackTwo;
-        Map<String, Integer> templateChart;
-//        public static StudentResponseDTO.GetStudentDTO convertToMatchedStudent(
-//                MemberEntity student, List<FeedbackResponseDTO.GetFeedbackDTO> feedbackList, Map<String, Integer> chart) {
-//            return GetStudentDTO.builder()
-//                    .studentId(student.getMemberId())
-//                    .name(student.getName())
-//                    .phoneNumber(student.getPhoneNumber())
-//                    .iq(convertIqToString(student.getIq()))
-//                    .feedbackTwo(feedbackList)
-//                    .templateChart(chart)
-//                    .build();
-//
-//        }
+        String profileImage;
+
+
+        private static final String DEFAULT_PROFILE_IMAGE = "https://maeummal-s3.s3.ap-northeast-2.amazonaws.com/words/7018ba2c-a82e-4c69-8033-16d7a678856d";
+
+        public static StudentResponseDTO.GetStudentAprroximateDTO convertToMatchedStudent(MemberEntity member) {
+            return GetStudentAprroximateDTO.builder()
+                    .studentId(member.getMemberId())
+                    .name(member.getName())
+                    .profileImage(member.getImage() != null ? member.getImage() : DEFAULT_PROFILE_IMAGE)
+                    .build();
+        }
     }
 
 

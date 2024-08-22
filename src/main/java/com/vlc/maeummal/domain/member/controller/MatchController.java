@@ -36,12 +36,19 @@ public class MatchController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<StudentDTO>> getStudentsByTeacherId() {
+    public ResponseEntity<?> getStudentsByTeacherId() {
         // 현재 로그인된 선생님의 ID를 사용
         Long teacherId = userAuthorizationConverter.getCurrentUserId();
 
-        List<StudentDTO> students = matchService.getStudentsByTeacherId(teacherId);
-        return ResponseEntity.ok(students);
+        List<StudentResponseDTO.GetStudentAprroximateDTO> students = matchService.getStudentsByTeacherId(teacherId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(students));
+    }@GetMapping("/fiveStudents")
+    public ResponseEntity<?> getFiveStudentsByTeacherId() {
+        // 현재 로그인된 선생님의 ID를 사용
+        Long teacherId = userAuthorizationConverter.getCurrentUserId();
+
+        List<StudentResponseDTO.GetStudentAprroximateDTO> students = matchService.getFiveStudentsByTeacherId(teacherId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(students));
     }
 
     @GetMapping("/get")
