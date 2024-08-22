@@ -61,13 +61,24 @@ public class MatchService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentDTO> getStudentsByTeacherId(Long teacherId) {
+    public List<StudentResponseDTO.GetStudentAprroximateDTO> getStudentsByTeacherId(Long teacherId) {
         // 주어진 teacherId와 매칭된 학생들을 조회
         List<MemberEntity> students = memberRepository.findByTeacher_MemberId(teacherId);
 
         // 조회된 학생 엔티티들을 DTO로 변환하여 리스트로 반환
         return students.stream()
-                .map(this::convertToStudentDTO)
+                .map(StudentResponseDTO.GetStudentAprroximateDTO::convertToMatchedStudent)
+                .collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public List<StudentResponseDTO.GetStudentAprroximateDTO> getFiveStudentsByTeacherId(Long teacherId) {
+        // 주어진 teacherId와 매칭된 학생들을 조회
+        List<MemberEntity> students = memberRepository.findByTeacher_MemberId(teacherId);
+
+        // 조회된 학생 엔티티들을 DTO로 변환하여 리스트로 반환
+        return students.stream()
+                .limit(5)
+                .map(StudentResponseDTO.GetStudentAprroximateDTO::convertToMatchedStudent)
                 .collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
@@ -88,6 +99,8 @@ public class MatchService {
         return StudentResponseDTO.GetStudentDTO.convertToMatchedStudent(student, latestTwoFeedbackDTOs, templateChart);
 
     }
+
+
     private Map<String, Integer> getTemplateChart(List<FeedbackEntity> feedbackEntityList) {
         Map<TemplateType, String> templateMappings = Map.of(
                 TemplateType.TEMPLATE1, "a",
