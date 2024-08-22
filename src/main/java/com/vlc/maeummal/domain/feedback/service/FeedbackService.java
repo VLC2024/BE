@@ -26,16 +26,22 @@ import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.enums.TemplateType;
+import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO.calculateCorrectness;
 
 @Slf4j
 @Service
@@ -51,6 +57,8 @@ public class FeedbackService extends BaseEntity {
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
     final ChallengeService challengeService;
+    @Autowired
+    private final ChatGPTService chatGPTService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -262,17 +270,51 @@ public class FeedbackService extends BaseEntity {
         List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntitiesFromWords(wordEntities);
         List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromAnswers(wordEntities, studentAnswerDTO);
 
+        // generateAiFeedback 호출 및 피드백 값 반환 받기
+        String aiFeedback = generateAiFeedback(template1, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+
+        // 피드백 엔티티에 AI 피드백 설정
+        feedbackEntity.setAiFeedback(aiFeedback);
+
         feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
         feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
 
         return feedbackRepository.save(feedbackEntity);
     }
 
+    private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+        // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
+        List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
+
+        // 피드백 생성에 사용할 프롬프트를 작성합니다.
+        StringBuilder promptBuilder = new StringBuilder();
+        promptBuilder.append("Provide feedback for the following answers based on the template:\n\n");
+
+        for (int i = 0; i < correctnessList.size(); i++) {
+            FeedbackCardEntity studentCard = studentCards.get(i);
+            boolean isCorrect = correctnessList.get(i);
+            FeedbackCardEntity correctCard = correctCards.get(i);
+
+            promptBuilder.append("Question ").append(i + 1).append(": \n");
+            promptBuilder.append("Prompt: ").append("내가 어디서 틀렸는지 설명해줘. 그리고 내가 다시 실수하지 않으려면 어떤 공부를 더 해야하는지도 말해줘.").append("\n");
+            promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append("\n");
+            promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append("\n");
+            promptBuilder.append("Result: ").append(isCorrect ? "Correct" : "Incorrect").append("\n\n");
+        }
+
+        // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
+        String prompt = promptBuilder.toString();
+        String aiFeedback = chatGPTService.generateText(prompt);
+
+        // 생성된 피드백을 반환합니다.
+        return aiFeedback != null ? aiFeedback.trim() : "No feedback generated.";
+    }
+
     private FeedbackEntity setFeedbackEntityWithoutList(Template1Entity template1, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // 기본 정보 설정 (피드백 엔티티 생성 및 설정)
         return FeedbackEntity.builder()
                 .templateId(template1.getId())
-                .aiFeedback("template ai feedback....") // AI 피드백은 이후에 추가
+//                .aiFeedback(aiFeedback) // AI 피드백은 이후에 추가
                 .templateType(template1.getType())
                 .imageNum(template1.getImageNum())
                 .templateType(studentAnswerDTO.getTemplateType())
