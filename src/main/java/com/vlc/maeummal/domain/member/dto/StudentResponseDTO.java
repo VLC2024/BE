@@ -23,6 +23,7 @@ public class StudentResponseDTO {
         Long studentId;
         String name;
         String phoneNumber;
+        String profileImage;
         String iq;
         List<FeedbackResponseDTO.GetFeedbackDTO> feedbackTwo;
         Map<String, Integer> templateChart;
@@ -32,6 +33,7 @@ public class StudentResponseDTO {
                     .studentId(student.getMemberId())
                     .name(student.getName())
                     .phoneNumber(student.getPhoneNumber())
+                    .profileImage(student.getImage())
                     .iq(convertIqToString(student.getIq()))
                     .feedbackTwo(feedbackList)
                     .templateChart(chart)
