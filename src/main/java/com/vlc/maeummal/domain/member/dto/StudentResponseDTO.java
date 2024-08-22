@@ -52,4 +52,30 @@ public class StudentResponseDTO {
 
         return "해당 정보를 제공하지 않음";
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetStudentAprroximateDTO {
+        Long studentId;
+        String name;
+        String phoneNumber;
+        String iq;
+        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackTwo;
+        Map<String, Integer> templateChart;
+//        public static StudentResponseDTO.GetStudentDTO convertToMatchedStudent(
+//                MemberEntity student, List<FeedbackResponseDTO.GetFeedbackDTO> feedbackList, Map<String, Integer> chart) {
+//            return GetStudentDTO.builder()
+//                    .studentId(student.getMemberId())
+//                    .name(student.getName())
+//                    .phoneNumber(student.getPhoneNumber())
+//                    .iq(convertIqToString(student.getIq()))
+//                    .feedbackTwo(feedbackList)
+//                    .templateChart(chart)
+//                    .build();
+//
+//        }
+    }
+
+
 }
