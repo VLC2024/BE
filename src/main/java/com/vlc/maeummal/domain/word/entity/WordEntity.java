@@ -42,7 +42,15 @@ public class WordEntity extends BaseEntity {
     /*@OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
     List<WordCardEntity> wordListEntities = new ArrayList<>();*/
 
-    @ManyToOne
-    @JoinColumn(name = "temp1_id")
-    private Template1Entity template1Entity;
+//    @ManyToMany
+//    @JoinColumn(name = "temp1_id")
+//    private List<Template1Entity> template1Entity;
+
+    @ManyToMany
+    @JoinTable(
+            name = "template1_word", // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "word_id"), // 현재 엔티티의 외래 키
+            inverseJoinColumns = @JoinColumn(name = "temp1_id") // 반대편 엔티티의 외래 키
+    )
+    private List<Template1Entity> template1Entity = new ArrayList<>();
 }

@@ -271,7 +271,7 @@ public class FeedbackService extends BaseEntity {
         List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromAnswers(wordEntities, studentAnswerDTO);
 
         // generateAiFeedback 호출 및 피드백 값 반환 받기
-        String aiFeedback = generateAiFeedback(template1, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+        String aiFeedback = generateAiFeedback(template1, correctFeedbackCards, studentFeedbackCards);
 
         // 피드백 엔티티에 AI 피드백 설정
         feedbackEntity.setAiFeedback(aiFeedback);
@@ -282,7 +282,8 @@ public class FeedbackService extends BaseEntity {
         return feedbackRepository.save(feedbackEntity);
     }
 
-    private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+    private String generateAiFeedback(TemplateEntity template, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+
         // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
         List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
 
@@ -296,7 +297,7 @@ public class FeedbackService extends BaseEntity {
             FeedbackCardEntity correctCard = correctCards.get(i);
 
             promptBuilder.append("Question ").append(i + 1).append(": \n");
-            promptBuilder.append("Prompt: ").append("내가 어디서 틀렸는지 설명해줘. 그리고 내가 다시 실수하지 않으려면 어떤 공부를 더 해야하는지도 말해줘.").append("\n");
+            promptBuilder.append("Prompt: ").append("Explain to me where I went wrong. And tell me what I need to study more so I don't make the same mistake again.").append("\n");
             promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append("\n");
             promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append("\n");
             promptBuilder.append("Result: ").append(isCorrect ? "Correct" : "Incorrect").append("\n\n");
