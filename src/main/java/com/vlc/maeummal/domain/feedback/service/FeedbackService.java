@@ -181,62 +181,6 @@ public class FeedbackService extends BaseEntity {
         }
     }
 
-//    public void setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-//        Long templateId = studentAnswerDTO.getTemplateId();
-//        TemplateType type = studentAnswerDTO.getTemplateType();
-//
-//        Long memberId = memberRepository.findById(studentAnswerDTO.getStudentId())
-//                .map(MemberEntity::getMemberId) // MemberEntity가 존재하면 MemberId를 반환합니다
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getTemplateId()));
-//        log.info("memberId" + memberId + "   ");
-//        challengeService.completeMission(memberId, MissionType.TEMP);
-//
-//        if (isValidate(templateId, type)) {
-//            switchForTemplateType(studentAnswerDTO, studentAnswerDTO.getTemplateType());
-//
-//        } else {
-//            throw new IllegalArgumentException("Template id not found with id: " + templateId);
-//        }
-//    }
-
-//    public void switchForTemplateType(FeedbackRequestDTO.GetAnswer studentAnswerDTO, TemplateType templateType) {
-//        // 템플릿 타입에 따라 적절한 리포지토리와 함수 선택
-//
-//        switch (templateType) {
-//            case TEMPLATE1:
-//                processTemplate1ToFeedback(
-//                        studentAnswerDTO
-//
-//                );
-//                break;
-//            case TEMPLATE2:
-//                processTemplate2ToFeedback(
-//                        studentAnswerDTO
-//
-//                );
-//                break;
-//            case TEMPLATE3:
-//                processTemplate3ToFeedback(
-//                        studentAnswerDTO
-//
-//                );
-//                break;
-//            case TEMPLATE4:
-//                processTemplate4ToFeedback(
-//                        studentAnswerDTO
-//
-//                );
-//                break;
-//            case TEMPLATE5:
-//                processTemplate5ToFeedback(
-//                        studentAnswerDTO
-//
-//                );
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Unknown template type: " + studentAnswerDTO.getTemplateType());
-//        }
-//    }
     /**
      * 학생의 답 & 정답 으로 피드백 만드는 함수 호출
      * 재료 : 학생의 답 & 이미지 카드 s
@@ -288,23 +232,53 @@ public class FeedbackService extends BaseEntity {
 
         // 피드백 생성에 사용할 프롬프트를 작성합니다.
         StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("Provide feedback for the following answers based on the template:\n\n");
+        promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the following answers based on the provided template. For each incorrect answer, explain in detail where the student went wrong and suggest specific strategies or areas they should focus on to avoid making the same mistake in the future. Please provide clear and actionable advice.\n");
 
         for (int i = 0; i < correctnessList.size(); i++) {
             FeedbackCardEntity studentCard = studentCards.get(i);
             boolean isCorrect = correctnessList.get(i);
             FeedbackCardEntity correctCard = correctCards.get(i);
 
-            promptBuilder.append("Question ").append(i + 1).append(": \n");
-            promptBuilder.append("Prompt: ").append("내가 어디서 틀렸는지 설명해줘. 그리고 내가 다시 실수하지 않으려면 어떤 공부를 더 해야하는지도 말해줘.").append("\n");
-            promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append("\n");
-            promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append("\n");
-            promptBuilder.append("Result: ").append(isCorrect ? "Correct" : "Incorrect").append("\n\n");
+            promptBuilder.append("Question ").append(i + 1).append(": ");
+
+            switch (template.getType()) {
+                case TEMPLATE1:
+                case TEMPLATE5:
+                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+                    break;
+                case TEMPLATE2:
+                case TEMPLATE4:
+                    promptBuilder.append("Your Answer: ").append(studentCard.getAnswerNumber()).append(". ");
+                    promptBuilder.append("Correct Answer: ").append(correctCard.getAnswerNumber()).append(". ");
+                    break;
+                case TEMPLATE3:
+                    promptBuilder.append("Your Answer: ").append(studentCard.getAdjective()).append(". ");
+                    promptBuilder.append("Correct Answer: ").append(correctCard.getAdjective()).append(". ");
+                    break;
+                default:
+                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+                    break;
+            }
+
+            promptBuilder.append("Result: ").append(isCorrect ? "Correct." : "Incorrect.").append(" ");
+
+            if (!isCorrect) {
+                promptBuilder.append("Explain why the student's answer is incorrect, and provide specific advice on what they should study or practice to improve in this area.");
+            }
+
+            promptBuilder.append("\n");
         }
 
         // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
         String prompt = promptBuilder.toString();
         String aiFeedback = chatGPTService.generateText(prompt);
+        // 피드백 길이 제한 (예: 2000자로 제한)
+        int maxLength = 255;
+        if (aiFeedback != null && aiFeedback.length() > maxLength) {
+            aiFeedback = aiFeedback.substring(0, maxLength);
+        }
 
         // 생성된 피드백을 반환합니다.
         return aiFeedback != null ? aiFeedback.trim() : "No feedback generated.";
@@ -372,25 +346,23 @@ public class FeedbackService extends BaseEntity {
 
 
 
-
-
-
-
-
-
-
-
-
     public FeedbackEntity processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
         Template2Entity template2 = template2Repository.findById(studentAnswerDTO.getTemplateId()).get();
         List<StoryCardEntity> storyCardEntityList = template2.getStoryCardEntityList();
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template2, studentAnswerDTO);
+        // 생성 feedbackcard
+        List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntityFromStoryCards(storyCardEntityList);
+        List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO);
 
         // Todo 정답 리스트 & 학생 답 리스트 포맷
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
-
+        feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
+        feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
+//// generateAiFeedback 호출 및 피드백 값 반환 받기
+        String aiFeedback = generateAiFeedback(template2, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+//
+//        // 피드백 엔티티에 AI 피드백 설정
+        feedbackEntity.setAiFeedback(aiFeedback);
         // Todo 반환
         log.info("in processTemplate2ToFeedback: ");
         FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
@@ -402,9 +374,18 @@ public class FeedbackService extends BaseEntity {
         log.info("in processTemplate3ToFeedback: 1");
         // Todo 기본 정보 설정 - 공통
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template3, studentAnswerDTO);
-        // TOdo 각자 수행.
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromImageCards(imageCardEntities));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromImageCards(imageCardEntities, studentAnswerDTO));
+        // 생성 feedbackcard
+        List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntityFromImageCards(imageCardEntities);
+        List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromImageCards(imageCardEntities, studentAnswerDTO);
+
+        // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
+        feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
+//// generateAiFeedback 호출 및 피드백 값 반환 받기
+        String aiFeedback = generateAiFeedback(template3, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+//
+//        // 피드백 엔티티에 AI 피드백 설정
+        feedbackEntity.setAiFeedback(aiFeedback);
         // Todo 반환
         log.info("in processTemplate3ToFeedback: 2");
         FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
@@ -417,12 +398,20 @@ public class FeedbackService extends BaseEntity {
 
         List<StoryCardEntity> storyCardEntityList = template4.getStoryCardEntityList();
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template4, studentAnswerDTO);
+        // 생성 feedbackcard
+        List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntityFromStoryCards(storyCardEntityList);
+        List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO);
 
         // Todo 정답 리스트 & 학생 답 리스트 포맷
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntityFromStoryCards(storyCardEntityList));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromStoryCards(storyCardEntityList, studentAnswerDTO));
-        // Todo 반환
-        log.info("in processTemplate4ToFeedback: ");
+        feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
+        feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
+//// generateAiFeedback 호출 및 피드백 값 반환 받기
+        String aiFeedback = generateAiFeedback(template4, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+//
+//        // 피드백 엔티티에 AI 피드백 설정
+        feedbackEntity.setAiFeedback(aiFeedback);
+
+        log.info("in processTemplate3ToFeedback: 2");
         FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
         return feedback;
 
@@ -434,12 +423,20 @@ public class FeedbackService extends BaseEntity {
         // Todo 기본 정보 설정 - 공통
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template5, studentAnswerDTO);
         // Todo 정답 리스트 & 학생 답 리스트 포맷
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromWordCards(wordCardEntities));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromWordCards(wordCardEntities, studentAnswerDTO));
-        // Todo 반환
+        List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntitiesFromWordCards(wordCardEntities);
+        List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromWordCards(wordCardEntities, studentAnswerDTO);
+
+        // Todo 정답 리스트 & 학생 답 리스트 포맷
+        feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
+        feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
+        String aiFeedback = generateAiFeedback(template5, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+
+        feedbackEntity.setAiFeedback(aiFeedback);
+
         log.info("in processTemplate3ToFeedback: 2");
         FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
         return feedback;
+
     }
 
 

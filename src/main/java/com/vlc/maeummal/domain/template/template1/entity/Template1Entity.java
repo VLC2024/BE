@@ -45,6 +45,11 @@ public class Template1Entity extends TemplateEntity {
     private Integer level;
 
     @Builder.Default
-    @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "template1_word",
+            joinColumns = @JoinColumn(name = "temp1_id"),
+            inverseJoinColumns = @JoinColumn(name = "word_id")
+    )
     private List<WordEntity> wordEntities = new ArrayList<>();
 }
