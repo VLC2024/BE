@@ -26,6 +26,7 @@ import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.enums.TemplateType;
+import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,24 +34,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.vlc.maeummal.domain.feedback.dto.FeedbackResponseDTO.calculateCorrectness;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FeedbackService extends BaseEntity {
 
-    final Template3Repository template3Repository;
-    final Template4Repository template4Repository;
     final Template1Repository template1Repository;
     final Template2Repository template2Repository;
+    final Template3Repository template3Repository;
+    final Template4Repository template4Repository;
+    final Template5Repository template5Repository;
+
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
-    final Template5Repository template5Repository;
     final ChallengeService challengeService;
+    @Autowired
+    private final ChatGPTService chatGPTService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -77,18 +85,18 @@ public class FeedbackService extends BaseEntity {
 //
 //
 //    }
-public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
-    FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
-            .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
+    public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
+        FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
 
-    // 추가적인 검증이 필요한 경우
-    if (feedbackEntity.getStudent() == null) {
-        // 로깅하거나 적절한 처리를 수행할 수 있습니다.
-        throw new IllegalStateException("Student information is missing in feedback");
+        // 추가적인 검증이 필요한 경우
+        if (feedbackEntity.getStudent() == null) {
+            // 로깅하거나 적절한 처리를 수행할 수 있습니다.
+            throw new IllegalStateException("Student information is missing in feedback");
+        }
+
+        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
     }
-
-    return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
-}
 
     /**
      * 모든 피드백 리스트 가져오기
@@ -150,10 +158,9 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
 
         if (isValidate(templateId, type)) {
             switch (type) {
-//                case TEMPLATE1: // TODO 반환값 설정
-//                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
-//                    // Return null or an appropriate default value if TEMPLATE1 does not need to return an ID
-//                    return feedbackEntity1 != null ? feedbackEntity1.getId() : null;
+                case TEMPLATE1: // TODO 반환값 설정
+                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
+                    return getFeedbackDetail(feedbackEntity1.getId());
                 case TEMPLATE2: // TODO 반환값 설정
                     FeedbackEntity feedbackEntity2 = processTemplate2ToFeedback(studentAnswerDTO);
                     return getFeedbackDetail(feedbackEntity2.getId());
@@ -234,21 +241,146 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
      * 학생의 답 & 정답 으로 피드백 만드는 함수 호출
      * 재료 : 학생의 답 & 이미지 카드 s
      * 조건 : 각 템플릿 마다 사용되는 리스트
-     * */
-    public void processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-        Template1Entity template1 = template1Repository.findById(studentAnswerDTO.getTemplateId()).get();
+     *
+     * @return
+     */
+
+    public FeedbackEntity processTemplate1ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        Template1Entity template1 = template1Repository.findById(studentAnswerDTO.getTemplateId())
+                .orElseThrow(() -> new EntityNotFoundException("Template1 not found with id: " + studentAnswerDTO.getTemplateId()));
+
         List<WordEntity> wordEntities = template1.getWordEntities();
-        log.info("in processTemplate1ToFeedback: 1");
-        // Todo 기본 정보 설정 - 공통
+
+        // 유효성 검사 추가
+        if (studentAnswerDTO.getAnswerList() == null) {
+            throw new IllegalArgumentException("Student answer list cannot be null");
+        }
+        if (studentAnswerDTO.getAnswerList().size() != wordEntities.size()) {
+            log.error("Invalid argument: Answer list size does not match the word entities size. " +
+                    "Answer list size: {}, Word entities size: {}", studentAnswerDTO.getAnswerList().size(), wordEntities.size());
+            throw new IllegalArgumentException("Answer list size does not match the word entities size");
+        }
+
+        log.info("Processing Template1 feedback");
+
+        // 기본 정보 설정
         FeedbackEntity feedbackEntity = setFeedbackEntityWithoutList(template1, studentAnswerDTO);
-        // Todo 정답 리스트 & 학생 답 리스트 포맷
-        feedbackEntity.setCorrectFeedbackCards(setFeedbackCardEntitiesFromWords(wordEntities));
-        feedbackEntity.setStudentFeedbackCards(setStudentFeedbackCardEntityFromWords(wordEntities, studentAnswerDTO));
 
-        log.info("in processTemplate1ToFeedback: 2");
-        feedbackRepository.save(feedbackEntity);
+        // 정답 카드 및 학생 카드 설정
+        List<FeedbackCardEntity> correctFeedbackCards = setFeedbackCardEntitiesFromWords(wordEntities);
+        List<FeedbackCardEntity> studentFeedbackCards = setStudentFeedbackCardEntityFromAnswers(wordEntities, studentAnswerDTO);
 
+        // generateAiFeedback 호출 및 피드백 값 반환 받기
+        String aiFeedback = generateAiFeedback(template1, studentAnswerDTO, correctFeedbackCards, studentFeedbackCards);
+
+        // 피드백 엔티티에 AI 피드백 설정
+        feedbackEntity.setAiFeedback(aiFeedback);
+
+        feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
+        feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
+
+        return feedbackRepository.save(feedbackEntity);
     }
+
+    private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+        // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
+        List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
+
+        // 피드백 생성에 사용할 프롬프트를 작성합니다.
+        StringBuilder promptBuilder = new StringBuilder();
+        promptBuilder.append("Provide feedback for the following answers based on the template:\n\n");
+
+        for (int i = 0; i < correctnessList.size(); i++) {
+            FeedbackCardEntity studentCard = studentCards.get(i);
+            boolean isCorrect = correctnessList.get(i);
+            FeedbackCardEntity correctCard = correctCards.get(i);
+
+            promptBuilder.append("Question ").append(i + 1).append(": \n");
+            promptBuilder.append("Prompt: ").append("내가 어디서 틀렸는지 설명해줘. 그리고 내가 다시 실수하지 않으려면 어떤 공부를 더 해야하는지도 말해줘.").append("\n");
+            promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append("\n");
+            promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append("\n");
+            promptBuilder.append("Result: ").append(isCorrect ? "Correct" : "Incorrect").append("\n\n");
+        }
+
+        // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
+        String prompt = promptBuilder.toString();
+        String aiFeedback = chatGPTService.generateText(prompt);
+
+        // 생성된 피드백을 반환합니다.
+        return aiFeedback != null ? aiFeedback.trim() : "No feedback generated.";
+    }
+
+    private FeedbackEntity setFeedbackEntityWithoutList(Template1Entity template1, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        // 기본 정보 설정 (피드백 엔티티 생성 및 설정)
+        return FeedbackEntity.builder()
+                .templateId(template1.getId())
+//                .aiFeedback(aiFeedback) // AI 피드백은 이후에 추가
+                .templateType(template1.getType())
+                .imageNum(template1.getImageNum())
+                .templateType(studentAnswerDTO.getTemplateType())
+                .solution(template1.getDescription())
+                .student(memberRepository.findById(studentAnswerDTO.getStudentId())
+                        .orElse(null))
+                .teacher(memberRepository.findById(studentAnswerDTO.getStudentId())
+                        .orElse(null)) // Todo: 교사로 수정해야 함
+                .build();
+    }
+
+    private List<FeedbackCardEntity> setFeedbackCardEntitiesFromWords(List<WordEntity> wordEntities) {
+        // 단어 엔티티를 사용하여 정답 카드 엔티티 생성
+        return wordEntities.stream().map(word -> FeedbackCardEntity.builder()
+                        .meaning(word.getMeaning())
+                        .image(word.getImage())
+                        .description(word.getDescription())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromAnswers(List<WordEntity> wordEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        // null값 체크
+        if (wordEntities == null || studentAnswerDTO == null) {
+            throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
+        }
+
+        // 유효성 체크
+        List<String> answerList = studentAnswerDTO.getAnswerList();
+        if (answerList == null) {
+            throw new IllegalArgumentException("Student answer list cannot be null");
+        }
+        if (answerList.size() != wordEntities.size()) {
+            throw new IllegalArgumentException("Answer list size does not match the image card entities size");
+        }
+
+        List<FeedbackCardEntity> studentFeedbackCardEntities = IntStream.range(0, wordEntities.size())
+                .mapToObj(index -> {
+                    WordEntity wordCard = wordEntities.get(index);
+
+                    String studentMeaing = answerList.size() > index
+                            ? answerList.get(index)
+                            : null;
+
+                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
+                    feedbackCard.setImage(wordCard.getImage());
+                    feedbackCard.setMeaning(studentMeaing);
+                    feedbackCard.setDescription(wordCard.getDescription());
+
+                    return feedbackCard;
+                })
+                .collect(Collectors.toList());
+        return studentFeedbackCardEntities;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public FeedbackEntity processTemplate2ToFeedback(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // Todo 기본 정보 설정 - 공통
         Template2Entity template2 = template2Repository.findById(studentAnswerDTO.getTemplateId()).get();
@@ -308,52 +440,6 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         log.info("in processTemplate3ToFeedback: 2");
         FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
         return feedback;
-    }
-
-
-    // temp1에서 사용
-    public List<FeedbackCardEntity> setFeedbackCardEntitiesFromWords(List<WordEntity> wordEntities) {
-        List<FeedbackCardEntity> feedbackCardEntities = wordEntities.stream()
-                .map(word -> {
-                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
-                    feedbackCard.setImage(word.getImage());
-                    feedbackCard.setMeaning(word.getMeaning());
-                    feedbackCard.setDescription(word.getDescription());
-                    return feedbackCard;
-                })
-                .collect(Collectors.toList());
-        return feedbackCardEntities;
-    }
-    public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromWords(List<WordEntity> wordEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
-        if (wordEntities == null || studentAnswerDTO == null) {
-            throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
-        }
-
-        List<String> answerList = studentAnswerDTO.getAnswerList();
-        if (answerList == null) {
-            throw new IllegalArgumentException("Student answer list cannot be null");
-        }
-        if (answerList.size() != wordEntities.size()) {
-            throw new IllegalArgumentException("Answer list size does not match the image card entities size");
-        }
-
-        List<FeedbackCardEntity> studentFeedbackCardEntities = IntStream.range(0, wordEntities.size())
-                .mapToObj(index -> {
-                    WordEntity word = wordEntities.get(index);
-
-                    String studentMeaing = studentAnswerDTO.getAnswerList().size() > index
-                            ? studentAnswerDTO.getAnswerList().get(index)
-                            : null;
-
-                    FeedbackCardEntity feedbackCard = new FeedbackCardEntity();
-                    feedbackCard.setImage(word.getImage());
-                    feedbackCard.setMeaning(studentMeaing);
-                    feedbackCard.setDescription(word.getDescription());
-
-                    return feedbackCard;
-                })
-                .collect(Collectors.toList());
-        return studentFeedbackCardEntities;
     }
 
 
