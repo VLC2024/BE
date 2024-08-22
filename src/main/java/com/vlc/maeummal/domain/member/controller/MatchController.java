@@ -43,6 +43,7 @@ public class MatchController {
         List<StudentDTO> students = matchService.getStudentsByTeacherId(teacherId);
         return ResponseEntity.ok(students);
     }
+
     @GetMapping("/get")
     public ResponseEntity<?> getMatchedStudent(@RequestParam(value = "studentId") Long studentId) {
         StudentResponseDTO.GetStudentDTO student = matchService.getStudentByStudentId(studentId);
