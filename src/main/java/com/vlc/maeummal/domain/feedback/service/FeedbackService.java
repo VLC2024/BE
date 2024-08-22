@@ -42,13 +42,14 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class FeedbackService extends BaseEntity {
 
-    final Template3Repository template3Repository;
-    final Template4Repository template4Repository;
     final Template1Repository template1Repository;
     final Template2Repository template2Repository;
+    final Template3Repository template3Repository;
+    final Template4Repository template4Repository;
+    final Template5Repository template5Repository;
+
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
-    final Template5Repository template5Repository;
     final ChallengeService challengeService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
@@ -76,18 +77,18 @@ public class FeedbackService extends BaseEntity {
 //
 //
 //    }
-public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
-    FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
-            .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
+    public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
+        FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
 
-    // 추가적인 검증이 필요한 경우
-    if (feedbackEntity.getStudent() == null) {
-        // 로깅하거나 적절한 처리를 수행할 수 있습니다.
-        throw new IllegalStateException("Student information is missing in feedback");
+        // 추가적인 검증이 필요한 경우
+        if (feedbackEntity.getStudent() == null) {
+            // 로깅하거나 적절한 처리를 수행할 수 있습니다.
+            throw new IllegalStateException("Student information is missing in feedback");
+        }
+
+        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
     }
-
-    return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFeedbackDetail(feedbackEntity);
-}
 
     /**
      * 모든 피드백 리스트 가져오기
@@ -264,8 +265,6 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
         feedbackEntity.setCorrectFeedbackCards(correctFeedbackCards);
         feedbackEntity.setStudentFeedbackCards(studentFeedbackCards);
 
-//        log.info("Saving FeedbackEntity: {}", feedbackEntity);
-
         return feedbackRepository.save(feedbackEntity);
     }
 
@@ -295,20 +294,13 @@ public FeedbackResponseDTO.GetFeedbackDetailDTO getFeedbackDetail(Long feedbackI
                 .collect(Collectors.toList());
     }
 
-//    private List<FeedbackCardEntity> setStudentFeedbackCardEntityFromAnswers(List<String> studentAnswers, List<WordEntity> wordEntities) {
-//        // 학생의 답안 리스트를 기반으로 학생 카드 엔티티 생성
-//        return studentAnswers.stream().map(answer -> {
-//            FeedbackCardEntity card = new FeedbackCardEntity();
-//            card.setMeaning(answer); // 여기에 실제 단어와 비교할 논리가 필요할 수 있음
-//            return card;
-//        }).collect(Collectors.toList());
-//    }
-
     public List<FeedbackCardEntity> setStudentFeedbackCardEntityFromAnswers(List<WordEntity> wordEntities, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
+        // null값 체크
         if (wordEntities == null || studentAnswerDTO == null) {
             throw new IllegalArgumentException("Image card entities and student answer DTO cannot be null");
         }
 
+        // 유효성 체크
         List<String> answerList = studentAnswerDTO.getAnswerList();
         if (answerList == null) {
             throw new IllegalArgumentException("Student answer list cannot be null");
