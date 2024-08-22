@@ -170,7 +170,7 @@ public class FeedbackResponseDTO {
                     break;
                 case TEMPLATE4:
                     // Template4: answerNumber를 비교
-//                    isCorrect = studentCard.getAnswerNumber().equals(correctCard.getAnswerNumber());
+                    isCorrect = studentCard.getAnswerNumber().equals(correctCard.getAnswerNumber());
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported template type in FeedbackResponseDTO: " + templateType);
