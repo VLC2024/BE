@@ -27,8 +27,15 @@ public class Template1Service {
     private final UserAuthorizationConverter userAuthorizationConverter;
 
     @Transactional
-    public Template1DTO createTemplate() {
-        Template1Entity template = Template1Entity.builder().build();
+    public Template1DTO createTemplate(String title, Integer level) {
+        Template1Entity template = Template1Entity.builder()
+                .imageNum(3)
+                .type(TemplateType.TEMPLATE1)
+                .createrId(userAuthorizationConverter.getCurrentUserId())
+                .title(title)
+                .level(level)
+                .build();
+
         Template1Entity savedTemplate = template1Repository.save(template);
         return convertToDTO(savedTemplate);
     }
@@ -109,6 +116,8 @@ public class Template1Service {
                 .imageNum(3)
                 .templateType(TemplateType.TEMPLATE1)
                 .createrId(userAuthorizationConverter.getCurrentUserId())
+                .level(template.getLevel())
+                .title(template.getTitle())
                 .build();
     }
 

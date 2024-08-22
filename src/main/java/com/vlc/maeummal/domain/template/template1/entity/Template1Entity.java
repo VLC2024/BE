@@ -38,6 +38,12 @@ public class Template1Entity extends TemplateEntity {
     @Column(nullable = true)
     private String description;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private Integer level;
+
     @Builder.Default
     @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WordEntity> wordEntities = new ArrayList<>();

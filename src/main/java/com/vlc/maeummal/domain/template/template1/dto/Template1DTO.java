@@ -22,6 +22,8 @@ public class Template1DTO {
     private Integer imageNum;
     private TemplateType templateType;
     private Long createrId;
+    private String title;
+    private Integer level;
     @Builder.Default
     private List<WordSetRequestDTO.GetWordDTO> words = new ArrayList<>();
 }

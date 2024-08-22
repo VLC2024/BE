@@ -18,8 +18,8 @@ public class Template1Controller {
     private final UserAuthorizationConverter userAuthorizationConverter;
 
     @PostMapping("/create")
-    public ResponseEntity<Template1DTO> createTemplate() {
-        Template1DTO createdTemplate = template1Service.createTemplate();
+    public ResponseEntity<Template1DTO> createTemplate(@RequestParam String title, @RequestParam Integer level) {
+        Template1DTO createdTemplate = template1Service.createTemplate(title, level);
         return ResponseEntity.ok(createdTemplate);
     }
 
