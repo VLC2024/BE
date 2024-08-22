@@ -158,7 +158,7 @@ public class FeedbackResponseDTO {
             switch (templateType) {
                 case TEMPLATE1:
                     // Template1: 를 비교
-
+                    isCorrect = studentCard.getMeaning().equals(correctCard.getMeaning());
                     break;
                 case TEMPLATE2:
                     // Template2: answerNumber를 비교

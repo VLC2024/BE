@@ -39,7 +39,7 @@ public class FeedbackEntity extends BaseEntity {
     private MemberEntity student;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", nullable = true)
     private MemberEntity teacher;
 
     @Enumerated(EnumType.STRING)
