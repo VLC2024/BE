@@ -26,14 +26,19 @@ public class Template1Entity extends TemplateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WordEntity> wordEntities = new ArrayList<>();
+    @Column(nullable = false)
+    private Long createrId;
 
     @Enumerated(EnumType.STRING)
     TemplateType type;
+
     @Column(nullable = true)
     private Integer imageNum;
+
     @Column(nullable = true)
     private String description;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WordEntity> wordEntities = new ArrayList<>();
 }
