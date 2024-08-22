@@ -121,9 +121,6 @@ public class MemberService {
     private MemberRepository memberRepository;
 
     @Autowired
-    private MemberReposirotyUsingId memberRepository2;
-
-    @Autowired
     private ChallengeRepository challengeRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -224,9 +221,5 @@ public class MemberService {
             return originalMember;
         }
         return null;
-    }
-
-    public Long getTeacherIdByMemberId(Long memberId) {
-        return memberRepository2.findTeacherIdByMemberId(memberId);
     }
 }

@@ -462,7 +462,7 @@ public class FeedbackService extends BaseEntity {
                 .solution(template.getDescription())
                 .student(memberRepository.findById(studentAnswerDTO.getStudentId())
                         .orElse(null))
-                .teacher(memberRepository.findById(studentAnswerDTO.getStudentId())
+                .teacher(memberRepository.findTeacherByMemberId(studentAnswerDTO.getStudentId())
                         .orElse(null)) // Todo: 교사로 수정해야 함
                 .build();
         return feedbackEntity;

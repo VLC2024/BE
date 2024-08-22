@@ -12,9 +12,6 @@ public interface MemberReposirotyUsingId extends JpaRepository<MemberEntity, Lon
     Optional<MemberEntity> findById(Long id);
 
     // 특정 학생의 ID로 해당 학생의 교사(teacher)를 찾는 메소드
+    @Query("SELECT m.teacher FROM MemberEntity m WHERE m.memberId = :memberId")
     Optional<MemberEntity> findTeacherByMemberId(Long memberId);
-
-    // 특정 학생의 ID로 teacher_id만 가져오는 메소드
-    @Query("SELECT m.teacher.memberId FROM MemberEntity m WHERE m.memberId = :memberId")
-    Long findTeacherIdByMemberId(@Param("memberId") Long memberId);
 }
