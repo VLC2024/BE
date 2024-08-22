@@ -8,6 +8,8 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
+import com.vlc.maeummal.domain.member.repository.MemberRepository;
+import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
@@ -57,6 +59,7 @@ public class FeedbackService extends BaseEntity {
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
     final ChallengeService challengeService;
+    final MemberService memberService;
     @Autowired
     private final ChatGPTService chatGPTService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
@@ -322,8 +325,8 @@ public class FeedbackService extends BaseEntity {
                 .solution(template1.getDescription())
                 .student(memberRepository.findById(studentAnswerDTO.getStudentId())
                         .orElse(null))
-                .teacher(memberRepository.findById(studentAnswerDTO.getStudentId())
-                        .orElse(null)) // Todo: 교사로 수정해야 함
+                .teacher(memberRepository.findTeacherByMemberId(studentAnswerDTO.getStudentId())
+                        .orElse(null))
                 .build();
     }
 

@@ -102,6 +102,7 @@ import com.vlc.maeummal.domain.challenge.repository.ChallengeRepository;
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
+import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,9 @@ public class MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberReposirotyUsingId memberRepository2;
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -220,5 +224,9 @@ public class MemberService {
             return originalMember;
         }
         return null;
+    }
+
+    public Long getTeacherIdByMemberId(Long memberId) {
+        return memberRepository2.findTeacherIdByMemberId(memberId);
     }
 }

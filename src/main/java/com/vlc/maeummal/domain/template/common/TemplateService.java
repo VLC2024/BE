@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TemplateService {
 
-//    private final Template1Repository template1Repository;
+    private final Template1Repository template1Repository;
     private final Template2Repository template2Repository;
     private final Template3Repository template3Repository;
 //    private final Template4Repository template4Repository;
@@ -28,7 +28,7 @@ public class TemplateService {
     public List<TemplateResponseDTO.GetTemplates> getAllTemplateList(){
 
         List<TemplateEntity> templateEntityList = new ArrayList<>();
-//        templateEntityList.addAll(template1Repository.findAll());
+        templateEntityList.addAll(template1Repository.findAll());
         templateEntityList.addAll(template2Repository.findAll());
         templateEntityList.addAll(template3Repository.findAll());
         templateEntityList.addAll(template5Repository.findAll());

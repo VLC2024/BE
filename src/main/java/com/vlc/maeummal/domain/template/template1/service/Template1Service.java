@@ -86,7 +86,7 @@ public class Template1Service {
 
         // 양방향 연관 관계 설정 및 단어 추가
         for (WordEntity word : randomWords) {
-            word.getTemplate1Entity().add(template);  // WordEntity에 Template1Entity 추가
+//            word.getTemplate1Entity().add(template);  // WordEntity에 Template1Entity 추가
             template.getWordEntities().add(word);     // Template1Entity에 WordEntity 추가
         }
 
