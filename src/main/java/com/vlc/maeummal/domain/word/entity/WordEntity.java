@@ -39,13 +39,6 @@ public class WordEntity extends BaseEntity {
     @JsonIgnore
     private WordSetEntity wordSet;
 
-    /*@OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<WordCardEntity> wordListEntities = new ArrayList<>();*/
-
-//    @ManyToMany
-//    @JoinColumn(name = "temp1_id")
-//    private List<Template1Entity> template1Entity;
-
     @ManyToMany
     @JoinTable(
             name = "template1_word", // 중간 테이블 이름

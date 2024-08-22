@@ -1,9 +1,11 @@
 package com.vlc.maeummal.domain.member.controller;
 
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
+import com.vlc.maeummal.domain.member.dto.StudentResponseDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MatchService;
 import com.vlc.maeummal.domain.member.service.MemberService;
+import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,12 +36,26 @@ public class MatchController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<StudentDTO>> getStudentsByTeacherId() {
+    public ResponseEntity<?> getStudentsByTeacherId() {
         // 현재 로그인된 선생님의 ID를 사용
         Long teacherId = userAuthorizationConverter.getCurrentUserId();
 
-        List<StudentDTO> students = matchService.getStudentsByTeacherId(teacherId);
-        return ResponseEntity.ok(students);
+        List<StudentResponseDTO.GetStudentAprroximateDTO> students = matchService.getStudentsByTeacherId(teacherId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(students));
+    }@GetMapping("/fiveStudents")
+    public ResponseEntity<?> getFiveStudentsByTeacherId() {
+        // 현재 로그인된 선생님의 ID를 사용
+        Long teacherId = userAuthorizationConverter.getCurrentUserId();
+
+        List<StudentResponseDTO.GetStudentAprroximateDTO> students = matchService.getFiveStudentsByTeacherId(teacherId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(students));
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getMatchedStudent(@RequestParam(value = "studentId") Long studentId) {
+        StudentResponseDTO.GetStudentDTO student = matchService.getStudentByStudentId(studentId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(student));
+    }
+
 
 }
