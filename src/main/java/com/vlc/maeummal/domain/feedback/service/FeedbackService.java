@@ -232,7 +232,7 @@ public class FeedbackService extends BaseEntity {
 
         // 피드백 생성에 사용할 프롬프트를 작성합니다.
         StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the following answers based on the provided template. For each incorrect answer, explain in detail where the student went wrong and suggest specific strategies or areas they should focus on to avoid making the same mistake in the future. Please provide clear and actionable advice.\n");
+        promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the following answers based on the provided template. For each incorrect answer, explain in detail where the student went wrong and suggest specific strategies or areas they should focus on to avoid making the same mistake in the future. Please provide clear and actionable advice.\n delete all enter(\n)");
 
         for (int i = 0; i < correctnessList.size(); i++) {
             FeedbackCardEntity studentCard = studentCards.get(i);
@@ -275,7 +275,7 @@ public class FeedbackService extends BaseEntity {
         String prompt = promptBuilder.toString();
         String aiFeedback = chatGPTService.generateText(prompt);
         // 피드백 길이 제한 (예: 2000자로 제한)
-        int maxLength = 255;
+        int maxLength = 2000;
         if (aiFeedback != null && aiFeedback.length() > maxLength) {
             aiFeedback = aiFeedback.substring(0, maxLength);
         }
