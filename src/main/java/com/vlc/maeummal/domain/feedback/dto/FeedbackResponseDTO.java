@@ -116,7 +116,7 @@ public class FeedbackResponseDTO {
                     .teacherId(feedbackEntity.getTeacher().getMemberId())
                     .templateType(feedbackEntity.getTemplateType())
                     .imageNum(feedbackEntity.getImageNum().toString())
-                    .hint(template.getDescription()) // 템플릿 객체에서 힌트 받아오기 Todo : 각 템플릿 엔티티에서 Description이 설명, 즉, 힌트가 됨. 정답은 solution 필드에 작성
+                    .hint(template.getDescription()) // Todo : 각 템플릿 엔티티에서 Description이 설명, 즉, 힌트가 됨. 정답은 solution 필드에 작성
                     .heartCount(1)
                     .correctFeedbackCards(convertToCardDtoList(feedbackEntity.getCorrectFeedbackCards()))
                     .studentFeedbackCards(convertToCardDtoList(feedbackEntity.getStudentFeedbackCards()))
@@ -189,7 +189,7 @@ public class FeedbackResponseDTO {
                     break;
                 case TEMPLATE5:
                     // Template5: answerNumber를 비교
-                    isCorrect = studentCard.getMeaning().equals(correctCard.getAnswerNumber());
+                    isCorrect = studentCard.getMeaning().equals(correctCard.getMeaning());
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported template type in FeedbackResponseDTO: " + templateType);

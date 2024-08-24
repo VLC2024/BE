@@ -28,6 +28,7 @@ import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.enums.TemplateType;
 import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,9 @@ public class FeedbackService extends BaseEntity {
 
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
-    final ChallengeService challengeService;
     @Autowired
     private final ChatGPTService chatGPTService;
+    final ChallengeService challengeService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -143,6 +144,7 @@ public class FeedbackService extends BaseEntity {
      * Controller에서 호출되는 메인 메소드
      *
      * */
+    @Transactional
     public FeedbackResponseDTO.GetFeedbackDetailDTO setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Long templateId = studentAnswerDTO.getTemplateId();
         TemplateType type = studentAnswerDTO.getTemplateType();
@@ -630,12 +632,6 @@ public class FeedbackService extends BaseEntity {
     public FeedbackResponseDTO.GetFeedbackDetailDTO createFirstFeedBack(FeedbackRequestDTO.GetAnswer studentAnswerDTO){
         Long templateId = studentAnswerDTO.getTemplateId();
         TemplateType type = studentAnswerDTO.getTemplateType();
-
-        Long memberId = memberRepository.findById(studentAnswerDTO.getStudentId())
-                .map(MemberEntity::getMemberId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + studentAnswerDTO.getStudentId()));
-
-        challengeService.completeMission(memberId, MissionType.TEMP);
 
         if (isValidate(templateId, type)) {
             switch (type) {
