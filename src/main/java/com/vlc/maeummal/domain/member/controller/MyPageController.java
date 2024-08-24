@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.member.controller;
 
+import com.vlc.maeummal.domain.member.dto.MemberDTO;
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
@@ -27,7 +28,7 @@ public class MyPageController {
     @GetMapping
     public ResponseEntity<?> getMemberInfo(){
         Long memberId = userAuthorizationConverter.getCurrentUserId();
-        MemberEntity member = memberReposirotyUsingId.findById(memberId).orElseThrow(() -> new RuntimeException(""));
+        MemberEntity member = memberReposirotyUsingId.findById(memberId).orElseThrow(() -> new RuntimeException("잘못된 접근입니다. 회원가입과 로그인을 진행해주세요"));
         if (member.getRole().equals(Role.STUDENT)){
             StudentDTO.GetStudentInfo result =  myPageService.getStudentInfo(member);
             return ResponseEntity.ok(ApiResponse.onSuccess(result));
@@ -61,8 +62,8 @@ public class MyPageController {
             return ResponseEntity.badRequest().body("업로드할 이미지가 없습니다. 이미지 업로드에 실패했습니다.");
         }
 
-        myPageService.uploadProfileImage(file);
-        return ResponseEntity.ok(ApiResponse.successWithoutResult());
+        MemberDTO.GetProfileImageDTO result = myPageService.uploadProfileImage(file);
+        return ResponseEntity.ok(ApiResponse.onSuccess(result));
     }
 
     @PatchMapping("/changePassword")

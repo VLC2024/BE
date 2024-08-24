@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.vlc.maeummal.domain.member.dto.MemberDTO;
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
@@ -73,7 +74,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public void uploadProfileImage(MultipartFile file) throws IOException {
+    public MemberDTO.GetProfileImageDTO uploadProfileImage(MultipartFile file) throws IOException {
         Long memberId = userAuthorizationConverter.getCurrentUserId();
         MemberEntity member = memberReposirotyUsingId.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("잘못된 접근입니다. 회원가입 먼저 진행해주세요."));
@@ -92,6 +93,8 @@ public class MyPageService {
         // 멤버 엔티티 업데이트 및 저장
         member.setImage(imageUrl);
         memberRepository.save(member);
+
+        return MemberDTO.GetProfileImageDTO.getProfileImageDTO(imageUrl);
     }
 
     @Transactional

@@ -26,4 +26,19 @@ public class MemberDTO {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetProfileImageDTO{
+
+        private String profileImage;
+
+        public static MemberDTO.GetProfileImageDTO getProfileImageDTO (String profileImage) {
+            return MemberDTO.GetProfileImageDTO.builder()
+                    .profileImage(profileImage)
+                    .build();
+        }
+    }
 }
