@@ -1,5 +1,10 @@
 package com.vlc.maeummal.domain.member.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
@@ -7,14 +12,21 @@ import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
 import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
+import com.vlc.maeummal.global.openAi.dalle.service.AiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -60,20 +72,26 @@ public class MyPageService {
         return TeacherDTO.GetTeacherInfo.getTeacherInfo(member);
     }
 
-    public void uploadProfileImage(MultipartFile file) {
+    @Transactional
+    public void uploadProfileImage(MultipartFile file) throws IOException {
         Long memberId = userAuthorizationConverter.getCurrentUserId();
         MemberEntity member = memberReposirotyUsingId.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("잘못된 접근입니다. 회원가입 먼저 진행해주세요."));
-        String keyName = "users/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-        String imageUrl = amazonS3Manager.uploadMultipartFile(keyName, file);
-
-        //기존의 이미지는 S3에서 삭제
+        // Todo : 기존 프로필 이미지 삭제
+        /*// 기존 프로필 이미지 삭제 로직
         String currentImageUrl = member.getImage();
-        String currentKeyName = amazonS3Manager.extractKeyFromUrl(imageUrl);
-        amazonS3Manager.deleteFile(currentKeyName);
+        if (currentImageUrl != null && !currentImageUrl.isEmpty()) {
+            String currentKeyName = amazonS3Manager.extractKeyFromUrl(currentImageUrl);
+            amazonS3Manager.deleteFile(currentKeyName);
+        }*/
 
+        // 새로운 이미지 업로드
+        String imageUrl = amazonS3Manager.uploadMultipartFile("users", file);
+
+        // 멤버 엔티티 업데이트 및 저장
         member.setImage(imageUrl);
+        memberRepository.save(member);
     }
 
     @Transactional

@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -54,7 +56,7 @@ public class MyPageController {
     }
 
     @PatchMapping("/updateProfileImage")
-    public ResponseEntity<?> updateImage(@RequestPart(value = "file", required = false) MultipartFile file) {
+    public ResponseEntity<?> updateImage(@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body("업로드할 이미지가 없습니다. 이미지 업로드에 실패했습니다.");
         }
