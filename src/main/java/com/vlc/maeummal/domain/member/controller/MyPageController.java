@@ -11,10 +11,9 @@ import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.enums.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.sqm.tree.expression.SqmToDuration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -37,6 +36,22 @@ public class MyPageController {
         } else {
             return ResponseEntity.badRequest().body("잘못된 접근입니다. 회원가입과 로그인을 진행해주세요");
         }
+    }
+
+    @PatchMapping("/student")
+    public ResponseEntity<?> updateMemberInfo(@RequestBody StudentDTO.GetStudentInfo studentInfo){
+        Long memberId = userAuthorizationConverter.getCurrentUserId();
+        MemberEntity member = memberReposirotyUsingId.findById(memberId).orElseThrow(() -> new RuntimeException(""));
+        StudentDTO.GetStudentInfo result = myPageService.updateStudentInfo(member, studentInfo);
+        return ResponseEntity.ok(ApiResponse.onSuccess(result));
+    }
+
+    @PatchMapping("/teacher")
+    public ResponseEntity<?> updateMemberInfo(@RequestBody TeacherDTO.GetTeacherInfo teacherInfo){
+        Long memberId = userAuthorizationConverter.getCurrentUserId();
+        MemberEntity member = memberReposirotyUsingId.findById(memberId).orElseThrow(() -> new RuntimeException(""));
+        TeacherDTO.GetTeacherInfo result = myPageService.updateTeacherInfo(member, teacherInfo);
+        return ResponseEntity.ok(ApiResponse.onSuccess(result));
     }
 
 }
