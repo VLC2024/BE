@@ -28,16 +28,14 @@ import com.vlc.maeummal.global.enums.MissionType;
 import com.vlc.maeummal.global.enums.TemplateType;
 import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -56,9 +54,9 @@ public class FeedbackService extends BaseEntity {
 
     final MemberReposirotyUsingId memberRepository;
     final FeedbackRepository feedbackRepository;
-    final ChallengeService challengeService;
     @Autowired
     private final ChatGPTService chatGPTService;
+    final ChallengeService challengeService;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -146,6 +144,7 @@ public class FeedbackService extends BaseEntity {
      * Controller에서 호출되는 메인 메소드
      *
      * */
+    @Transactional
     public FeedbackResponseDTO.GetFeedbackDetailDTO setFeedbackFromAnswer(FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         Long templateId = studentAnswerDTO.getTemplateId();
         TemplateType type = studentAnswerDTO.getTemplateType();
@@ -627,6 +626,60 @@ public class FeedbackService extends BaseEntity {
             default:
                 return false;
         }
+    }
+
+    // Todo : 1차 피드백 생성 (GetAnswer DTO -> 1차 피드백 DTO)
+    public FeedbackResponseDTO.GetFeedbackDetailDTO createFirstFeedBack(FeedbackRequestDTO.GetAnswer studentAnswerDTO){
+        Long templateId = studentAnswerDTO.getTemplateId();
+        TemplateType type = studentAnswerDTO.getTemplateType();
+
+        if (isValidate(templateId, type)) {
+            switch (type) {
+                case TEMPLATE1: // TODO 반환값 설정
+                    Template1Entity template1 = template1Repository.findById(templateId)
+                            .orElseThrow(() -> new RuntimeException("해당하는 템플릿이 존재하지 않습니다."));
+                    FeedbackEntity feedbackEntity1 = processTemplate1ToFeedback(studentAnswerDTO);
+                    return getFirstFeedbackDetail(feedbackEntity1.getId(), template1);
+                case TEMPLATE2: // TODO 반환값 설정
+                    Template2Entity template2 = template2Repository.findById(templateId)
+                            .orElseThrow(() -> new RuntimeException("해당하는 템플릿이 존재하지 않습니다."));
+                    FeedbackEntity feedbackEntity2 = processTemplate2ToFeedback(studentAnswerDTO);
+                    return getFirstFeedbackDetail(feedbackEntity2.getId(), template2);
+                case TEMPLATE3: // TODO 반환값 설정
+                    Template3Entity template3 = template3Repository.findById(templateId)
+                            .orElseThrow(() -> new RuntimeException("해당하는 템플릿이 존재하지 않습니다."));
+                    FeedbackEntity feedbackEntity3 = processTemplate3ToFeedback(studentAnswerDTO);
+                    return getFirstFeedbackDetail(feedbackEntity3.getId(), template3);
+                case TEMPLATE4: // TODO 반환값 설정
+                    Template4Entity template4 = template4Repository.findById(templateId)
+                            .orElseThrow(() -> new RuntimeException("해당하는 템플릿이 존재하지 않습니다."));
+                    FeedbackEntity feedbackEntity4 =processTemplate4ToFeedback(studentAnswerDTO);
+                    return getFirstFeedbackDetail(feedbackEntity4.getId(), template4);
+                case TEMPLATE5: // TODO 반환값 설정
+                    Template5Entity template5 = template5Repository.findById(templateId)
+                            .orElseThrow(() -> new RuntimeException("해당하는 템플릿이 존재하지 않습니다."));
+                    FeedbackEntity feedbackEntity5 =processTemplate5ToFeedback(studentAnswerDTO);
+                    return getFirstFeedbackDetail(feedbackEntity5.getId(), template5);
+                default:
+                    throw new IllegalArgumentException("Unknown template type: " + studentAnswerDTO.getTemplateType());
+            }
+        } else {
+            throw new IllegalArgumentException("Template id not found with id: " + templateId);
+        }
+    }
+
+    public FeedbackResponseDTO.GetFeedbackDetailDTO getFirstFeedbackDetail(Long feedbackId, TemplateEntity template) {
+        FeedbackEntity feedbackEntity = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback not found"));
+
+
+        // 추가적인 검증이 필요한 경우
+        if (feedbackEntity.getStudent() == null) {
+            // 로깅하거나 적절한 처리를 수행할 수 있습니다.
+            throw new IllegalStateException("Student information is missing in feedback");
+        }
+
+        return FeedbackResponseDTO.GetFeedbackDetailDTO.convertToFirstFeedbackDetail(feedbackEntity, template);
     }
 
 }

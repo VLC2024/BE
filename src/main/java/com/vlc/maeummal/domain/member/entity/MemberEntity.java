@@ -79,7 +79,7 @@ public class MemberEntity extends BaseEntity {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEntity> matchingStudents;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private ChallengeEntity challenge; //  챌린지
 
     // PIN 코드 생성자

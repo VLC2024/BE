@@ -3,18 +3,15 @@ package com.vlc.maeummal.domain.feedback.dto;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
-import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
+import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@RequiredArgsConstructor
 public class FeedbackResponseDTO {
     @Builder
     @Getter
@@ -99,6 +96,8 @@ public class FeedbackResponseDTO {
         private TemplateType templateType;
         private String imageNum;
         private String solution;
+        private String hint;
+        private Integer heartCount;
         private List<FeedbackCardDTO> correctFeedbackCards;
         private List<FeedbackCardDTO> studentFeedbackCards;
 
@@ -106,7 +105,25 @@ public class FeedbackResponseDTO {
         List<Boolean> correctnessList; // 각 학생 답안의 정답 여부
 
 
+        public static GetFeedbackDetailDTO convertToFirstFeedbackDetail(FeedbackEntity feedbackEntity, TemplateEntity template) {
+            List<Boolean> correctnessList = calculateCorrectness(feedbackEntity.getTemplateType(), feedbackEntity.getCorrectFeedbackCards(), feedbackEntity.getStudentFeedbackCards());
+            Integer answerNum = calculateAnswerNum(correctnessList);
 
+            return GetFeedbackDetailDTO.builder()
+                    .id(feedbackEntity.getId())
+                    .templateId(feedbackEntity.getTemplateId())
+                    .studentId(feedbackEntity.getStudent().getMemberId())
+                    .teacherId(feedbackEntity.getTeacher().getMemberId())
+                    .templateType(feedbackEntity.getTemplateType())
+                    .imageNum(feedbackEntity.getImageNum().toString())
+                    .hint(template.getDescription()) // Todo : 각 템플릿 엔티티에서 Description이 설명, 즉, 힌트가 됨. 정답은 solution 필드에 작성
+                    .heartCount(1)
+                    .correctFeedbackCards(convertToCardDtoList(feedbackEntity.getCorrectFeedbackCards()))
+                    .studentFeedbackCards(convertToCardDtoList(feedbackEntity.getStudentFeedbackCards()))
+                    .correctnessList(correctnessList)
+                    .answerNum(answerNum)
+                    .build();
+        }
 
         public static GetFeedbackDetailDTO convertToFeedbackDetail(FeedbackEntity feedbackEntity) {
             List<Boolean> correctnessList = calculateCorrectness(feedbackEntity.getTemplateType(), feedbackEntity.getCorrectFeedbackCards(), feedbackEntity.getStudentFeedbackCards());
@@ -127,8 +144,6 @@ public class FeedbackResponseDTO {
                     .answerNum(answerNum)
                     .build();
         }
-
-
 
         private static List<FeedbackResponseDTO.FeedbackCardDTO> convertToCardDtoList(List<FeedbackCardEntity> feedbackCardEntities) {
             return feedbackCardEntities.stream()
@@ -174,7 +189,7 @@ public class FeedbackResponseDTO {
                     break;
                 case TEMPLATE5:
                     // Template5: answerNumber를 비교
-                    isCorrect = studentCard.getMeaning().equals(correctCard.getAnswerNumber());
+                    isCorrect = studentCard.getMeaning().equals(correctCard.getMeaning());
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported template type in FeedbackResponseDTO: " + templateType);

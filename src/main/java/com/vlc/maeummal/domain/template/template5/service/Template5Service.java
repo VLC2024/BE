@@ -79,6 +79,7 @@ public class Template5Service {
 
         // Template5Entity를 생성하고 먼저 저장
         Template5Entity template5Entity = Template5Entity.builder()
+                .imageNum(wordCardEntities.size())
                 .type(TemplateType.TEMPLATE5)
                 .wordListEntities(new ArrayList<>()) // 일단 비어있는 리스트로 초기화
                 .build();
