@@ -4,14 +4,12 @@ import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
-import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.domain.member.service.MyPageService;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.enums.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.sqm.tree.expression.SqmToDuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,4 +52,10 @@ public class MyPageController {
         return ResponseEntity.ok(ApiResponse.onSuccess(result));
     }
 
+    @PatchMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestParam("현재 비밀번호") String currentPassword,
+                                            @RequestParam("새 비밀번호") String newPassword) {
+        myPageService.changePassword(currentPassword, newPassword);
+        return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호가 성공적으로 변경되었습니다."));
+    }
 }

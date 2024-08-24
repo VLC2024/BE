@@ -9,6 +9,7 @@ import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class MyPageService {
     private final MemberRepository memberRepository;
     private final MemberReposirotyUsingId memberReposirotyUsingId;
     private final UserAuthorizationConverter userAuthorizationConverter;
+    private final PasswordEncoder passwordEncoder;
 
     public StudentDTO.GetStudentInfo getStudentInfo(MemberEntity member){
         return StudentDTO.GetStudentInfo.getStudentInfo(member);
@@ -58,4 +60,17 @@ public class MyPageService {
 
     // Todo : 이미지 업로드
     // Todo : 비밀번호 변경
+    @Transactional
+    public void changePassword(String currentPassword, String newPassword) {
+        Long memberId = userAuthorizationConverter.getCurrentUserId();
+        MemberEntity member = memberReposirotyUsingId.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("잘못된 접근입니다. 회원가입 먼저 진행해주세요."));
+
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
+            throw new RuntimeException("비밀번호가 틀립니다. 다시 입력해주세요.");
+        }
+
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
 }
