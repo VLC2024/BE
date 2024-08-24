@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -50,6 +51,16 @@ public class MyPageController {
         MemberEntity member = memberReposirotyUsingId.findById(memberId).orElseThrow(() -> new RuntimeException(""));
         TeacherDTO.GetTeacherInfo result = myPageService.updateTeacherInfo(member, teacherInfo);
         return ResponseEntity.ok(ApiResponse.onSuccess(result));
+    }
+
+    @PatchMapping("/updateProfileImage")
+    public ResponseEntity<?> updateImage(@RequestPart(value = "file", required = false) MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body("업로드할 이미지가 없습니다. 이미지 업로드에 실패했습니다.");
+        }
+
+        myPageService.uploadProfileImage(file);
+        return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
 
     @PatchMapping("/changePassword")

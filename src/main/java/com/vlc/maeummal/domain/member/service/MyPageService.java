@@ -5,12 +5,14 @@ import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
+import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -22,6 +24,8 @@ public class MyPageService {
     private final MemberReposirotyUsingId memberReposirotyUsingId;
     private final UserAuthorizationConverter userAuthorizationConverter;
     private final PasswordEncoder passwordEncoder;
+    private final AmazonS3Manager amazonS3Manager;
+
 
     public StudentDTO.GetStudentInfo getStudentInfo(MemberEntity member){
         return StudentDTO.GetStudentInfo.getStudentInfo(member);
@@ -38,7 +42,6 @@ public class MyPageService {
         member.setName(studentInfo.getName());
         member.setEmail(studentInfo.getEmail());
         member.setPhoneNumber(studentInfo.getPhoneNum());
-        member.setImage(studentInfo.getProfileImage());
         member.setIq(studentInfo.getIq());
 
         memberRepository.save(member);
@@ -51,15 +54,28 @@ public class MyPageService {
         member.setName(teacherInfo.getName());
         member.setEmail(teacherInfo.getEmail());
         member.setPhoneNumber(teacherInfo.getPhoneNum());
-        member.setImage(teacherInfo.getProfileImage());
 
         memberRepository.save(member);
 
         return TeacherDTO.GetTeacherInfo.getTeacherInfo(member);
     }
 
-    // Todo : 이미지 업로드
-    // Todo : 비밀번호 변경
+    public void uploadProfileImage(MultipartFile file) {
+        Long memberId = userAuthorizationConverter.getCurrentUserId();
+        MemberEntity member = memberReposirotyUsingId.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("잘못된 접근입니다. 회원가입 먼저 진행해주세요."));
+        String keyName = "users/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+        String imageUrl = amazonS3Manager.uploadMultipartFile(keyName, file);
+
+        //기존의 이미지는 S3에서 삭제
+        String currentImageUrl = member.getImage();
+        String currentKeyName = amazonS3Manager.extractKeyFromUrl(imageUrl);
+        amazonS3Manager.deleteFile(currentKeyName);
+
+        member.setImage(imageUrl);
+    }
+
     @Transactional
     public void changePassword(String currentPassword, String newPassword) {
         Long memberId = userAuthorizationConverter.getCurrentUserId();

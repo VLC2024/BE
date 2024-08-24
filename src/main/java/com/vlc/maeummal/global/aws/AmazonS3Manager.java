@@ -71,6 +71,11 @@ public class AmazonS3Manager{
     public String generateWordKeyName(Uuid uuid) {
         return amazonConfig.getWordPath() + '/' + uuid.getUuid();
     }
+
+    public String extractKeyFromUrl(String imageUrl) {
+        // S3 URL에서 key를 추출하는 로직
+        return imageUrl.substring(imageUrl.indexOf(amazonConfig.getBucket()) + amazonConfig.getBucket().length() + 1);
+    }
 //
 //    public String generateReviewKeyName(Uuid uuid) {
 //        return amazonConfig.getReviewPath() + '/' + uuid.getUuid();
