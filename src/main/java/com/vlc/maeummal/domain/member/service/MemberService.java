@@ -104,12 +104,12 @@ public class MemberService {
                     .templateMission(false)
                     .prepMission(false)
                     .build();
-            challenge.setMember(savedMember);
+//            challenge.setMember(savedMember);
 
             challengeRepository.save(challenge);
 
             // 회원과 챌린지를 연결
-            savedMember.setChallenge(challenge);
+//            savedMember.setChallenge(challenge);
 
 
             return savedMember;
