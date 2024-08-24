@@ -33,6 +33,7 @@ public class FeedbackController {
      * @param feedbackRequestDTO 피드백 요청 데이터
      * @return ResponseEntity 피드백 생성 결과
      */
+    // 1차 피드백을 만든다 -> 다 맞으면 최종 피드백 반환, 틀리면 1차 피드백이 반환
     @PostMapping("/create")
     public ResponseEntity<?> createFeedback(@RequestBody  FeedbackRequestDTO.GetAnswer feedbackRequestDTO) {
 //        Long memberId = userAuthorizationConverter.getCurrentUserId();
@@ -41,7 +42,14 @@ public class FeedbackController {
         try {
             // Call the service method to process the feedback and get the saved Feedback ID
             FeedbackResponseDTO.GetFeedbackDetailDTO savedFeedback =
-                    feedbackService.setFeedbackFromAnswer(feedbackRequestDTO);
+                    feedbackService.createFirstFeedBack(feedbackRequestDTO);
+
+            if(savedFeedback.getAnswerNum().equals(savedFeedback.getImageNum())){
+                FeedbackResponseDTO.GetFeedbackDetailDTO savedFeedback1 =
+                        feedbackService.setFeedbackFromAnswer(feedbackRequestDTO);
+                log.info("Successfully processed feedback with ID: " + savedFeedback1);
+                return ResponseEntity.ok(savedFeedback1);
+            }
 
             // Log the successful operation
             log.info("Successfully processed feedback with ID: " + savedFeedback);
