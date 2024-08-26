@@ -109,11 +109,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Java 17 설정 (추가)
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'temurin'
 
       # Spring Boot 어플리케이션 Build (1)
       - name: Spring Boot Build
