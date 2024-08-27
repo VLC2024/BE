@@ -38,7 +38,6 @@ public class WordService {
 
     private final UuidRepository uuidRepository;
 
-    private final WordRepository wordRepository;
     private final UserAuthorizationConverter userAuthorizationConverter;
     private final ChallengeService challengeService;
 
