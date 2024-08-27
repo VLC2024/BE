@@ -121,7 +121,7 @@ jobs:
 
       # Docker 이미지 Build (2)
       - name: docker image build
-        run: docker build -t maeummal/maeummal-cicd:${{ github.sha }} .
+        run: docker build -t maeummal/maeummal-cicd .
 
       # DockerHub Login (3)
       - name: docker login
@@ -132,4 +132,4 @@ jobs:
 
       # Docker Hub push (4)
       - name: docker Hub push
-        run: docker push maeummal/maeummal-cicd:${{ github.sha }}
+        run: docker push maeummal/maeummal-cicd
