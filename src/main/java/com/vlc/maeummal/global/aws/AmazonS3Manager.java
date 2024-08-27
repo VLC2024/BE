@@ -25,13 +25,14 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class AmazonS3Manager{
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     private final AmazonS3 amazonS3;
 
     private final AmazonConfig amazonConfig;
+
+    private final UuidRepository uuidRepository;
 
 
     public String uploadFileWithoutImg(String keyName, MultipartFile file){
