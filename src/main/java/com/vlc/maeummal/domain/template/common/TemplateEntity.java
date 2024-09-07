@@ -33,6 +33,9 @@ public abstract class TemplateEntity {
     @Column(nullable = true)
     Integer level;
 
+    @Column(nullable = false)
+    private Long createrId;
+
     public abstract Long getId();
     public abstract TemplateType getType();
     public abstract Integer getImageNum();
