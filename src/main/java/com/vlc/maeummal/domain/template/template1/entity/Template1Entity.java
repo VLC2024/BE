@@ -44,6 +44,14 @@ public class Template1Entity extends TemplateEntity {
     @Column(nullable = false)
     private Integer level;
 
+//    @Builder.Default
+//    @OneToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<WordEntity> wordEntities = new ArrayList<>();
+
+//    @Builder.Default
+//    @ManyToMany(mappedBy = "template1Entity", cascade = CascadeType.ALL)
+//    private List<WordEntity> wordEntities = new ArrayList<>();
+
     @Builder.Default
     @ManyToMany
     @JoinTable(

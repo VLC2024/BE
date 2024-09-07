@@ -25,6 +25,7 @@ public class TemplateResponseDTO {
         String templateName;
         String createdAt;
         Integer level;
+        Long createrId;
 
         public static TemplateResponseDTO.GetTemplates convertTemplateResponseDTO(TemplateEntity template) {
             return GetTemplates.builder()
@@ -33,6 +34,7 @@ public class TemplateResponseDTO {
                     .templateName(convertTypeToString(template.getType()))
                     .createdAt(convertStringFromLocalDateTime(template.getCreatedAt()))
                     .level(template.getLevel() != null ? template.getLevel() : 0) // 디폴트 값 설정
+                    .createrId(template.getCreaterId())
                     .build();
         }
         public static String convertTypeToString(TemplateType type) {
