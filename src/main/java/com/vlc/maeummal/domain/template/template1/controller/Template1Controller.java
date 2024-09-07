@@ -50,4 +50,15 @@ public class Template1Controller {
         return ResponseEntity.ok(templates);
     }
 
+    /**
+     * 특정 템플릿에 사용된 낱말 카드를 사용한 다른 템플릿 리스트를 가져오는 메서드
+     * @param templateId 템플릿 ID
+     * @return 연관된 다른 템플릿 리스트
+     */
+    @GetMapping("/{templateId}/related-templates")
+    public ResponseEntity<List<Template1DTO>> getRelatedTemplatesByTemplateId(@PathVariable Long templateId) {
+        List<Template1DTO> relatedTemplates = template1Service.getRelatedTemplatesByTemplateId(templateId);
+        return ResponseEntity.ok(relatedTemplates); // 200 OK 응답과 함께 템플릿 리스트 반환
+    }
+
 }
