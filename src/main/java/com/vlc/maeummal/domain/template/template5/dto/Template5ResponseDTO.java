@@ -63,6 +63,4 @@ public class Template5ResponseDTO {
         }
     }
     // Template5 DTO
-
-
 }
