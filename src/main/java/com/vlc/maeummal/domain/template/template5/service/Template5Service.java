@@ -59,7 +59,7 @@ public class Template5Service {
     }
 
     @Transactional
-    public Template5ResponseDTO.GetTemplate5DTO randomWords(List<Long> wordIdList) {
+    public Template5ResponseDTO.GetTemplate5DTO randomWords(Template5RequestDTO.GetTemplate5DTO dto, List<Long> wordIdList) {
         // 랜덤으로 3개의 단어 ID를 추출
         List<Long> randomWordIdList = wordIdList.stream()
                 .sorted((a, b) -> Double.compare(Math.random(), Math.random()))
@@ -86,6 +86,8 @@ public class Template5Service {
                 .type(TemplateType.TEMPLATE5)
                 .wordListEntities(new ArrayList<>()) // 일단 비어있는 리스트로 초기화
                 .build();
+        template5Entity.setTitle(dto.getTitle());
+        template5Entity.setLevel(dto.getLevel());
         template5Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
         
         template5Entity = template5Repository.save(template5Entity);

@@ -28,6 +28,7 @@ public abstract class TemplateEntity {
     @Enumerated(EnumType.STRING)
     TemplateType type;
 
+    @Column(nullable = false)
     String title;
 
     @Column(nullable = true)
