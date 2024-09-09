@@ -1,6 +1,7 @@
 
 package com.vlc.maeummal.domain.word.repository;
 
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,7 @@ public interface WordSetRepository extends JpaRepository<WordSetEntity, Long> {
 
     @Override
     List<WordSetEntity> findAll();
+
+    List<WordSetEntity> findByCreater(MemberEntity member);
 }
 
