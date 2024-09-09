@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TemplateService {
 
-//    private final Template1Repository template1Repository;
+    private final Template1Repository template1Repository;
     private final Template2Repository template2Repository;
     private final Template3Repository template3Repository;
 //    private final Template4Repository template4Repository;
@@ -28,7 +28,7 @@ public class TemplateService {
     public List<TemplateResponseDTO.GetTemplates> getAllTemplateList(){
 
         List<TemplateEntity> templateEntityList = new ArrayList<>();
-//        templateEntityList.addAll(template1Repository.findAll());
+        templateEntityList.addAll(template1Repository.findAll());
         templateEntityList.addAll(template2Repository.findAll());
         templateEntityList.addAll(template3Repository.findAll());
         templateEntityList.addAll(template5Repository.findAll());
@@ -67,5 +67,19 @@ public class TemplateService {
 
         return templates;
     }
+
+    public List<TemplateResponseDTO.GetTemplates> getTemplatesByUserId(Long userId) {
+        // 모든 템플릿을 가져옵니다.
+        List<TemplateResponseDTO.GetTemplates> templates = getAllTemplateList()
+                .stream()
+                // createrId와 현재 userId가 같은 경우만 필터링
+                .filter(template -> template.getCreaterId().equals(userId))
+                // 생성일 기준 내림차순 정렬
+                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
+                .collect(Collectors.toList());
+
+        return templates;
+    }
+
 
 }
