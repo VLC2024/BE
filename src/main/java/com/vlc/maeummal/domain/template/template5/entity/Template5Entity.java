@@ -26,6 +26,8 @@ public class Template5Entity extends TemplateEntity {
 
     @Column
     private TemplateType type;
+    @Column(nullable = true)
+    private String title;
 
     @Column
     private Integer imageNum;

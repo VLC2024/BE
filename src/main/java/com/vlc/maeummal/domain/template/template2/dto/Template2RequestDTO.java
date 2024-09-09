@@ -17,6 +17,7 @@ public class Template2RequestDTO {
     public static class GetTemplate2DTO {
 
         String title;
+        Integer level;
         String description;
         String hint;
         Integer imageNum;
@@ -26,6 +27,7 @@ public class Template2RequestDTO {
         public static Template2RequestDTO.GetTemplate2DTO convert2DTO(Template2RequestDTO.GetTemplate2DTO template2DTO) {
             return GetTemplate2DTO.builder()
                     .title(template2DTO.title)
+                    .level(template2DTO.level)
                     .description(template2DTO.description)
                     .hint(template2DTO.hint)
                     .imageNum(template2DTO.imageNum)
@@ -37,31 +39,6 @@ public class Template2RequestDTO {
 
 
     }
-    /**
-     *
-     * @Builder
-     *     @Getter
-     *     @NoArgsConstructor
-     *     @AllArgsConstructor
-     *     public static class GetImageCardDTO {
-     *
-     *         String image;
-     *         String adjective;
-     *         String noun;
-     *        String hint;
-     *
-     *         public static Template3RequestDTO.GetImageCardDTO getImageCardDTO(Template3RequestDTO.GetImageCardDTO imageCardDTO) {
-     *             return GetImageCardDTO.builder()
-     *                     .image(imageCardDTO.image)
-     *                     .adjective(imageCardDTO.adjective)
-     *                     .noun(imageCardDTO.noun)
-     *                     .hint(imageCardDTO.hint)
-     *                     .build();
-     *         }
-     *
-     *     }
-     *
-     * */
     @Builder
     @Getter
     @NoArgsConstructor

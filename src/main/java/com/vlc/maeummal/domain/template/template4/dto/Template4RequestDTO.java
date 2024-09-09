@@ -16,6 +16,7 @@ public class Template4RequestDTO {
     public static class GetTemplate4DTO {
 
         String title;
+        Integer level;
         String description; // 해설
         String hint; // 힌트
         Integer imageNum; // 이야기 카드 갯수

@@ -7,6 +7,7 @@ import com.vlc.maeummal.domain.template.template2.repository.Template2Repository
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
 import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
 import com.vlc.maeummal.domain.template.template5.repository.Template5Repository;
+import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,33 @@ public class TemplateService {
                 .collect(Collectors.toList());
 
         return templates;
+    }
+    public Integer getTemplateLevel(TemplateType templateType, Long templateId) {
+        switch (templateType) {
+            case TEMPLATE1:
+                return template1Repository.findById(templateId)
+                        .map(TemplateEntity::getLevel)
+                        .orElse(null);
+            case TEMPLATE2:
+                return template2Repository.findById(templateId)
+                        .map(TemplateEntity::getLevel)
+                        .orElse(null);
+            case TEMPLATE3:
+                return template3Repository.findById(templateId)
+                        .map(TemplateEntity::getLevel)
+                        .orElse(null);
+            case TEMPLATE4:
+                return template4Repository.findById(templateId)
+                        .map(TemplateEntity::getLevel)
+                        .orElse(null);
+            case TEMPLATE5:
+                return template5Repository.findById(templateId)
+                        .map(TemplateEntity::getLevel)
+                        .orElse(null);
+            default:
+                // 예외 처리 또는 로깅
+                return null;
+        }
     }
 
 

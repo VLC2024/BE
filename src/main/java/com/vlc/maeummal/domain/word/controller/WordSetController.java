@@ -29,7 +29,7 @@ public class WordSetController {
     private final WordService wordService;
 
     private final AmazonS3 s3Client;
-
+    private final UserAuthorizationConverter userAuthorizationConverter;
 
     @GetMapping("/wordSet")
     public ResponseEntity<?> getWordSet(@RequestParam Long wordSetId){
@@ -49,6 +49,7 @@ public class WordSetController {
 
     @PostMapping("/wordSet")
     public ResponseEntity<?> createWordSet(@RequestBody WordSetRequestDTO.WordSetCreationRequestDTO wordSet){
+
         // wordSet를 저장
         wordService.saveWordSetWithWords(wordSet.getWordSetDTO(), wordSet.getWordDTOList());
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
