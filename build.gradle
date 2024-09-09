@@ -101,3 +101,9 @@ tasks.named('test') {
 jar { // ci set
     enabled = false
 }
+
+bootJar{ // 프로젝트 빌드 파일명 설정
+    archivesBaseName = 'maeummal'
+    archiveFileName = 'maeummal.jar'
+    archiveVersion = "0.0.0"
+}
