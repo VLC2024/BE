@@ -6,6 +6,7 @@ import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 public class Template4Service {
     private final Template4Repository template4Repository;
     private final StoryCardRepository storyCardRepository;
+    private final UserAuthorizationConverter userAuthorizationConverter;
 
     public Template4Entity createTemplate4(Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList){
         Template4Entity template4Entity = Template4Entity.builder()
@@ -28,6 +30,8 @@ public class Template4Service {
                 .storyCardEntityList(new ArrayList<>())
                 .type(requestDTO.getType())
                 .build();
+        template4Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        template4Entity.setLevel(requestDTO.getLevel());
 
         Template4Entity savedTemplate4 = template4Repository.save(template4Entity);
 

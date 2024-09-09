@@ -14,6 +14,7 @@ import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.domain.word.repository.WordRepository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class Template5Service {
     private Template5Repository template5Repository;
     @Autowired
     private WordCardRepository wordCardRepository;
-
+    @Autowired
+    private  UserAuthorizationConverter userAuthorizationConverter;
     public Template5ResponseDTO.GetTemplate5DTO getTemplate5(Long template5Id) {
         // DB에서 가져와서 DTO로 변환
         Template5ResponseDTO.GetTemplate5DTO template5DTO = Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(template5Repository.findById(template5Id).orElseThrow(() -> new EntityNotFoundException("Template not found")));
@@ -84,7 +86,8 @@ public class Template5Service {
                 .type(TemplateType.TEMPLATE5)
                 .wordListEntities(new ArrayList<>()) // 일단 비어있는 리스트로 초기화
                 .build();
-
+        template5Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        
         template5Entity = template5Repository.save(template5Entity);
 
         // 저장된 Template5Entity의 ID를 가져와서 WordCardEntity에 설정

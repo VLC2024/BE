@@ -1,7 +1,9 @@
 package com.vlc.maeummal.domain.template.common;
 
 import com.vlc.maeummal.domain.template.common.dto.TemplateResponseDTO;
+import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import com.vlc.maeummal.global.apiPayload.code.status.SuccessStatus;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,12 @@ public class TemplateController {
         // 서비스 메서드 호출하여 결과 가져오기
         List<TemplateResponseDTO.GetTemplates> templates = templateService.getTemplatesByUserId(createrId);
         return ResponseEntity.ok(templates); // 200 OK 응답과 함께 반환
+    }
+    @GetMapping("/title")
+    public ResponseEntity<ApiResponse<List<TemplateResponseDTO.GetTemplates>>> retrieveTemplateFromTitleContaining(
+            @RequestParam(value = "title") String title) {
+        List<TemplateResponseDTO.GetTemplates> templateEntities = templateService.retrieveTemplateUsingTitle(title);
+        return ResponseEntity.ok(ApiResponse.of(SuccessStatus._OK, templateEntities));
     }
 
 }

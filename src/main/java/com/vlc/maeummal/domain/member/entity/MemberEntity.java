@@ -2,6 +2,8 @@ package com.vlc.maeummal.domain.member.entity;
 
 import com.vlc.maeummal.domain.challenge.entity.ChallengeEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.domain.word.entity.WordEntity;
+import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import com.vlc.maeummal.global.enums.Iq;
@@ -10,6 +12,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
@@ -81,6 +84,9 @@ public class MemberEntity extends BaseEntity {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private ChallengeEntity challenge; //  챌린지
+
+    @OneToMany(mappedBy = "creater", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <WordSetEntity> wordSetEntities = new ArrayList<>();
 
     // PIN 코드 생성자
     @PrePersist

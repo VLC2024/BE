@@ -7,6 +7,7 @@ import com.vlc.maeummal.domain.template.common.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.common.StoryCardRepository;
 import com.vlc.maeummal.domain.template.template2.repository.Template2Repository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class Template2Service {
 
     private final Template2Repository template2Repository;
     private final StoryCardRepository storyCardRepository;
+    private final UserAuthorizationConverter userAuthorizationConverter;
 
     public Template2ResponseDTO.GetTemplate2DTO getTemplate2(Long template2Id) {
         Template2Entity template2Entity = template2Repository.findById(template2Id)
@@ -46,6 +48,8 @@ public class Template2Service {
                 .storyCardEntityList(new ArrayList<>())
                 .type(template2DTO.getType())
                 .build();
+        template2Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        template2Entity.setLevel(template2DTO.getLevel());
 
         Template2Entity savedTemplate2 = template2Repository.save(template2Entity);
 
