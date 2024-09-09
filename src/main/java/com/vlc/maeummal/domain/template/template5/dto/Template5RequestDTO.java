@@ -22,6 +22,8 @@ public class Template5RequestDTO {
     }*/
     public static class GetTemplate5DTO{
         Long temp5Id;
+        String title;
+        Integer level;
         List<Long> wordSetIdList;
     }
     @Builder

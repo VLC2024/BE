@@ -5,6 +5,7 @@ import com.vlc.maeummal.domain.challenge.repository.ChallengeRepository;
 import com.vlc.maeummal.domain.member.dto.StudentDTO;
 import com.vlc.maeummal.domain.member.dto.TeacherDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
+import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

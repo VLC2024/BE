@@ -8,6 +8,7 @@ import com.vlc.maeummal.domain.template.template3.repository.ImageCardRepository
 import com.vlc.maeummal.domain.template.template3.repository.Template3Repository;
 import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.UuidRepository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class Template3Service {
     private final ImageCardRepository imageCardRepository;
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
+    private final UserAuthorizationConverter userAuthorizationConverter;
 
     // id를 통해 Template3 반환
     public Template3ResponseDTO.GetTemplate3DTO getTemplate3(Long template3Id) {
@@ -54,6 +56,8 @@ public class Template3Service {
                 .imageCardEntityList(new ArrayList<>())
                 .optionList(template3DTO.getOptions())
                 .build();
+        template3Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        template3Entity.setLevel(template3DTO.getLevel());
 
         // Step 2: Template3Entity 저장
         Template3Entity savedTemplate3 = template3Repository.save(template3Entity);

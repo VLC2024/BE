@@ -162,4 +162,54 @@ public class Template1Service {
                 .build();
     }
 
+    /**
+     * 특정 템플릿에 사용된 낱말 카드를 사용한 다른 템플릿 리스트를 반환하는 메서드
+     * @param templateId 템플릿 ID
+     * @return 연관된 다른 템플릿 리스트
+     */
+    @Transactional
+    public List<Template1DTO> getRelatedTemplatesByTemplateId(Long templateId) {
+        // 주어진 템플릿을 가져옴
+        Template1Entity template = template1Repository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+
+        // 템플릿에 사용된 낱말 카드를 가져옴
+        List<WordEntity> wordsUsedInTemplate = template.getWordEntities();
+
+        // 모든 낱말 카드가 사용된 템플릿을 수집
+        Set<Template1Entity> relatedTemplates = wordsUsedInTemplate.stream()
+                .flatMap(word -> template1Repository.findByWordEntitiesContaining(word).stream())
+                .filter(t -> !t.getId().equals(templateId)) // 현재 템플릿을 제외
+                .collect(Collectors.toSet()); // 중복된 템플릿을 제거하기 위해 Set 사용
+
+        // DTO로 변환하여 반환
+        return relatedTemplates.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+//    public List<Template1DTO> getRelatedTemplatesByTemplateId(Long templateId) {
+//        // 주어진 템플릿을 가져옴
+//        Template1Entity template = template1Repository.findById(templateId)
+//                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+//
+//        // 템플릿에 사용된 낱말 카드를 가져옴
+//        List<WordEntity> wordsUsedInTemplate = template.getWordEntities();
+//
+//        // 낱말 카드가 사용된 다른 템플릿을 조회
+//        Set<Template1Entity> relatedTemplates = new HashSet<>();
+//        for (WordEntity word : wordsUsedInTemplate) {
+//            List<Template1Entity> templatesUsingWord = template1Repository.findByWordEntitiesContaining(word);
+//            // 현재 템플릿을 제외한 다른 템플릿을 추가
+//            relatedTemplates.addAll(templatesUsingWord.stream()
+//                    .filter(t -> !t.getId().equals(templateId))
+//                    .collect(Collectors.toList()));
+//        }
+//
+//        // 중복 제거 후 DTO로 변환하여 반환
+//        return relatedTemplates.stream()
+//                .map(this::convertToDTO)
+//                .collect(Collectors.toList());
+//    }
+
 }
