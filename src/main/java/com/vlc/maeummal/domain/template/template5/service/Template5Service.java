@@ -119,7 +119,7 @@ public class Template5Service {
 
         // 현재 템플릿 ID를 제외하고 필터링
         relatedTemplate5Ids = relatedTemplate5Ids.stream()
-                .filter(id -> !id.equals(wordCard.getTemp5()))  // 현재 템플릿 ID 제외
+                .filter(id -> !id.equals(templateId))  // 현재 템플릿 ID 제외
                 .collect(Collectors.toList());
 
         // 관련된 템플릿이 없으면 예외 발생
