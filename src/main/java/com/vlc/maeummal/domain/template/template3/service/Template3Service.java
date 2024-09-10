@@ -57,6 +57,7 @@ public class Template3Service {
                 .optionList(template3DTO.getOptions())
                 .build();
         template3Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        template3Entity.setTitle(template3DTO.getTitle());
         template3Entity.setLevel(template3DTO.getLevel());
 
         // Step 2: Template3Entity 저장
