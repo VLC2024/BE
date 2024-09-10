@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/template5")
 @RequiredArgsConstructor
 public class Template5Controller {
@@ -40,9 +40,9 @@ public class Template5Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> getSelectedWordSet(@RequestParam Long wordSetId){
+    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetTemplate5DTO dto, @RequestParam Long wordSetId){
         List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetId);
-        Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(wordIdListDTO);
+        Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(dto,wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
     }

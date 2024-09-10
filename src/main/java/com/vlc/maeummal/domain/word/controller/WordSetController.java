@@ -40,6 +40,13 @@ public class WordSetController {
         }
         return ResponseEntity.ok(ApiResponse.onSuccess(wordSet));
     }
+    @GetMapping("/myWordSet")
+    public ResponseEntity<?> getMyWordSet(){
+        Long currentUserId = userAuthorizationConverter.getCurrentUserId();
+        List<WordSetResponseDTO.GetWordSetDTO> wordSetDTOList = wordService.getTeacherWordSet(currentUserId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(wordSetDTOList));
+    }
     @GetMapping("/wordSet/all")
     public ResponseEntity<?> getAllWordSet(){
         List<WordSetResponseDTO.GetWordSetDTO> wordSetDTOList = wordService.getAllWordSet();

@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.word.service;
 
 import com.vlc.maeummal.domain.challenge.service.ChallengeService;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
@@ -54,6 +55,13 @@ public class WordService {
 
         // return
         return wordSetResponseDTO;
+
+    }
+    public List<WordSetResponseDTO.GetWordSetDTO> getTeacherWordSet(Long createrId) {
+        MemberEntity creater = memberReposirotyUsingId.findById(createrId).orElseThrow();
+        // db에서 가져옴, dto변환
+        List<WordSetEntity> wordSetDTOList = wordSetRepository.findByCreater(creater);
+        return wordSetDTOList.stream().map(wordSet -> WordSetResponseDTO.GetWordSetDTO.getWordSetDTO(wordSet)).collect(Collectors.toList());
 
     }
     public List<WordSetResponseDTO.GetWordSetDTO> getAllWordSet() {
