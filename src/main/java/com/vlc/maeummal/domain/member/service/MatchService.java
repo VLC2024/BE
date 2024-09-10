@@ -126,6 +126,7 @@ public class MatchService {
         counts.forEach(templateChart::put);
 
         return templateChart;
+        
     }
 
 
