@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.template.template5.controller;
 
+import com.vlc.maeummal.domain.template.template1.dto.Template1DTO;
 import com.vlc.maeummal.domain.template.template3.dto.Template3ResponseDTO;
 import com.vlc.maeummal.domain.template.template5.dto.Template5RequestDTO;
 import com.vlc.maeummal.domain.template.template5.dto.Template5ResponseDTO;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/template5")
 @RequiredArgsConstructor
 public class Template5Controller {
@@ -39,9 +40,9 @@ public class Template5Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> getSelectedWordSet(@RequestParam Long wordSetId){
+    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetTemplate5DTO dto, @RequestParam Long wordSetId){
         List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetId);
-        Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(wordIdListDTO);
+        Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(dto,wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
     }
@@ -61,5 +62,12 @@ public class Template5Controller {
         List<Template5ResponseDTO.GetTemplate5DTO> template5DTOList = template5Service.getAllTemplate5();
         return ResponseEntity.ok(ApiResponse.onSuccess(template5DTOList));
     }
+
+    @GetMapping("/{templateId}/related-templates")
+    public ResponseEntity<?> getRelatedTemplatesByTemplateId(@PathVariable Long templateId) {
+        Template5ResponseDTO.GetTemplate5DTO relatedTemplates = template5Service.getRelatedTemplateByTemplateId(templateId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(relatedTemplates)); // 200 OK 응답과 함께 템플릿 리스트 반환
+    }
+
 
 }

@@ -21,6 +21,7 @@ public class Template4ResponseDTO {
         Long templateId;
         Integer heartCount;
         String title;
+        Integer level;
 //        String description;
 //        String hint;
         List<Template4ResponseDTO.GetStoryCardDTO> storyCardEntityList;
@@ -38,6 +39,7 @@ public class Template4ResponseDTO {
                     .templateId(template4.getId())
                     .heartCount(2)
                     .title(template4.getTitle())
+                    .level(template4.getLevel())
 //                    .description(template4.getDescription())
 //                    .hint(template4.getHint())
                     .storyCardEntityList(storyCardDTOList)

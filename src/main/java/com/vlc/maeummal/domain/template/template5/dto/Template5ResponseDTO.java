@@ -28,6 +28,8 @@ public class Template5ResponseDTO {
     @AllArgsConstructor
     public static class GetTemplate5DTO{
         Long temp5Id;
+        String title;
+        Integer level;
         TemplateType templateType;
         List<GetWordCardDTO> wordCardList;
         public static GetTemplate5DTO getTemplate5DTO(Template5Entity template5){
@@ -35,6 +37,8 @@ public class Template5ResponseDTO {
                     .map(GetWordCardDTO::getWordCardDTO).toList();
             return GetTemplate5DTO.builder()
                     .temp5Id(template5.getId())
+                    .title(template5.getTitle())
+                    .level(template5.getLevel())
                     .templateType(TemplateType.TEMPLATE5)
                     .wordCardList(wordCardDTOList)
                     .build();
@@ -63,6 +67,4 @@ public class Template5ResponseDTO {
         }
     }
     // Template5 DTO
-
-
 }

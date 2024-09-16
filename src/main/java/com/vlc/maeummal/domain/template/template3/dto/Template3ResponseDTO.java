@@ -22,6 +22,8 @@ public class Template3ResponseDTO {
         String description;
         Integer imageNum;
         List<String> options;
+        String title;
+        Integer level;
 
         public static GetTemplate3DTO getTemplate3DTO(Template3Entity template3) {
             List<GetImageCardDTO> imageCardDTOList = template3.getImageCardEntityList().stream()
@@ -32,6 +34,8 @@ public class Template3ResponseDTO {
                     .description(template3.getDescription())
                     .imageNum(template3.getImageNum())
                     .options(template3.getOptionList())
+                    .title(template3.getTitle())
+                    .level(template3.getLevel())
                     .build();
         }
     }

@@ -17,6 +17,8 @@ public class Template3RequestDTO {
     @AllArgsConstructor
     public static class GetTemplate3DTO {
 
+        String title;
+        Integer level;
         String description;
         Integer imageNum;
         TemplateType templateType;
@@ -25,11 +27,12 @@ public class Template3RequestDTO {
 
         public static Template3RequestDTO.GetTemplate3DTO getTemplate3DTO(Template3RequestDTO.GetTemplate3DTO template3DTO) {
             return GetTemplate3DTO.builder()
+                    .title(template3DTO.title)
+                    .level(template3DTO.level)
                     .description(template3DTO.description)
                     .imageNum(template3DTO.imageNum)
                     .templateType(template3DTO.templateType)
                     .options(template3DTO.options)
-
                     .build();
         }
 

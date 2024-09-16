@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.challenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -27,8 +28,9 @@ public class ChallengeEntity  extends BaseEntity {
 
     String title = "오늘의 챌린지";
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id")
+    @JsonIgnore // 무한 참조 방지
     private MemberEntity member; // 연관된 사용자
 
     private boolean wordMission;

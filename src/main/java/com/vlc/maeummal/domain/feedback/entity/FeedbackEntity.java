@@ -28,6 +28,8 @@ public class FeedbackEntity extends BaseEntity {
 
     private Long templateId;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String aiFeedback;
 
     private String title;

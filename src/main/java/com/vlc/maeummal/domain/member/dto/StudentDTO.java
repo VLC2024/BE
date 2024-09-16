@@ -1,6 +1,7 @@
 package com.vlc.maeummal.domain.member.dto;
 
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import com.vlc.maeummal.global.enums.Iq;
 import com.vlc.maeummal.global.enums.Role;
@@ -51,4 +52,30 @@ public class StudentDTO {
                 .build();
     }
 
+    // 마이페이지 학생 정보 DTO
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetStudentInfo{
+        private String profileImage;
+        private String name;
+        private String email;
+        private String phoneNum;
+//        private String password;
+        private Iq iq;
+        private String pinCode;
+
+        public static StudentDTO.GetStudentInfo getStudentInfo(MemberEntity member) {
+            return GetStudentInfo.builder()
+                    .profileImage(member.getImage())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .phoneNum(member.getPhoneNumber())
+                    .iq(member.getIq())
+                    .pinCode(member.getPinCode())
+                    .build();
+
+        }
+    }
 }
