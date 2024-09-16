@@ -3,7 +3,7 @@ package com.vlc.maeummal.domain.feedback.dto;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackCardEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.*;
 
