@@ -15,7 +15,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
-    _NOT_FOUND_FEEDBACK(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON505", "서버 에러, 데이터를 받아오지 못했습니다.");
+    _NOT_FOUND_FEEDBACK(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON505", "서버 에러, 데이터를 받아오지 못했습니다."),
+
+    _NOT_FOUND_TEMPLATE(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON506", "해당 데이터가 없습니다");
+
 
     private final HttpStatus httpStatus;
     private final String code;
