@@ -8,10 +8,10 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.template2.repository.Template2Repository;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
@@ -34,10 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
