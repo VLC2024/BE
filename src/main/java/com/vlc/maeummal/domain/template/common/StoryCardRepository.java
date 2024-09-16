@@ -14,4 +14,5 @@ public interface StoryCardRepository extends JpaRepository<StoryCardEntity, Long
     Optional<StoryCardEntity> findById(Long id);*/
 
     List<StoryCardEntity> findByTemplate2Id(Long id);
+
 }

@@ -113,21 +113,40 @@ public class MatchService {
 
         // Initialize the result map with all keys (a, b, c, d, e) and values set to 0
         Map<String, Integer> templateChart = new HashMap<>();
-        templateMappings.values().forEach(key -> templateChart.put(key.toString(), 0));
+        templateMappings.values().forEach(key -> templateChart.put(key, 0));
 
         // Update the map based on the actual feedbackEntityList
         Map<String, Integer> counts = feedbackEntityList.stream()
                 .collect(Collectors.groupingBy(
-                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),  // Map TEMPLATE1 -> a, etc.
-                        Collectors.summingInt(e -> 1)  // Count occurrences
+                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),
+                        Collectors.summingInt(e -> 1)
                 ));
 
         // Merge counts into the templateChart, adding the counts to the initialized values
-        counts.forEach(templateChart::put);
+        counts.forEach((key, count) -> {
+            if (count >= 10) {
+                templateChart.put(key, -1);
+            } else {
+                templateChart.put(key, count);
+            }
+        });
 
         return templateChart;
-        
-    }
+
+
+//        // Update the map based on the actual feedbackEntityList
+//        Map<String, Integer> counts = feedbackEntityList.stream()
+//                .collect(Collectors.groupingBy(
+//                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),  // Map TEMPLATE1 -> a, etc.
+//                        Collectors.summingInt(e -> 1)  // Count occurrences
+//                ));
+//
+//        // Merge counts into the templateChart, adding the counts to the initialized values
+//        counts.forEach(templateChart::put);
+//
+//        return templateChart;
+
+}
 
 
     private StudentDTO convertToStudentDTO(MemberEntity studentEntity) {
