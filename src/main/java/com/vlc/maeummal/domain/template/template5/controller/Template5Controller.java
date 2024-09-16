@@ -83,9 +83,9 @@ public class Template5Controller {
 
     // 템플릿 삭제 (DELETE)
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteTemplate5(@RequestParam Long template5Id) {
+    public ResponseEntity<?> deleteTemplate5(@RequestParam Long temp5Id) {
         try {
-            template5Service.deleteTemplate5(template5Id);
+            template5Service.deleteTemplate5(temp5Id);
             return ResponseEntity.ok(ApiResponse.successWithoutResult());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿을 찾을 수 없습니다.", null));

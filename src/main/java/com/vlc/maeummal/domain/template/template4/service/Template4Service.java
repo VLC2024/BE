@@ -6,6 +6,8 @@ import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
+import com.vlc.maeummal.domain.template.template5.dto.Template5ResponseDTO;
+import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +26,13 @@ public class Template4Service {
 
     public Template4Entity createTemplate4(Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList) {
         Template4Entity template4Entity = Template4Entity.builder()
-                .title(requestDTO.getTitle())
                 .description(requestDTO.getDescription())
                 .hint(requestDTO.getHint())
                 .imageNum(requestDTO.getStoryCardEntityList().size())
                 .storyCardEntityList(new ArrayList<>())
                 .type(requestDTO.getType())
                 .build();
+        template4Entity.setTitle(requestDTO.getTitle());
         template4Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
         template4Entity.setLevel(requestDTO.getLevel());
 
@@ -56,7 +59,12 @@ public class Template4Service {
                 .orElseThrow(() -> new EntityNotFoundException("템플릿을 찾을 수 없습니다."));
         return Template4ResponseDTO.GetTemplate4DTO.convertTemplate4DTO(template4Entity);
     }
-
+    public List<Template4ResponseDTO.GetTemplate4DTO> getAllTemplate4() {
+        List<Template4Entity> template4EntityList = template4Repository.findAll();
+        return template4EntityList.stream()
+                .map(template4 -> Template4ResponseDTO.GetTemplate4DTO.convertTemplate4DTO(template4))
+                .collect(Collectors.toList());
+    }
     // 템플릿 삭제 메소드
     public void deleteTemplate4(Long template4Id) {
         Template4Entity template4Entity = template4Repository.findById(template4Id)
@@ -102,4 +110,6 @@ public class Template4Service {
         // 수정된 템플릿 저장
         return template4Repository.save(template4Entity);
     }
+
+
 }

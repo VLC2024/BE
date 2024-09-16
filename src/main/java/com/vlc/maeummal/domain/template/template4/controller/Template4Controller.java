@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/template4")
 @RequiredArgsConstructor
@@ -24,12 +26,22 @@ public class Template4Controller {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> getTemplate4(@RequestParam Long template4Id) {
-        Template4ResponseDTO.GetTemplate4DTO template4 = template4Service.getTemplate4(template4Id);
-        if (template4 == null) {
-            return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿이 없습니다.", null));
+    public ResponseEntity<?> getTemplate4(@RequestParam(value = "template4Id", required = false) Long template4Id) {
+        if (template4Id == null) {
+            // template4Id가 없으면 전체 템플릿을 불러옴
+            List<Template4ResponseDTO.GetTemplate4DTO> template4List = template4Service.getAllTemplate4();
+            if (template4List == null || template4List.isEmpty()) {
+                return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "템플릿 목록이 없습니다.", null));
+            }
+            return ResponseEntity.ok(ApiResponse.onSuccess(template4List));
+        } else {
+            // template4Id가 있으면 특정 템플릿을 불러옴
+            Template4ResponseDTO.GetTemplate4DTO template4 = template4Service.getTemplate4(template4Id);
+            if (template4 == null) {
+                return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿이 없습니다.", null));
+            }
+            return ResponseEntity.ok(ApiResponse.onSuccess(template4));
         }
-        return ResponseEntity.ok(ApiResponse.onSuccess(template4));
     }
 
     @PatchMapping("/update")
