@@ -188,28 +188,32 @@ public class Template1Service {
                 .collect(Collectors.toList());
     }
 
-//    public List<Template1DTO> getRelatedTemplatesByTemplateId(Long templateId) {
-//        // 주어진 템플릿을 가져옴
-//        Template1Entity template = template1Repository.findById(templateId)
-//                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
-//
-//        // 템플릿에 사용된 낱말 카드를 가져옴
-//        List<WordEntity> wordsUsedInTemplate = template.getWordEntities();
-//
-//        // 낱말 카드가 사용된 다른 템플릿을 조회
-//        Set<Template1Entity> relatedTemplates = new HashSet<>();
-//        for (WordEntity word : wordsUsedInTemplate) {
-//            List<Template1Entity> templatesUsingWord = template1Repository.findByWordEntitiesContaining(word);
-//            // 현재 템플릿을 제외한 다른 템플릿을 추가
-//            relatedTemplates.addAll(templatesUsingWord.stream()
-//                    .filter(t -> !t.getId().equals(templateId))
-//                    .collect(Collectors.toList()));
-//        }
-//
-//        // 중복 제거 후 DTO로 변환하여 반환
-//        return relatedTemplates.stream()
-//                .map(this::convertToDTO)
-//                .collect(Collectors.toList());
-//    }
+    @Transactional
+    public Template1DTO updateTemplate(Long templateId, String newTitle, Integer newLevel) {
+        // 주어진 ID로 템플릿을 찾고 없으면 예외 처리
+        Template1Entity template = template1Repository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+
+        // 템플릿의 제목과 레벨을 수정
+        template.setTitle(newTitle);
+        template.setLevel(newLevel);
+
+        // 수정된 템플릿을 저장
+        Template1Entity updatedTemplate = template1Repository.save(template);
+
+        // DTO로 변환하여 반환
+        return convertToDTO(updatedTemplate);
+    }
+
+    @Transactional
+    public void deleteTemplate(Long templateId) {
+        // 주어진 ID로 템플릿을 찾고 없으면 예외 처리
+        Template1Entity template = template1Repository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+
+        // 템플릿 삭제
+        template1Repository.delete(template);
+    }
+
 
 }
