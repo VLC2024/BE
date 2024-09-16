@@ -1,7 +1,6 @@
 package com.vlc.maeummal.domain.template.template5.entity;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.global.common.BaseEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

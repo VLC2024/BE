@@ -1,7 +1,6 @@
 package com.vlc.maeummal.domain.template.template1.entity;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.domain.template.template5.entity.WordCardEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;

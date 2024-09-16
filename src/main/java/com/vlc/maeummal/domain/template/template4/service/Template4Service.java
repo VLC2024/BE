@@ -1,7 +1,7 @@
 package com.vlc.maeummal.domain.template.template4.service;
 
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
-import com.vlc.maeummal.domain.template.common.StoryCardRepository;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.repository.StoryCardRepository;
 import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;

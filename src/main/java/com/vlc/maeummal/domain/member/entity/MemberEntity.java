@@ -2,8 +2,7 @@ package com.vlc.maeummal.domain.member.entity;
 
 import com.vlc.maeummal.domain.challenge.entity.ChallengeEntity;
 import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
-import com.vlc.maeummal.domain.word.entity.WordEntity;
-import com.vlc.maeummal.domain.word.entity.WordSetEntity;
+import com.vlc.maeummal.domain.template.common.entity.BadgeEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Gender;
 import com.vlc.maeummal.global.enums.Iq;
@@ -82,11 +81,12 @@ public class MemberEntity extends BaseEntity {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEntity> matchingStudents;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private ChallengeEntity challenge; //  챌린지
 
-    @OneToMany(mappedBy = "creater", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <WordSetEntity> wordSetEntities = new ArrayList<>();
+    // 수료한 뱃지 목록
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<BadgeEntity> badges = new ArrayList<>();
 
     // PIN 코드 생성자
     @PrePersist

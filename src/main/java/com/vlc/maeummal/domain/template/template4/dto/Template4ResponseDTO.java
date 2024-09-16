@@ -1,8 +1,6 @@
 package com.vlc.maeummal.domain.template.template4.dto;
 
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
-import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
-import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

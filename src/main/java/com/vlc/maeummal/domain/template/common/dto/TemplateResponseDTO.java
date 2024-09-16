@@ -1,11 +1,8 @@
 package com.vlc.maeummal.domain.template.common.dto;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.vlc.maeummal.global.converter.DateTimeConverter.*;
 
