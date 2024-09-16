@@ -21,7 +21,7 @@ public class Template4Service {
     private final StoryCardRepository storyCardRepository;
     private final UserAuthorizationConverter userAuthorizationConverter;
 
-    public Template4Entity createTemplate4(Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList){
+    public Template4Entity createTemplate4(Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList) {
         Template4Entity template4Entity = Template4Entity.builder()
                 .title(requestDTO.getTitle())
                 .description(requestDTO.getDescription())
@@ -57,4 +57,49 @@ public class Template4Service {
         return Template4ResponseDTO.GetTemplate4DTO.convertTemplate4DTO(template4Entity);
     }
 
+    // 템플릿 삭제 메소드
+    public void deleteTemplate4(Long template4Id) {
+        Template4Entity template4Entity = template4Repository.findById(template4Id)
+                .orElseThrow(() -> new EntityNotFoundException("템플릿을 찾을 수 없습니다."));
+
+        // 관련된 스토리 카드 삭제
+        storyCardRepository.deleteAll(template4Entity.getStoryCardEntityList());
+
+        // 템플릿 삭제
+        template4Repository.delete(template4Entity);
+    }
+
+    // 템플릿 수정 메소드
+    public Template4Entity updateTemplate4(Long template4Id, Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList) {
+        Template4Entity template4Entity = template4Repository.findById(template4Id)
+                .orElseThrow(() -> new EntityNotFoundException("템플릿을 찾을 수 없습니다."));
+
+        // 템플릿 정보 수정
+        template4Entity.setTitle(requestDTO.getTitle());
+        template4Entity.setDescription(requestDTO.getDescription());
+        template4Entity.setHint(requestDTO.getHint());
+        template4Entity.setLevel(requestDTO.getLevel());
+        template4Entity.setImageNum(storyCardDTOList.size());
+        template4Entity.setType(requestDTO.getType());
+
+        // 기존 스토리 카드 삭제 및 새로운 스토리 카드 추가
+        storyCardRepository.deleteAll(template4Entity.getStoryCardEntityList());
+        template4Entity.getStoryCardEntityList().clear();
+
+        for (Template4RequestDTO.GetStoryCard storyCardDTO : storyCardDTOList) {
+            StoryCardEntity storyCardEntity = StoryCardEntity.builder()
+                    .image(storyCardDTO.getImage())
+                    .answerNumber(storyCardDTO.getAnswerNumber())
+                    .description(storyCardDTO.getDescription())
+                    .template4(template4Entity)
+                    .build();
+
+            template4Entity.getStoryCardEntityList().add(storyCardEntity);
+        }
+
+        storyCardRepository.saveAll(template4Entity.getStoryCardEntityList());
+
+        // 수정된 템플릿 저장
+        return template4Repository.save(template4Entity);
+    }
 }
