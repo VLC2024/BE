@@ -8,10 +8,10 @@ import com.vlc.maeummal.domain.feedback.entity.FeedbackEntity;
 import com.vlc.maeummal.domain.feedback.repository.FeedbackRepository;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import com.vlc.maeummal.domain.template.template2.repository.Template2Repository;
 import com.vlc.maeummal.domain.template.template3.entity.ImageCardEntity;
@@ -225,63 +225,140 @@ public class FeedbackService extends BaseEntity {
         return feedbackRepository.save(feedbackEntity);
     }
 
-    private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
-        // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
-        List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
+//    private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+//        // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
+//        List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
+//
+//        // 피드백 생성에 사용할 프롬프트를 작성합니다.
+//        StringBuilder promptBuilder = new StringBuilder();
+//        promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the following answers based on the provided template. For each incorrect answer, explain in detail where the student went wrong and suggest specific strategies or areas they should focus on to avoid making the same mistake in the future. Please provide clear and actionable advice.\n delete all enter(\n)");
+//
+//        for (int i = 0; i < correctnessList.size(); i++) {
+//            FeedbackCardEntity studentCard = studentCards.get(i);
+//            boolean isCorrect = correctnessList.get(i);
+//            FeedbackCardEntity correctCard = correctCards.get(i);
+//
+//            promptBuilder.append("Question ").append(i + 1).append(": ");
+//
+//            switch (template.getType()) {
+//                case TEMPLATE1:
+//                case TEMPLATE5:
+//                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+//                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+//                    break;
+//                case TEMPLATE2:
+//                case TEMPLATE4:
+//                    promptBuilder.append("Your Answer: ").append(studentCard.getAnswerNumber()).append(". ");
+//                    promptBuilder.append("Correct Answer: ").append(correctCard.getAnswerNumber()).append(". ");
+//                    break;
+//                case TEMPLATE3:
+//                    promptBuilder.append("Your Answer: ").append(studentCard.getAdjective()).append(". ");
+//                    promptBuilder.append("Correct Answer: ").append(correctCard.getAdjective()).append(". ");
+//                    break;
+//                default:
+//                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+//                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+//                    break;
+//            }
+//
+//            promptBuilder.append("Result: ").append(isCorrect ? "Correct." : "Incorrect.").append(" ");
+//
+//            if (!isCorrect) {
+//                promptBuilder.append("Explain why the student's answer is incorrect, and provide specific advice on what they should study or practice to improve in this area.");
+//            }
+//            promptBuilder.append("reply and transfer korean language");
+//
+//            promptBuilder.append("\n");
+//        }
+//
+//        // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
+//        String prompt = promptBuilder.toString();
+//        String aiFeedback = chatGPTService.generateText(prompt);
+//        // 피드백 길이 제한 (예: 2000자로 제한)
+//        int maxLength = 2000;
+//        if (aiFeedback != null && aiFeedback.length() > maxLength) {
+//            aiFeedback = aiFeedback.substring(0, maxLength);
+//        }
+//
+//        // 생성된 피드백을 반환합니다.
+//        return aiFeedback != null ? aiFeedback.trim() : "No feedback generated.";
+//    }
+private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.GetAnswer studentAnswerDTO, List<FeedbackCardEntity> correctCards, List<FeedbackCardEntity> studentCards) {
+    // 정답과 학생의 답변을 비교하여 올바른 답변인지 여부를 판단합니다.
+    List<Boolean> correctnessList = calculateCorrectness(template.getType(), correctCards, studentCards);
 
-        // 피드백 생성에 사용할 프롬프트를 작성합니다.
-        StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the following answers based on the provided template. For each incorrect answer, explain in detail where the student went wrong and suggest specific strategies or areas they should focus on to avoid making the same mistake in the future. Please provide clear and actionable advice.\n delete all enter(\n)");
+    // 피드백 생성에 사용할 프롬프트를 작성합니다.
+    StringBuilder promptBuilder = new StringBuilder();
+    promptBuilder.append("You are an expert educator providing detailed feedback to a student. Analyze the student's answers based on the provided template and give feedback accordingly. For each incorrect answer, explain why the student's answer is incorrect, highlight specific weaknesses, and provide actionable advice on how they can improve. " +
+            "If the student answered all questions correctly, provide praise and recommend areas for further study or enhancement. " +
+            "Use the following template description to give relevant feedback. Respond in Korean (한국어로 답변해주세요) " +
+            "without using line breaks or additional line spacing. " +
+            "All feedback should be presented in a continuous format without new lines or paragraph breaks.\n\n");
 
-        for (int i = 0; i < correctnessList.size(); i++) {
-            FeedbackCardEntity studentCard = studentCards.get(i);
-            boolean isCorrect = correctnessList.get(i);
-            FeedbackCardEntity correctCard = correctCards.get(i);
 
-            promptBuilder.append("Question ").append(i + 1).append(": ");
+    boolean allCorrect = true; // 학생의 모든 답이 맞았는지 확인하는 변수
 
-            switch (template.getType()) {
-                case TEMPLATE1:
-                case TEMPLATE5:
-                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
-                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
-                    break;
-                case TEMPLATE2:
-                case TEMPLATE4:
-                    promptBuilder.append("Your Answer: ").append(studentCard.getAnswerNumber()).append(". ");
-                    promptBuilder.append("Correct Answer: ").append(correctCard.getAnswerNumber()).append(". ");
-                    break;
-                case TEMPLATE3:
-                    promptBuilder.append("Your Answer: ").append(studentCard.getAdjective()).append(". ");
-                    promptBuilder.append("Correct Answer: ").append(correctCard.getAdjective()).append(". ");
-                    break;
-                default:
-                    promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
-                    promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
-                    break;
-            }
+    for (int i = 0; i < correctnessList.size(); i++) {
+        FeedbackCardEntity studentCard = studentCards.get(i);
+        boolean isCorrect = correctnessList.get(i);
+        FeedbackCardEntity correctCard = correctCards.get(i);
 
-            promptBuilder.append("Result: ").append(isCorrect ? "Correct." : "Incorrect.").append(" ");
+        promptBuilder.append("Question ").append(i + 1).append(": ");
 
-            if (!isCorrect) {
-                promptBuilder.append("Explain why the student's answer is incorrect, and provide specific advice on what they should study or practice to improve in this area.");
-            }
-
-            promptBuilder.append("\n");
+        switch (template.getType()) {
+            case TEMPLATE1:
+            case TEMPLATE5:
+                promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+                promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+                break;
+            case TEMPLATE2:
+            case TEMPLATE4:
+                promptBuilder.append("Your Answer: ").append(studentCard.getAnswerNumber()).append(". ");
+                promptBuilder.append("Correct Answer: ").append(correctCard.getAnswerNumber()).append(". ");
+                break;
+            case TEMPLATE3:
+                promptBuilder.append("Your Answer: ").append(studentCard.getAdjective()).append(". ");
+                promptBuilder.append("Correct Answer: ").append(correctCard.getAdjective()).append(". ");
+                break;
+            default:
+                promptBuilder.append("Your Answer: ").append(studentCard.getMeaning()).append(". ");
+                promptBuilder.append("Correct Answer: ").append(correctCard.getMeaning()).append(". ");
+                break;
         }
 
-        // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
-        String prompt = promptBuilder.toString();
-        String aiFeedback = chatGPTService.generateText(prompt);
-        // 피드백 길이 제한 (예: 2000자로 제한)
-        int maxLength = 2000;
-        if (aiFeedback != null && aiFeedback.length() > maxLength) {
-            aiFeedback = aiFeedback.substring(0, maxLength);
+        if (!isCorrect) {
+            allCorrect = false;
+            promptBuilder.append("Result: Incorrect. ");
+            promptBuilder.append("Explain why the student's answer is incorrect, highlight specific weaknesses, and provide actionable advice for improvement. For example, suggest focusing on expanding vocabulary, understanding positive and negative expressions, or other relevant areas based on the template description. ");
+        } else {
+            promptBuilder.append("Result: Correct. ");
+            promptBuilder.append("Well done! Continue practicing and consider focusing on advanced topics or areas where you can further enhance your skills based on the template description.");
         }
 
-        // 생성된 피드백을 반환합니다.
-        return aiFeedback != null ? aiFeedback.trim() : "No feedback generated.";
+        promptBuilder.append("\n");
     }
+
+    // 학생이 모든 답을 맞췄다면 칭찬과 추가 학습 권장사항을 제공
+    if (allCorrect) {
+        promptBuilder.append("The student answered all questions correctly. Provide praise and suggest areas for further improvement or advanced study based on the template description. ");
+    }
+
+    // 프롬프트를 사용하여 ChatGPT에서 피드백을 생성합니다.
+    String prompt = promptBuilder.toString();
+    String aiFeedback = chatGPTService.generateText(prompt);
+    // 피드백 길이 제한 (예: 4000자로 제한)
+    int maxLength = 4000;
+    if (aiFeedback != null && aiFeedback.length() > maxLength) {
+        aiFeedback = aiFeedback.substring(0, maxLength);
+    }
+
+    // 생성된 피드백을 반환합니다.
+    return aiFeedback != null ? aiFeedback.trim() : "피드백을 생성하지 못했습니다.";
+}
+
+
+
+
 
     private FeedbackEntity setFeedbackEntityWithoutList(Template1Entity template1, FeedbackRequestDTO.GetAnswer studentAnswerDTO) {
         // 기본 정보 설정 (피드백 엔티티 생성 및 설정)

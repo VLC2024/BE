@@ -1,6 +1,9 @@
 package com.vlc.maeummal.domain.template.template1.service;
 
 import com.vlc.maeummal.domain.lesson.dto.WordDTO;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
+import com.vlc.maeummal.domain.template.common.entity.BadgeEntity;
+import com.vlc.maeummal.domain.template.common.repository.BadgeRepository;
 import com.vlc.maeummal.domain.template.template1.dto.Template1DTO;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template1.repository.Template1Repository;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Member;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,7 @@ public class Template1Service {
     private final Template1Repository template1Repository;
     private final WordRepository wordRepository;
     private final UserAuthorizationConverter userAuthorizationConverter;
+    private final BadgeRepository badgeRepository;
 
     @Transactional
     public Template1DTO createTemplate(String title, Integer level) {
@@ -97,39 +102,6 @@ public class Template1Service {
         return convertToDTO(template);
     }
 
-
-//    @Transactional
-//    public Template1DTO addRandomWordsToTemplate(Long templateId) {
-//        Template1Entity template = template1Repository.findById(templateId)
-//                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
-//
-//        List<WordEntity> allWords = wordRepository.findAll();
-//        if (allWords.size() < 3) {
-//            throw new RuntimeException("Not enough WordEntities to select 3 random words.");
-//        }
-//
-//        Collections.shuffle(allWords);
-//        List<WordEntity> randomWords = allWords.subList(0, 3);
-//
-//        for (WordEntity word : randomWords) {
-//            // 단어가 이미 다른 템플릿에 연결되어 있는지 확인
-//            if (word.getTemplate1Entity() == null) {
-//                // 양방향 연관 관계 설정
-//                word.setTemplate1Entity(template); // WordEntity에 template1Entity 설정
-//                template.getWordEntities().add(word); // Template1Entity에 WordEntity 추가
-//            } else {
-//                // 이미 다른 템플릿에 연결된 경우 처리 로직 (예: 무시하거나, 로그를 남김)
-//                System.out.println("WordEntity already associated with another template: " + word.getId());
-//            }
-//        }
-//
-//        // template과 word 엔티티들을 데이터베이스에 저장
-//        template1Repository.save(template);
-//        wordRepository.saveAll(randomWords);
-//
-//        return convertToDTO(template);
-//    }
-
     // 내가 만든 템플릿만 보기
     @Transactional
     public List<Template1DTO> getTemplatesByCreaterId(Long createrId) {
@@ -188,28 +160,31 @@ public class Template1Service {
                 .collect(Collectors.toList());
     }
 
-//    public List<Template1DTO> getRelatedTemplatesByTemplateId(Long templateId) {
-//        // 주어진 템플릿을 가져옴
-//        Template1Entity template = template1Repository.findById(templateId)
-//                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
-//
-//        // 템플릿에 사용된 낱말 카드를 가져옴
-//        List<WordEntity> wordsUsedInTemplate = template.getWordEntities();
-//
-//        // 낱말 카드가 사용된 다른 템플릿을 조회
-//        Set<Template1Entity> relatedTemplates = new HashSet<>();
-//        for (WordEntity word : wordsUsedInTemplate) {
-//            List<Template1Entity> templatesUsingWord = template1Repository.findByWordEntitiesContaining(word);
-//            // 현재 템플릿을 제외한 다른 템플릿을 추가
-//            relatedTemplates.addAll(templatesUsingWord.stream()
-//                    .filter(t -> !t.getId().equals(templateId))
-//                    .collect(Collectors.toList()));
-//        }
-//
-//        // 중복 제거 후 DTO로 변환하여 반환
-//        return relatedTemplates.stream()
-//                .map(this::convertToDTO)
-//                .collect(Collectors.toList());
-//    }
+    @Transactional
+    public Template1DTO updateTemplate(Long templateId, String newTitle, Integer newLevel) {
+        // 주어진 ID로 템플릿을 찾고 없으면 예외 처리
+        Template1Entity template = template1Repository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+
+        // 템플릿의 제목과 레벨을 수정
+        template.setTitle(newTitle);
+        template.setLevel(newLevel);
+
+        // 수정된 템플릿을 저장
+        Template1Entity updatedTemplate = template1Repository.save(template);
+
+        // DTO로 변환하여 반환
+        return convertToDTO(updatedTemplate);
+    }
+
+    @Transactional
+    public void deleteTemplate(Long templateId) {
+        // 주어진 ID로 템플릿을 찾고 없으면 예외 처리
+        Template1Entity template = template1Repository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template1Entity not found with id: " + templateId));
+
+        // 템플릿 삭제
+        template1Repository.delete(template);
+    }
 
 }

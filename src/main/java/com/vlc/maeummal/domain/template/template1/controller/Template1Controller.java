@@ -61,4 +61,21 @@ public class Template1Controller {
         return ResponseEntity.ok(relatedTemplates); // 200 OK 응답과 함께 템플릿 리스트 반환
     }
 
+    // 템플릿 수정
+    @PutMapping("/{templateId}")
+    public ResponseEntity<Template1DTO> updateTemplate(
+            @PathVariable Long templateId,
+            @RequestParam String newTitle,
+            @RequestParam Integer newLevel) {
+        Template1DTO updatedTemplate = template1Service.updateTemplate(templateId, newTitle, newLevel);
+        return ResponseEntity.ok(updatedTemplate);
+    }
+
+    // 템플릿 삭제
+    @DeleteMapping("/{templateId}")
+    public ResponseEntity<Void> deleteTemplate(@PathVariable Long templateId) {
+        template1Service.deleteTemplate(templateId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

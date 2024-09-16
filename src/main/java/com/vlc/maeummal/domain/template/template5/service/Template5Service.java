@@ -1,6 +1,6 @@
 package com.vlc.maeummal.domain.template.template5.service;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.dto.Template1DTO;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;

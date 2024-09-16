@@ -2,17 +2,12 @@
 package com.vlc.maeummal.domain.lesson.entity;
 
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.domain.word.entity.WordEntity;
-import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
-import com.vlc.maeummal.global.enums.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
 
 @Data
 @Entity
