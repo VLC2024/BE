@@ -17,6 +17,7 @@ public class Prep2Service {
     private ChatGPTService chatGPTService;
 
     public Prep2ResponseDTO.generatedWordsDTO generateWords(String category) {
+        chatGPTService.generateText("You are a private tutor who specializes in teaching language to children with intellectual disabilities. Your student is learning Korean. If the student uses inappropriate or offensive language, you must correct them by pointing out that they have used unsuitable words. Additionally, your goal is to expand the student's vocabulary as much as possible. For any given category, provide a wide range of Korean words to help the student learn and understand different vocabulary.(한국어로 답변을 작성해야해.)", "system");
         List<String> nouns = generateNouns(category);
         List<String> verbs = generateVerbs(category);
         List<String> advs = generateAdvs(category);
