@@ -1,17 +1,21 @@
 package com.vlc.maeummal.domain.template.template4.service;
 
+import com.vlc.maeummal.domain.member.dto.MemberDTO;
 import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.common.repository.StoryCardRepository;
+import com.vlc.maeummal.domain.template.template4.dto.ImageUploadDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import com.vlc.maeummal.domain.template.template4.repository.Template4Repository;
 import com.vlc.maeummal.domain.template.template5.dto.Template5ResponseDTO;
 import com.vlc.maeummal.domain.template.template5.entity.Template5Entity;
+import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ public class Template4Service {
     private final Template4Repository template4Repository;
     private final StoryCardRepository storyCardRepository;
     private final UserAuthorizationConverter userAuthorizationConverter;
+    private final AmazonS3Manager amazonS3Manager;
 
     public Template4Entity createTemplate4(Template4RequestDTO.GetTemplate4DTO requestDTO, List<Template4RequestDTO.GetStoryCard> storyCardDTOList) {
         Template4Entity template4Entity = Template4Entity.builder()
@@ -111,5 +116,11 @@ public class Template4Service {
         return template4Repository.save(template4Entity);
     }
 
-
+    public ImageUploadDTO uploadImage(Long template4Id, MultipartFile file) {
+        String folderPath = "temp4/" + template4Id + "/";
+        String imageUrl = amazonS3Manager.uploadMultipartFile(folderPath, file);
+        return ImageUploadDTO.builder()
+                .url(imageUrl)
+                .build();
+    }
 }

@@ -1,16 +1,21 @@
 package com.vlc.maeummal.domain.template.template4.controller;
 
+import com.vlc.maeummal.domain.member.dto.MemberDTO;
+import com.vlc.maeummal.domain.template.template4.dto.ImageUploadDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4RequestDTO;
 import com.vlc.maeummal.domain.template.template4.dto.Template4ResponseDTO;
 import com.vlc.maeummal.domain.template.template4.service.Template4Service;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -24,6 +29,17 @@ public class Template4Controller {
         template4Service.createTemplate4(template4DTO, template4DTO.getStoryCardEntityList());
         return ResponseEntity.ok(ApiResponse.successWithoutResult());
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> updateImage(@RequestParam @Parameter(description = "temp4 ID") Long id, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body("업로드할 이미지가 없습니다. 이미지 업로드에 실패했습니다.");
+        }
+
+        ImageUploadDTO result = template4Service.uploadImage(id,file);
+        return ResponseEntity.ok(ApiResponse.onSuccess(result));
+    }
+
 
     @GetMapping("/get")
     public ResponseEntity<?> getTemplate4(@RequestParam(value = "template4Id", required = false) Long template4Id) {
