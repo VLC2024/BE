@@ -34,10 +34,8 @@ public class Prep2Controller {
     @PostMapping("/")
     public ResponseEntity<?> getWords (@RequestBody Prep2RequestDTO.GetCategoryDTO requestDTO) {
 
-
         String category = requestDTO.getCategory().toString();
         Prep2ResponseDTO.generatedWordsDTO responseDTO = prep2Service.generateWords(category);
-
 
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDTO));
     }

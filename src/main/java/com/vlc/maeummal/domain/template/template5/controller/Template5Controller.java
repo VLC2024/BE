@@ -9,6 +9,7 @@ import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.service.WordService;
 import com.vlc.maeummal.global.apiPayload.ApiErrResponse;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,8 @@ public class Template5Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetTemplate5DTO dto, @RequestParam Long wordSetId){
-        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(wordSetId);
+    public ResponseEntity<?> getSelectedWordSet(@RequestBody Template5RequestDTO.GetTemplate5DTO dto){
+        List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(dto.getWordSetId());
         Template5ResponseDTO.GetTemplate5DTO wordListDTO = template5Service.randomWords(dto,wordIdListDTO);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(wordListDTO));
@@ -69,5 +70,25 @@ public class Template5Controller {
         return ResponseEntity.ok(ApiResponse.onSuccess(relatedTemplates)); // 200 OK 응답과 함께 템플릿 리스트 반환
     }
 
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateTemplate5(@RequestParam Long temp5Id, @RequestBody Template5RequestDTO.GetTemplate5DTO template5DTO) {
+        try {
+            List<Long> wordIdListDTO = template5Service.getSelectedWordSetList(template5DTO.getWordSetId());
+            Template5ResponseDTO.GetTemplate5DTO updatedTemplate = template5Service.updateTemplate5(temp5Id, template5DTO, wordIdListDTO);
+            return ResponseEntity.ok(ApiResponse.onSuccess(updatedTemplate));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿을 찾을 수 없습니다.", null));
+        }
+    }
 
+    // 템플릿 삭제 (DELETE)
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteTemplate5(@RequestParam Long temp5Id) {
+        try {
+            template5Service.deleteTemplate5(temp5Id);
+            return ResponseEntity.ok(ApiResponse.successWithoutResult());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(ApiErrResponse.onFailure("템플릿", "해당하는 템플릿을 찾을 수 없습니다.", null));
+        }
+    }
 }

@@ -67,8 +67,8 @@ public class MyPageController {
     }
 
     @PatchMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestParam("현재 비밀번호") String currentPassword,
-                                            @RequestParam("새 비밀번호") String newPassword) {
+    public ResponseEntity<?> changePassword(@RequestParam("currentPassword") String currentPassword,
+                                            @RequestParam("newPassword") String newPassword) {
         myPageService.changePassword(currentPassword, newPassword);
         return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호가 성공적으로 변경되었습니다."));
     }

@@ -23,10 +23,8 @@ public class Template4Entity extends TemplateEntity {
     private Long id;
 
     @Column(nullable = true)
-    private String title;
-
-    @Column(nullable = true)
     private String description;
+
     @Column(nullable = true)
     private String hint;
 

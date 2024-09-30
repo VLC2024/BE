@@ -142,4 +142,29 @@ public class Template5Service {
         // DTO로 변환하여 반환
         return Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(selectedTemplate);
     }
+
+    @Transactional
+    public Template5ResponseDTO.GetTemplate5DTO updateTemplate5(Long template5Id, Template5RequestDTO.GetTemplate5DTO template5DTO, List<Long> wordIdList) {
+        Template5Entity template5Entity = template5Repository.findById(template5Id)
+                .orElseThrow(() -> new EntityNotFoundException("Template not found"));
+
+        template5Entity.setTitle(template5DTO.getTitle());
+        template5Entity.setLevel(template5DTO.getLevel());
+
+        return Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(template5Entity);
+    }
+
+
+    // 템플릿 삭제 메소드
+    @Transactional
+    public void deleteTemplate5(Long template5Id) {
+        Template5Entity template5Entity = template5Repository.findById(template5Id)
+                .orElseThrow(() -> new EntityNotFoundException("Template not found"));
+
+        // 연관된 WordCardEntity 삭제
+        wordCardRepository.deleteAll(template5Entity.getWordListEntities());
+
+        // 템플릿 삭제
+        template5Repository.delete(template5Entity);
+    }
 }

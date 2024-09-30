@@ -17,37 +17,9 @@ public class Template5RequestDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    /*public static class GetSelectedWordSetDTO{
-        List<WordSetResponseDTO.GetWordSetDTO> wordSetList;
-    }*/
     public static class GetTemplate5DTO{
-//        Long temp5Id;
         String title;
         Integer level;
-//        List<Long> wordSetIdList;
+        Long wordSetId;
     }
-//    @Builder
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    public static class GetWordCardDTO{
-//        Long wordCardId;
-//
-//        Long wordId;
-//        String image;
-//        String meaning;
-//        String description;
-//        Long wordSetId;
-//
-//        public static Template5RequestDTO.GetWordCardDTO getWordCardDTO(Template5RequestDTO.GetWordCardDTO wordCardDTO){
-//            return GetWordCardDTO.builder()
-//                    .wordCardId(wordCardDTO.wordCardId)
-//                    .wordId(wordCardDTO.wordId)
-//                    .image(wordCardDTO.image)
-//                    .description(wordCardDTO.description)
-//                    .meaning(wordCardDTO.meaning)
-//                    .wordSetId(wordCardDTO.wordSetId)
-//                    .build();
-//        }
-//    }
 }
