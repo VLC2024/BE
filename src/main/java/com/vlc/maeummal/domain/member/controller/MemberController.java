@@ -7,6 +7,7 @@ import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.service.MemberService;
 import com.vlc.maeummal.global.apiPayload.ApiResponse;
 import com.vlc.maeummal.global.apiPayload.code.ErrorReasonDTO;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class MemberController {
     @Autowired
     private TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private  UserAuthorizationConverter userAuthorizationConverter;
 
     @PostMapping("/signup/student")
     public ResponseEntity<?> registerStudent(@RequestBody StudentDTO student){
@@ -85,6 +88,12 @@ public class MemberController {
                     .build();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReasonDTO);
         }
+    }
+    @GetMapping("/userId")
+    public Long getUserId(){
+        Long userId = userAuthorizationConverter.getCurrentUserId();
+        return userId;
+
     }
 
 }
