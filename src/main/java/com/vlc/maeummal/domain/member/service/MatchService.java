@@ -93,7 +93,7 @@ public class MatchService {
         List<FeedbackResponseDTO.GetFeedbackDTO> latestTwoFeedbackDTOs = feedbackRepository.findAllByStudent(student).stream()
                 .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt())) // Sort by date in descending order
                 .limit(2) // Limit to the latest 2 entries
-                .map(feedbackEntity -> FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity, feedbackEntity.getTitle())) // Convert to DTO
+                .map(feedbackEntity -> FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity)) // Convert to DTO
                 .collect(Collectors.toList());
 
 
