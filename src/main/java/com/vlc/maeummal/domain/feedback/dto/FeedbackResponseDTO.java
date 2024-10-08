@@ -10,6 +10,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FeedbackResponseDTO {
@@ -29,20 +30,8 @@ public class FeedbackResponseDTO {
 
 
 
-        public static FeedbackResponseDTO.GetFeedbackDTO getFeedback(FeedbackEntity feedbackEntity, String title) {
-//            MemberEntity student = feedbackEntity.getStudent();
-//            Long studentId = (student != null) ? student.getMemberId() : null; // Null 체크 후 ID 설정
+        public static FeedbackResponseDTO.GetFeedbackDTO getFeedback(FeedbackEntity feedbackEntity) {
 
-
-//            return GetFeedbackDTO.builder()
-//                    .id(feedbackEntity.getId())
-//                    .templateType(feedbackEntity.getTemplateType())
-//                    .aiFeedback(feedbackEntity.getAiFeedback())
-//                    .createdAt(feedbackEntity.getCreatedAt())
-//                    .studentId(studentId) // Null 체크 후 studentId 설정
-//                    .title(title)
-//                    .build();
-            // Define default values
             Long defaultId = -1L;
             TemplateType defaultTemplateType = TemplateType.UNKNOWN;  // Assuming UNKNOWN is a valid enum value
             String defaultAiFeedback = "No feedback available";
@@ -62,9 +51,10 @@ public class FeedbackResponseDTO {
                     .createdAt(feedbackEntity.getCreatedAt() != null ? feedbackEntity.getCreatedAt() : defaultCreatedAt)
                     .updatedAt(feedbackEntity.getUpdatedAt() != null ? feedbackEntity.getUpdatedAt() : defaultUpdatedAt)
                     .studentId(studentId)
-                    .title(title != null ? title : defaultTitle)
+                    .title(feedbackEntity.getTitle() != null ? feedbackEntity.getTitle() : defaultTitle)
                     .build();
         }
+
 
     }
 
@@ -98,6 +88,7 @@ public class FeedbackResponseDTO {
         private String solution;
         private String hint;
         private Integer heartCount;
+        private String title;
         private List<FeedbackCardDTO> correctFeedbackCards;
         private List<FeedbackCardDTO> studentFeedbackCards;
 
@@ -114,6 +105,7 @@ public class FeedbackResponseDTO {
                     .templateId(feedbackEntity.getTemplateId())
                     .studentId(feedbackEntity.getStudent().getMemberId())
                     .teacherId(feedbackEntity.getTeacher().getMemberId())
+                    .title(feedbackEntity.getTitle())
                     .templateType(feedbackEntity.getTemplateType())
                     .imageNum(feedbackEntity.getImageNum().toString())
                     .hint(template.getDescription()) // Todo : 각 템플릿 엔티티에서 Description이 설명, 즉, 힌트가 됨. 정답은 solution 필드에 작성
@@ -135,6 +127,7 @@ public class FeedbackResponseDTO {
                     .aiFeedback(feedbackEntity.getAiFeedback())
                     .studentId(feedbackEntity.getStudent().getMemberId())
                     .teacherId(feedbackEntity.getTeacher().getMemberId())
+                    .title(feedbackEntity.getTitle())
                     .templateType(feedbackEntity.getTemplateType())
                     .imageNum(feedbackEntity.getImageNum().toString())
                     .solution(feedbackEntity.getSolution())

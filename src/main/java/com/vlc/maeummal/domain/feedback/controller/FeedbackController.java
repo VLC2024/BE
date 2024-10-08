@@ -13,6 +13,7 @@ import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.enums.MissionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -99,7 +100,8 @@ public class FeedbackController {
 //    }
     @GetMapping("/all")
     public ApiResponse<List<FeedbackResponseDTO.GetFeedbackDTO>> getAllFeedbackFromStudentId(@RequestParam(value = "id") Long studentId) {
-        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getAllFeedback();
+//        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getAllFeedback();
+        List<FeedbackResponseDTO.GetFeedbackDTO> feedbackEntityList = feedbackService.getStudentFeedback(studentId);
         return ApiResponse.of(SuccessStatus._OK,  feedbackEntityList);
 
     }

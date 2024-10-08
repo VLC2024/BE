@@ -35,7 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -57,6 +59,7 @@ public class FeedbackService extends BaseEntity {
     @Autowired
     private final ChatGPTService chatGPTService;
     final ChallengeService challengeService;
+    final MemberReposirotyUsingId memberReposiroty;
 //    final TemplateRepository<TemplateEntity> templateRepository;
 
 
@@ -100,12 +103,31 @@ public class FeedbackService extends BaseEntity {
      * 모든 피드백 리스트 가져오기
      * 모든 템플릿 사용 가능
      * */
-    public List<FeedbackResponseDTO.GetFeedbackDTO> getAllFeedback() {
-        List<FeedbackEntity> feedbackEntities = feedbackRepository.findAll();
-        return feedbackEntities.stream()
-                .map(this::mapToGetFeedbackDTO)
-                .collect(Collectors.toList());
+
+//    public List<FeedbackResponseDTO.GetFeedbackDTO> getStudentFeedback(Long studentId) {
+//        List<FeedbackEntity> feedbackEntities = feedbackRepository.findAllByStudent(memberReposiroty.findById(studentId).get());
+//        return feedbackEntities.stream()
+//                .map(this::FeedbackResponseDTO.GetFeedbackDTO.getFeedback)
+//                .collect(Collectors.toList());
+//    }
+    public List<FeedbackResponseDTO.GetFeedbackDTO> getStudentFeedback(Long studentId) {
+        // Fetch the student entity using the repository
+        Optional<MemberEntity> student = memberRepository.findById(studentId);
+
+        // If student is found, fetch their feedback
+        if (student.isPresent()) {
+            List<FeedbackEntity> feedbackEntities = feedbackRepository.findAllByStudent(student.get());
+
+            // Map FeedbackEntity to FeedbackResponseDTO.GetFeedbackDTO
+            return feedbackEntities.stream()
+                    .map(feedback -> FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedback))
+                    .collect(Collectors.toList());
+        }
+
+        // Return an empty list if no student found
+        return Collections.emptyList();
     }
+
     /**
      * 피드백을 제목과 매칭
      * 템플릿 3만 사용가능
@@ -114,15 +136,15 @@ public class FeedbackService extends BaseEntity {
      * */
 
 
-    private FeedbackResponseDTO.GetFeedbackDTO mapToGetFeedbackDTO(FeedbackEntity feedbackEntity) {
-        // 제목을 templateId로 조회
-        String title = template3Repository.findById(feedbackEntity.getTemplateId())
-                .map(Template3Entity::getDescription)// TOdo 제목으로 수정해야함(lesson생성 후)
-                .orElse("Unknown");
-
-        // DTO로 변환
-        return FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity, title);
-    }
+//    private FeedbackResponseDTO.GetFeedbackDTO mapToGetFeedbackDTO(FeedbackEntity feedbackEntity) {
+//        // 제목을 templateId로 조회
+//        String title = template3Repository.findById(feedbackEntity.getTemplateId())
+//                .map(Template3Entity::getTitle)// TOdo 제목으로 수정해야함(lesson생성 후)
+//                .orElse("Unknown");
+//
+//        // DTO로 변환
+//        return FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity,);
+//    }
     /**
      * 학생별 피드백 리스트 가져오기
      * 모든 템플릿 사용 가능
@@ -364,6 +386,7 @@ private String generateAiFeedback(TemplateEntity template, FeedbackRequestDTO.Ge
         // 기본 정보 설정 (피드백 엔티티 생성 및 설정)
         return FeedbackEntity.builder()
                 .templateId(template1.getId())
+                .title(template1.getTitle())
 //                .aiFeedback(aiFeedback) // AI 피드백은 이후에 추가
                 .templateType(template1.getType())
                 .imageNum(template1.getImageNum())
