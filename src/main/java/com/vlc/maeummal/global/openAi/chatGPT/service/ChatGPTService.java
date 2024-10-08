@@ -43,6 +43,7 @@ public class ChatGPTService {
         body.put("model", "gpt-4o-mini");
         body.put("messages", messages);
         body.put("max_tokens", 300);
+        body.put("temperature", 1.0);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = serviceConfig.restTemplate().exchange(apiUrl, HttpMethod.POST, request, String.class);
