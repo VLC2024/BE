@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,10 @@ public class Prep2Controller {
         String prompt = prep2Service.translateToEnglish(sentence);
         String base64ImageData = aiService.generatePicture(prompt); // base64 data
         String imageUrl = null;
-        challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.PREP);
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.PREP);
+        }
 
         //  Base64 데이터를 MultipartFile로 변환하여 S3에 업로드
         try {
