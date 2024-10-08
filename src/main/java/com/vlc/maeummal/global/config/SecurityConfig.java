@@ -42,7 +42,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .cors(withDefaults()); // CORS 설정을 명시적으로 추가
 
-        http.addFilterAfter(jwtAuthenricationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenricationFilter,  CorsFilter.class);
+        // UsernamePasswordAuthenticationFilter.class,
 
         return http.build();
     }
