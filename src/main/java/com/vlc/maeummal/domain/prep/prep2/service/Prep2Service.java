@@ -137,7 +137,19 @@ public class Prep2Service {
         String verb = requestDTO.getVerb();
         String adv = requestDTO.getAdv();
 
-        return String.format("%s %s %s", noun, verb, adv);
+        return String.format("%s 이/가 %s %s", noun, adv, verb);
+    }
+
+    // GPT를 사용해 한국어 문장을 자연스러운 영어로 번역하는 메서드
+    public String translateToEnglish(String koreanText) {
+        // GPT에게 번역 요청 프롬프트
+        String prompt = String.format("Please translate the following sentence into natural English: \"%s\"", koreanText);
+
+        // GPT에게 번역 요청
+        String translatedText = chatGPTService.generateText(prompt);
+
+        // 번역된 문장 반환
+        return translatedText;
     }
 
 }

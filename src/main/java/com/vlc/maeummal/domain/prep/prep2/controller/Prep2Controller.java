@@ -61,7 +61,8 @@ public class Prep2Controller {
     @PostMapping("/result")
     public ResponseEntity<?> getImageFromS3(@RequestBody Prep2RequestDTO.GetWordDTO requestDTO) {
         String sentence = prep2Service.makeSentence(requestDTO);
-        String base64ImageData = aiService.generatePicture(sentence); // base64 data
+        String prompt = prep2Service.translateToEnglish(sentence);
+        String base64ImageData = aiService.generatePicture(prompt); // base64 data
         String imageUrl = null;
         challengeService.completeMission(userAuthorizationConverter.getCurrentUserId(), MissionType.PREP);
 
