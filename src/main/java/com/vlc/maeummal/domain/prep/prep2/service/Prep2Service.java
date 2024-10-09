@@ -76,13 +76,17 @@ public class Prep2Service {
                 "Your student is learning Korean. If the student uses inappropriate or offensive language, you must correct them by pointing out " +
                 "that they have used unsuitable words. Additionally, your goal is to expand the student's vocabulary as much as possible. " +
                 "For any given category, provide a wide range of Korean words to help the student learn and understand different vocabulary. " +
-                "(한국어로 답변을 작성해야해.)";
+                "Do not include any English translations, pronunciations, or romanizations. Return only pure Korean words without any additional explanations." +
+                "The words should be selected in a way that they can form a natural sentence where a noun performs a verb described by an adverb. " +
+                "For example, '[명사] 이/가 [부사] [동사]' should form a natural sentence. Return only pure Korean words without any additional explanations.";
 
-        // 사용자 프롬프트 개선
+
+        // 중복 단어를 피하도록 요청하는 프롬프트 작성
         String prompt = String.format(
-                "Generate 4 unique nouns, 4 unique verbs, and 4 unique adverbs related to the category \"%s\". " +
+                "Generate 4 unique Korean nouns, 4 unique Korean verbs, and 4 unique Korean adverbs related to the category \"%s\". " +
                         "Try to include a variety of less common words and avoid very simple or frequently used words. " +
-                        "Your goal is to introduce new vocabulary in each attempt. Respond in the following JSON format: " +
+                        "Your goal is to introduce new vocabulary in each attempt." +
+                        "Do not include any English pronunciation or translation. Respond in the following JSON format: " +
                         "{ \"noun1\": \"\", \"noun2\": \"\", \"noun3\": \"\", \"noun4\": \"\", \"verb1\": \"\", \"verb2\": \"\", \"verb3\": \"\", \"verb4\": \"\", \"adv1\": \"\", \"adv2\": \"\", \"adv3\": \"\", \"adv4\": \"\" }",
                 category
         );
@@ -90,8 +94,10 @@ public class Prep2Service {
         // ChatGPT API 호출
         String response = chatGPTService.generateText(systemMessage + "\n\n" + prompt);
 
+        // JSON 파싱하여 단어 맵 반환
         return parseWordsFromJson(response);
     }
+
 
 
     // JSON 파싱 함수
@@ -100,17 +106,18 @@ public class Prep2Service {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            // ```json 코드 블록을 제거하여 JSON 파싱이 가능하도록 수정
-            if (jsonResponse.startsWith("```")) {
-                jsonResponse = jsonResponse.substring(jsonResponse.indexOf("{"), jsonResponse.lastIndexOf("}") + 1);
-            }
-
             JsonNode jsonNode = objectMapper.readTree(jsonResponse);
 
             for (int i = 1; i <= 4; i++) {
-                wordMap.put("noun" + i, jsonNode.get("noun" + i).asText());
-                wordMap.put("verb" + i, jsonNode.get("verb" + i).asText());
-                wordMap.put("adv" + i, jsonNode.get("adv" + i).asText());
+                // 괄호 안의 영어 발음 부분을 제거 (정규식 사용)
+                String noun = jsonNode.get("noun" + i).asText().replaceAll("\\s*\\([^)]*\\)", "");
+                String verb = jsonNode.get("verb" + i).asText().replaceAll("\\s*\\([^)]*\\)", "");
+                String adv = jsonNode.get("adv" + i).asText().replaceAll("\\s*\\([^)]*\\)", "");
+
+                // 발음 제거 후 결과를 맵에 저장
+                wordMap.put("noun" + i, noun.trim());
+                wordMap.put("verb" + i, verb.trim());
+                wordMap.put("adv" + i, adv.trim());
             }
         } catch (Exception e) {
             // 오류 처리
@@ -121,6 +128,8 @@ public class Prep2Service {
     }
 
 
+
+
     // 이미지 생성 prompt 만드는 메서드
     public String makeSentence(Prep2RequestDTO.GetWordDTO requestDTO) {
         // 요청된 데이터에서 명사, 동사 및 부사를 가져옴
@@ -128,7 +137,19 @@ public class Prep2Service {
         String verb = requestDTO.getVerb();
         String adv = requestDTO.getAdv();
 
-        return String.format("%s %s %s", noun, verb, adv);
+        return String.format("%s 이/가 %s %s", noun, adv, verb);
+    }
+
+    // GPT를 사용해 한국어 문장을 자연스러운 영어로 번역하는 메서드
+    public String translateToEnglish(String koreanText) {
+        // GPT에게 번역 요청 프롬프트
+        String prompt = String.format("Please translate the following sentence into natural English: \"%s\"", koreanText);
+
+        // GPT에게 번역 요청
+        String translatedText = chatGPTService.generateText(prompt);
+
+        // 번역된 문장 반환
+        return translatedText;
     }
 
 }
