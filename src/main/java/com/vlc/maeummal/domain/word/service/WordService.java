@@ -1,6 +1,9 @@
 package com.vlc.maeummal.domain.word.service;
 
 import com.vlc.maeummal.domain.challenge.service.ChallengeService;
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
+import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
+import com.vlc.maeummal.domain.member.repository.MemberRepository;
 import com.vlc.maeummal.domain.word.dto.WordSetRequestDTO;
 import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
@@ -41,6 +44,7 @@ public class WordService {
     private final WordRepository wordRepository;
     private final UserAuthorizationConverter userAuthorizationConverter;
     private final ChallengeService challengeService;
+    private final MemberReposirotyUsingId memberReposirotyUsingId;
 
     // id -> wordset반환
     public WordSetResponseDTO.GetWordSetDTO getWordSet(Long setId) {
@@ -51,6 +55,13 @@ public class WordService {
 
         // return
         return wordSetResponseDTO;
+
+    }
+    public List<WordSetResponseDTO.GetWordSetDTO> getTeacherWordSet(Long createrId) {
+        MemberEntity creater = memberReposirotyUsingId.findById(createrId).orElseThrow();
+        // db에서 가져옴, dto변환
+        List<WordSetEntity> wordSetDTOList = wordSetRepository.findByCreater(creater);
+        return wordSetDTOList.stream().map(wordSet -> WordSetResponseDTO.GetWordSetDTO.getWordSetDTO(wordSet)).collect(Collectors.toList());
 
     }
     public List<WordSetResponseDTO.GetWordSetDTO> getAllWordSet() {
@@ -95,6 +106,7 @@ public class WordService {
                 .description(wordSetDTO.getDescription())
                 .category(wordSetDTO.getCategory())
                 .wordEntities(new ArrayList<>())
+                .creater(memberReposirotyUsingId.findById(userAuthorizationConverter.getCurrentUserId()).get())
                 .build();
         // Step 2: Save WordSetEntity
         WordSetEntity savedWordSet = wordSetRepository.save(wordSetEntity);

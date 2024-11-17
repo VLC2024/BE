@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,13 +43,14 @@ public class ImageTextController {
 
     private UserAuthorizationConverter userAuthorizationConverter;
 
-    public ImageTextController(OpenAIService openAIService, AiService aiService, QuizService quizService, Prep1Mapper prep1Mapper, AmazonS3Manager s3Manager, UuidRepository uuidRepository) {
+    public ImageTextController(OpenAIService openAIService, AiService aiService, QuizService quizService, Prep1Mapper prep1Mapper, AmazonS3Manager s3Manager, UuidRepository uuidRepository, UserAuthorizationConverter userAuthorizationConverter) {
         this.openAIService = openAIService;
         this.aiService = aiService;
         this.quizService = quizService;
         this.prep1Mapper = prep1Mapper;
         this.s3Manager = s3Manager;
         this.uuidRepository = uuidRepository;
+        this.userAuthorizationConverter = userAuthorizationConverter;
     }
 
     @PostMapping("/generate")
@@ -77,13 +79,16 @@ public class ImageTextController {
         // 보기 생성
         List<String> options = quizService.generateOptions(secondPart);
 
+        // 현재 로그인된 선생님의 ID를 사용
+        Long userId = userAuthorizationConverter.getCurrentUserId();
+
         // Prep1DTO 생성
         Prep1DTO prep1DTO = new Prep1DTO();
         prep1DTO.setSituation(category);
         prep1DTO.setDetailedSituation(generatedText);
         prep1DTO.setAnswer(secondPart);
         prep1DTO.setExplanation("");  // 설명이 필요하다면 생성하거나 빈 값으로 설정
-        prep1DTO.setUid(prep1DTO.getUid());  // UID는 실제 사용자의 식별자로 설정
+        prep1DTO.setUid(userId);  // UID는 실제 사용자의 식별자로 설정
 
         // 옵션 설정
         if (options.size() > 0) prep1DTO.setOption1(options.get(0));

@@ -4,6 +4,7 @@ import com.vlc.maeummal.global.aws.AmazonS3Manager;
 import com.vlc.maeummal.global.aws.Uuid;
 import com.vlc.maeummal.global.aws.UuidRepository;
 import com.vlc.maeummal.global.openAi.Base64DecodedMultipartFile;
+import com.vlc.maeummal.global.openAi.chatGPT.service.ChatGPTService;
 import com.vlc.maeummal.global.openAi.dalle.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
@@ -43,6 +44,23 @@ public class AiController {
         System.out.println( "Image uploaded successfully");
 
         return ResponseEntity.ok().body(imageUrl);
+    }
+    private final ChatGPTService chatGPTService;
+
+    @PostMapping("/chat")
+    public ResponseEntity<String> sendMessage(@RequestBody String prompt) {
+        try {
+            // ChatGPTService를 통해 텍스트 생성
+            String responseText = chatGPTService.generateText(prompt);
+            if (responseText != null) {
+                return ResponseEntity.ok(responseText);
+            } else {
+                return ResponseEntity.status(500).body("Error generating text from GPT");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("An error occurred: " + e.getMessage());
+        }
     }
 
 }

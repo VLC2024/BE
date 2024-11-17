@@ -9,15 +9,14 @@ import com.vlc.maeummal.domain.member.dto.StudentResponseDTO;
 import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.domain.member.repository.MemberReposirotyUsingId;
 import com.vlc.maeummal.domain.member.repository.MemberRepository;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.service.TemplateService;
 import com.vlc.maeummal.global.enums.TemplateType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +27,7 @@ public class MatchService {
     private final MemberReposirotyUsingId memberReposirotyUsingId;
     private final FeedbackService feedbackService;
     private final FeedbackRepository feedbackRepository;
+    private final TemplateService templateService;
 
     @Transactional
     public StudentDTO matchStudentWithTeacher(String pinCode, Long teacherId) {
@@ -70,6 +70,7 @@ public class MatchService {
                 .map(StudentResponseDTO.GetStudentAprroximateDTO::convertToMatchedStudent)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public List<StudentResponseDTO.GetStudentAprroximateDTO> getFiveStudentsByTeacherId(Long teacherId) {
         // 주어진 teacherId와 매칭된 학생들을 조회
@@ -81,19 +82,19 @@ public class MatchService {
                 .map(StudentResponseDTO.GetStudentAprroximateDTO::convertToMatchedStudent)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public StudentResponseDTO.GetStudentDTO getStudentByStudentId(Long studentId) {
         MemberEntity student = memberReposirotyUsingId.findById(studentId)
                 .orElseThrow(() -> new NullPointerException("Student with ID " + studentId + " not found."));
-
+        // 개수 -> level 로 수정.
         List<FeedbackEntity> feedbackEntityListForChart = feedbackRepository.findAllByStudent(student);
         Map<String, Integer> templateChart = getTemplateChart(feedbackEntityListForChart);
         List<FeedbackResponseDTO.GetFeedbackDTO> latestTwoFeedbackDTOs = feedbackRepository.findAllByStudent(student).stream()
                 .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt())) // Sort by date in descending order
                 .limit(2) // Limit to the latest 2 entries
-                .map(feedbackEntity -> FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity, feedbackEntity.getTitle())) // Convert to DTO
+                .map(feedbackEntity -> FeedbackResponseDTO.GetFeedbackDTO.getFeedback(feedbackEntity)) // Convert to DTO
                 .collect(Collectors.toList());
-
 
 
         return StudentResponseDTO.GetStudentDTO.convertToMatchedStudent(student, latestTwoFeedbackDTOs, templateChart);
@@ -112,20 +113,40 @@ public class MatchService {
 
         // Initialize the result map with all keys (a, b, c, d, e) and values set to 0
         Map<String, Integer> templateChart = new HashMap<>();
-        templateMappings.values().forEach(key -> templateChart.put(key.toString(), 0));
+        templateMappings.values().forEach(key -> templateChart.put(key, 0));
 
         // Update the map based on the actual feedbackEntityList
         Map<String, Integer> counts = feedbackEntityList.stream()
                 .collect(Collectors.groupingBy(
-                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),  // Map TEMPLATE1 -> a, etc.
-                        Collectors.summingInt(e -> 1)  // Count occurrences
+                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),
+                        Collectors.summingInt(e -> 1)
                 ));
 
         // Merge counts into the templateChart, adding the counts to the initialized values
-        counts.forEach(templateChart::put);
+        counts.forEach((key, count) -> {
+            if (count >= 10) {
+                templateChart.put(key, -1);
+            } else {
+                templateChart.put(key, count);
+            }
+        });
 
         return templateChart;
-    }
+
+
+//        // Update the map based on the actual feedbackEntityList
+//        Map<String, Integer> counts = feedbackEntityList.stream()
+//                .collect(Collectors.groupingBy(
+//                        feedback -> templateMappings.getOrDefault(feedback.getTemplateType(), "unknown"),  // Map TEMPLATE1 -> a, etc.
+//                        Collectors.summingInt(e -> 1)  // Count occurrences
+//                ));
+//
+//        // Merge counts into the templateChart, adding the counts to the initialized values
+//        counts.forEach(templateChart::put);
+//
+//        return templateChart;
+
+}
 
 
     private StudentDTO convertToStudentDTO(MemberEntity studentEntity) {

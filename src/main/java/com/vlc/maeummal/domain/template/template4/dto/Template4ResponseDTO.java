@@ -1,8 +1,6 @@
 package com.vlc.maeummal.domain.template.template4.dto;
 
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
-import com.vlc.maeummal.domain.template.template2.dto.Template2ResponseDTO;
-import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template4.entity.Template4Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +21,9 @@ public class Template4ResponseDTO {
         Long templateId;
         Integer heartCount;
         String title;
-//        String description;
-//        String hint;
+        Integer level;
+        String description;
+        String hint;
         List<Template4ResponseDTO.GetStoryCardDTO> storyCardEntityList;
 
         public static Template4ResponseDTO.GetTemplate4DTO convertTemplate4DTO(Template4Entity template4) {
@@ -40,8 +39,9 @@ public class Template4ResponseDTO {
                     .templateId(template4.getId())
                     .heartCount(2)
                     .title(template4.getTitle())
-//                    .description(template4.getDescription())
-//                    .hint(template4.getHint())
+                    .level(template4.getLevel())
+                    .description(template4.getDescription())
+                    .hint(template4.getHint())
                     .storyCardEntityList(storyCardDTOList)
                     .build();
         }

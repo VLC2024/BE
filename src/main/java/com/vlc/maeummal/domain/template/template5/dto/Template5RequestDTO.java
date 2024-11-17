@@ -17,36 +17,9 @@ public class Template5RequestDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    /*public static class GetSelectedWordSetDTO{
-        List<WordSetResponseDTO.GetWordSetDTO> wordSetList;
-    }*/
     public static class GetTemplate5DTO{
-        Long temp5Id;
-        List<Long> wordSetIdList;
-    }
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class GetWordCardDTO{
-        Long wordCardId;
-
-        Long wordId;
-        String image;
-        String meaning;
-        String description;
+        String title;
+        Integer level;
         Long wordSetId;
-
-        public static Template5RequestDTO.GetWordCardDTO getWordCardDTO(Template5RequestDTO.GetWordCardDTO wordCardDTO){
-            return GetWordCardDTO.builder()
-                    .wordCardId(wordCardDTO.wordCardId)
-                    .wordId(wordCardDTO.wordId)
-                    .image(wordCardDTO.image)
-                    .description(wordCardDTO.description)
-                    .meaning(wordCardDTO.meaning)
-                    .wordSetId(wordCardDTO.wordSetId)
-                    .build();
-        }
     }
-    // 학생이 정답을 입력하면 정답 여부 알려주기 -> 나중에
 }

@@ -1,14 +1,8 @@
 package com.vlc.maeummal.domain.template.common.dto;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.*;
 
 import static com.vlc.maeummal.global.converter.DateTimeConverter.*;
 
@@ -17,6 +11,7 @@ public class TemplateResponseDTO {
 
     @Builder
     @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetTemplates {
@@ -25,6 +20,8 @@ public class TemplateResponseDTO {
         String templateName;
         String createdAt;
         Integer level;
+        Long createrId;
+        Integer number;
 
         public static TemplateResponseDTO.GetTemplates convertTemplateResponseDTO(TemplateEntity template) {
             return GetTemplates.builder()
@@ -33,6 +30,7 @@ public class TemplateResponseDTO {
                     .templateName(convertTypeToString(template.getType()))
                     .createdAt(convertStringFromLocalDateTime(template.getCreatedAt()))
                     .level(template.getLevel() != null ? template.getLevel() : 0) // 디폴트 값 설정
+                    .createrId(template.getCreaterId())
                     .build();
         }
         public static String convertTypeToString(TemplateType type) {

@@ -1,6 +1,5 @@
 package com.vlc.maeummal.domain.template.template3.repository;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

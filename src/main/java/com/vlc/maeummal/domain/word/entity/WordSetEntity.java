@@ -1,5 +1,6 @@
 package com.vlc.maeummal.domain.word.entity;
 
+import com.vlc.maeummal.domain.member.entity.MemberEntity;
 import com.vlc.maeummal.global.common.BaseEntity;
 import com.vlc.maeummal.global.enums.Category;
 import jakarta.persistence.*;
@@ -31,4 +32,8 @@ public class WordSetEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL, orphanRemoval = true)
     List <WordEntity> wordEntities = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="member_id")
+    private MemberEntity creater;
 }

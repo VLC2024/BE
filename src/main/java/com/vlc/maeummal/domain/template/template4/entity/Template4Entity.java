@@ -1,7 +1,7 @@
 package com.vlc.maeummal.domain.template.template4.entity;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,10 +23,8 @@ public class Template4Entity extends TemplateEntity {
     private Long id;
 
     @Column(nullable = true)
-    private String title;
-
-    @Column(nullable = true)
     private String description;
+
     @Column(nullable = true)
     private String hint;
 

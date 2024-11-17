@@ -1,6 +1,6 @@
 package com.vlc.maeummal.domain.template.template2.dto;
 
-import com.vlc.maeummal.domain.template.common.StoryCardEntity;
+import com.vlc.maeummal.domain.template.common.entity.StoryCardEntity;
 import com.vlc.maeummal.domain.template.template2.entity.Template2Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +18,7 @@ public class Template2ResponseDTO {
     public static class GetTemplate2DTO {
         Long templateId;
         String title;
+        Integer level;
         String description;
         String hint;
         List<GetStoryCardDTO> storyCardEntityList;
@@ -28,6 +29,7 @@ public class Template2ResponseDTO {
             return GetTemplate2DTO.builder()
                     .templateId(template2.getId())
                     .title(template2.getTitle())
+                    .level(template2.getLevel())
                     .description(template2.getDescription())
                     .hint(template2.getHint())
                     .storyCardEntityList(storyCardDTOList)

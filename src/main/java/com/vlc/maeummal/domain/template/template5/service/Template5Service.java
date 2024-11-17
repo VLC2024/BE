@@ -1,6 +1,6 @@
 package com.vlc.maeummal.domain.template.template5.service;
 
-import com.vlc.maeummal.domain.template.common.TemplateEntity;
+import com.vlc.maeummal.domain.template.common.entity.TemplateEntity;
 import com.vlc.maeummal.domain.template.template1.dto.Template1DTO;
 import com.vlc.maeummal.domain.template.template1.entity.Template1Entity;
 import com.vlc.maeummal.domain.template.template3.entity.Template3Entity;
@@ -14,6 +14,7 @@ import com.vlc.maeummal.domain.word.dto.WordSetResponseDTO;
 import com.vlc.maeummal.domain.word.entity.WordEntity;
 import com.vlc.maeummal.domain.word.entity.WordSetEntity;
 import com.vlc.maeummal.domain.word.repository.WordRepository;
+import com.vlc.maeummal.global.converter.UserAuthorizationConverter;
 import com.vlc.maeummal.global.enums.TemplateType;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class Template5Service {
     private Template5Repository template5Repository;
     @Autowired
     private WordCardRepository wordCardRepository;
-
+    @Autowired
+    private  UserAuthorizationConverter userAuthorizationConverter;
     public Template5ResponseDTO.GetTemplate5DTO getTemplate5(Long template5Id) {
         // DB에서 가져와서 DTO로 변환
         Template5ResponseDTO.GetTemplate5DTO template5DTO = Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(template5Repository.findById(template5Id).orElseThrow(() -> new EntityNotFoundException("Template not found")));
@@ -57,7 +59,7 @@ public class Template5Service {
     }
 
     @Transactional
-    public Template5ResponseDTO.GetTemplate5DTO randomWords(List<Long> wordIdList) {
+    public Template5ResponseDTO.GetTemplate5DTO randomWords(Template5RequestDTO.GetTemplate5DTO dto, List<Long> wordIdList) {
         // 랜덤으로 3개의 단어 ID를 추출
         List<Long> randomWordIdList = wordIdList.stream()
                 .sorted((a, b) -> Double.compare(Math.random(), Math.random()))
@@ -84,7 +86,10 @@ public class Template5Service {
                 .type(TemplateType.TEMPLATE5)
                 .wordListEntities(new ArrayList<>()) // 일단 비어있는 리스트로 초기화
                 .build();
-
+        template5Entity.setTitle(dto.getTitle());
+        template5Entity.setLevel(dto.getLevel());
+        template5Entity.setCreaterId(userAuthorizationConverter.getCurrentUserId());
+        
         template5Entity = template5Repository.save(template5Entity);
 
         // 저장된 Template5Entity의 ID를 가져와서 WordCardEntity에 설정
@@ -137,4 +142,30 @@ public class Template5Service {
         // DTO로 변환하여 반환
         return Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(selectedTemplate);
     }
+
+    @Transactional
+    public Template5ResponseDTO.GetTemplate5DTO updateTemplate5(Long template5Id, Template5RequestDTO.GetTemplate5DTO template5DTO, List<Long> wordIdList) {
+        Template5Entity template5Entity = template5Repository.findById(template5Id)
+                .orElseThrow(() -> new EntityNotFoundException("Template not found"));
+
+        template5Entity.setTitle(template5DTO.getTitle());
+        template5Entity.setLevel(template5DTO.getLevel());
+
+        return Template5ResponseDTO.GetTemplate5DTO.getTemplate5DTO(template5Entity);
+    }
+
+
+    // 템플릿 삭제 메소드
+    @Transactional
+    public void deleteTemplate5(Long template5Id) {
+        Template5Entity template5Entity = template5Repository.findById(template5Id)
+                .orElseThrow(() -> new EntityNotFoundException("Template not found"));
+
+        // 연관된 WordCardEntity 삭제
+        wordCardRepository.deleteAll(template5Entity.getWordListEntities());
+
+        // 템플릿 삭제
+        template5Repository.delete(template5Entity);
+    }
+
 }
